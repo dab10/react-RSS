@@ -21,7 +21,7 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/*" element={<Page404 />} />
+          <Route path="/404" element={<Page404 />} />
         </Routes>
         <Footer />
       </>

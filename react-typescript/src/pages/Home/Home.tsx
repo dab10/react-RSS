@@ -32,10 +32,6 @@ class Home extends React.Component<HomeProps, HomeState> {
     this.handleChangeForm = this.handleChangeForm.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  state: HomeState = {
-    cards: cardData,
-    searching: '',
-  };
 
   componentDidMount() {
     const saveState = JSON.parse(localStorage.getItem('savedState') as string);
@@ -76,8 +72,8 @@ class Home extends React.Component<HomeProps, HomeState> {
       <CardItem key={item.id} handleChange={this.handleChange} {...item} />
     ));
     return (
-      <div className="list">
-        <div>
+      <div>
+        <div className="searching">
           <form onSubmit={this.handleSubmit}>
             <input
               type="text"
@@ -89,7 +85,7 @@ class Home extends React.Component<HomeProps, HomeState> {
             <button type="submit">Search</button>
           </form>
         </div>
-        {cardItems}
+        <div className="list">{cardItems}</div>
       </div>
     );
   }
