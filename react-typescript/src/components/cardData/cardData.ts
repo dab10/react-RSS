@@ -1,0 +1,58 @@
+const cardData = [
+  {
+    id: 1,
+    image: '../../assets/1.jpeg',
+    name: 'Rick Sanchez',
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Male',
+    isFavourite: false,
+  },
+  {
+    id: 2,
+    image: '../../assets/2.jpeg',
+    name: 'Morty Smith',
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Male',
+    isFavourite: false,
+  },
+  {
+    id: 3,
+    image: '../../assets/3.jpeg',
+    name: 'Summer Smith',
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Female',
+    isFavourite: false,
+  },
+  {
+    id: 4,
+    image: '../../assets/4.jpeg',
+    name: 'Beth Smith',
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Female',
+    isFavourite: false,
+  },
+  {
+    id: 5,
+    image: '../../assets/5.jpeg',
+    name: 'Jerry Smith',
+    status: 'Alive',
+    species: 'Human',
+    gender: 'Male',
+    isFavourite: false,
+  },
+  {
+    id: 6,
+    image: '../../assets/6.jpeg',
+    name: 'Abadango Cluster Princess',
+    status: 'Alive',
+    species: 'Alien',
+    gender: 'Female',
+    isFavourite: false,
+  },
+];
+
+export default cardData;

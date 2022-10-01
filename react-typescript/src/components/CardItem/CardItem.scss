@@ -1,0 +1,45 @@
+.card-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-shadow: 0 15px 15px rgba(256,256,256,0.25), 0 15px 15px rgba(256,256,256,0.20);
+  transition: 0.2s;
+    
+  &:hover {
+      transform: scale(1.005);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25), 0 15px 15px rgba(0,0,0,0.20);
+    }
+}
+
+.about-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  width: 290px;
+}
+
+.card-item__image {
+  border-radius: 5px;
+}
+
+.checkbox {
+  display: block;
+	
+  input {
+		display: none;
+		
+		& + span:before {
+			content:'♥';
+      font-size: 40px;
+      color: gray;
+      cursor: pointer;
+		}
+		
+		&:checked + span:before {
+			content:'♥';
+      color: red;
+		}
+	}
+}
