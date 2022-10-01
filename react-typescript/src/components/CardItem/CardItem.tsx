@@ -8,7 +8,7 @@ type CardProps = {
   status: string;
   species: string;
   gender: string;
-  isFavourite: boolean;
+  isFavorite: boolean;
   handleChange: (id: number) => void;
 };
 
@@ -36,14 +36,14 @@ class CardItem extends React.Component<CardProps> {
             <label className="checkbox">
               <input
                 type="checkbox"
-                checked={this.props.isFavourite}
+                checked={this.props.isFavorite}
                 onChange={() => this.props.handleChange(this.props.id)}
               />
               <span></span>
             </label>
           </div>
         </div>
-        <div>{this.props.isFavourite}</div>
+        <div>{this.props.isFavorite}</div>
       </div>
     );
   }

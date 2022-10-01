@@ -6,7 +6,7 @@ const cardData = [
     status: 'Alive',
     species: 'Human',
     gender: 'Male',
-    isFavourite: false,
+    isFavorite: false,
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const cardData = [
     status: 'Alive',
     species: 'Human',
     gender: 'Male',
-    isFavourite: false,
+    isFavorite: false,
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const cardData = [
     status: 'Alive',
     species: 'Human',
     gender: 'Female',
-    isFavourite: false,
+    isFavorite: false,
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ const cardData = [
     status: 'Alive',
     species: 'Human',
     gender: 'Female',
-    isFavourite: false,
+    isFavorite: false,
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ const cardData = [
     status: 'Alive',
     species: 'Human',
     gender: 'Male',
-    isFavourite: false,
+    isFavorite: false,
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ const cardData = [
     status: 'Alive',
     species: 'Alien',
     gender: 'Female',
-    isFavourite: false,
+    isFavorite: false,
   },
 ];
 
