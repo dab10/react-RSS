@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Page404.scss';
 
-class About extends React.Component {
+class Page404 extends React.Component {
   render() {
     return (
       <div>
@@ -17,4 +17,4 @@ class About extends React.Component {
   }
 }
 
-export default About;
+export default Page404;

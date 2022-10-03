@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Footer from './Footer';
 
-test('renders learn react link', () => {
+test('renders github link', () => {
   render(<Footer />);
   const linkElement = screen.getByText(/github/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(linkElement).not.toBeDisabled();
 });

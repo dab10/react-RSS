@@ -18,7 +18,7 @@ type HomeState = {
   searching: string;
 };
 
-type HomeProps = Record<string, never>;
+type HomeProps = { [x: string]: string };
 
 class Home extends React.Component<HomeProps, HomeState> {
   constructor(props: HomeProps) {
@@ -34,12 +34,14 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   componentDidMount() {
-    const saveState = JSON.parse(localStorage.getItem('savedState') as string);
-    this.setState({ searching: saveState });
+    if (localStorage.getItem('savedStateSearching') !== undefined) {
+      const saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
+      this.setState({ searching: saveSearching });
+    }
   }
 
   componentWillUnmount() {
-    localStorage.setItem('savedState', JSON.stringify(this.state.searching));
+    localStorage.setItem('savedStateSearching', JSON.stringify(this.state.searching));
   }
 
   handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -77,7 +79,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           <form onSubmit={this.handleSubmit}>
             <input
               type="text"
-              value={this.state.searching}
+              value={this.state.searching === null ? '' : this.state.searching}
               name="searching"
               placeholder="Search"
               onChange={this.handleChangeForm}
