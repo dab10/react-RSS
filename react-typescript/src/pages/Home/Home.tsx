@@ -1,8 +1,8 @@
 import React from 'react';
-import cardData from 'components/cardData/cardData';
-import CardItem from 'components/CardItem/CardItem';
+import cardData from '../../components/cardData/cardData';
+import CardItem from '../../components/CardItem/CardItem';
 import './Home.scss';
-import SearchBar from 'components/SearchBar/SearchBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 
 type Card = {
   id: number;

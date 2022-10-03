@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import Home from 'pages/Home/Home';
-import About from 'pages/About/About';
-import Page404 from 'pages/Page404/Page404';
-import Footer from 'components/Footer/Footer';
+import Home from '../../pages/Home/Home';
+import About from '../../pages/About/About';
+import Page404 from '../../pages/Page404/Page404';
+import Footer from '../../components/Footer/Footer';
 import './App.scss';
 
 class App extends React.Component {
