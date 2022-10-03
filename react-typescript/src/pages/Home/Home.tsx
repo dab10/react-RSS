@@ -2,6 +2,7 @@ import React from 'react';
 import cardData from 'components/cardData/cardData';
 import CardItem from 'components/CardItem/CardItem';
 import './Home.scss';
+import SearchBar from 'components/SearchBar/SearchBar';
 
 type Card = {
   id: number;
@@ -75,18 +76,11 @@ class Home extends React.Component<HomeProps, HomeState> {
     ));
     return (
       <div>
-        <div className="searching">
-          <form onSubmit={this.handleSubmit}>
-            <input
-              type="text"
-              value={this.state.searching === null ? '' : this.state.searching}
-              name="searching"
-              placeholder="Search"
-              onChange={this.handleChangeForm}
-            />
-            <button type="submit">Search</button>
-          </form>
-        </div>
+        <SearchBar
+          handleChangeForm={this.handleChangeForm}
+          handleSubmit={this.handleSubmit}
+          searching={this.state.searching}
+        />
         <div className="list">{cardItems}</div>
       </div>
     );
