@@ -28,10 +28,6 @@ class Home extends React.Component<HomeProps, HomeState> {
       cards: cardData,
       searching: '',
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeForm = this.handleChangeForm.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -45,18 +41,18 @@ class Home extends React.Component<HomeProps, HomeState> {
     localStorage.setItem('savedStateSearching', JSON.stringify(this.state.searching));
   }
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  }
+  };
 
-  handleChangeForm(event: React.ChangeEvent<HTMLInputElement>) {
+  handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     this.setState({
       searching: value,
     });
-  }
+  };
 
-  handleChange(id: number) {
+  handleChange = (id: number) => {
     this.setState((prevState) => {
       const updatedCards = prevState.cards.map((todo) => {
         if (todo.id === id) {
@@ -68,7 +64,7 @@ class Home extends React.Component<HomeProps, HomeState> {
         cards: updatedCards,
       };
     });
-  }
+  };
 
   render() {
     const cardItems = this.state.cards.map((item) => (
