@@ -4,25 +4,25 @@ import Home from 'pages/Home/Home';
 import About from 'pages/About/About';
 import Page404 from 'pages/Page404/Page404';
 import Footer from 'components/Footer/Footer';
+import ROUTES from 'utils/const/const';
 import './App.scss';
-
 class App extends React.Component {
   render() {
     return (
       <>
         <header className="header-container">
-          <Link to="/" className="page-name">
+          <Link to={ROUTES.HOMEPAGE} className="page-name">
             Home
           </Link>
-          <Link to="/about" className="page-name">
+          <Link to={ROUTES.ABOUTPAGE} className="page-name">
             About
           </Link>
         </header>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/404" element={<Page404 />} />
-          <Route path="*" element={<Navigate to="/404" replace />} />
+          <Route path={ROUTES.HOMEPAGE} element={<Home />} />
+          <Route path={ROUTES.ABOUTPAGE} element={<About />} />
+          <Route path={ROUTES.NOTFOUNDPAGE} element={<Page404 />} />
+          <Route path={ROUTES.ANYPAGE} element={<Navigate to={ROUTES.NOTFOUNDPAGE} replace />} />
         </Routes>
         <Footer />
       </>
