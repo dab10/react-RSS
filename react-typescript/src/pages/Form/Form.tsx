@@ -51,9 +51,13 @@ class Form extends React.Component<FormProps, FormState> {
         surname: surname.value,
       };
 
-      this.setState((prevState) => {
-        prevState.formItems.push(newItem);
-        return prevState;
+      // this.setState((prevState) => {
+      //   prevState.formItems.push(newItem);
+      //   return prevState;
+      // });
+
+      this.setState({
+        formItems: [newItem],
       });
       console.log(this.state);
     }
