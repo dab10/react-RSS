@@ -5,6 +5,7 @@ type FormItemProps = {
   id: number;
   name: string;
   surname: string;
+  image: string;
 };
 
 type ListProps = {

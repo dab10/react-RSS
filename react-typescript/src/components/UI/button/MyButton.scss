@@ -1,0 +1,18 @@
+.myBtn {
+  padding: 5px 15px;
+  color: black;
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+
+  &:active {
+    background: gray;
+  }
+  &:disabled,
+  &[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+}
