@@ -1,8 +1,8 @@
-const ROUTES = {
-  HOMEPAGE: '/',
-  ABOUTPAGE: '/about',
-  NOTFOUNDPAGE: '/404',
-  ANYPAGE: '*',
+const routes = {
+  homePage: '/',
+  aboutPage: '/about',
+  notFoundPage: '/404',
+  anyPage: '*',
 };
 
-export default ROUTES;
+export default routes;
