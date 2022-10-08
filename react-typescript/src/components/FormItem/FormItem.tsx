@@ -6,19 +6,13 @@ type ItemProps = {
   surname: string;
 };
 
-class FormItem extends React.Component<ItemProps> {
-  constructor(props: ItemProps) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="form-item">
-        <div>Name: {this.props.name}</div>
-        <div>Surname: {this.props.surname}</div>
-      </div>
-    );
-  }
+function FormItem(props: ItemProps) {
+  return (
+    <div className="form-item">
+      <div>Name: {props.name}</div>
+      <div>Surname: {props.surname}</div>
+    </div>
+  );
 }
 
 export default FormItem;

@@ -11,16 +11,10 @@ type ListProps = {
   formItems: FormItemProps[];
 };
 
-class FormList extends React.Component<ListProps> {
-  constructor(props: ListProps) {
-    super(props);
-  }
+function FormList(props: ListProps) {
+  const formItems = props.formItems.map((item) => <FormItem key={item.id} {...item} />);
 
-  render() {
-    const formItems = this.props.formItems.map((item) => <FormItem key={item.id} {...item} />);
-
-    return <div>{formItems}</div>;
-  }
+  return <div>{formItems}</div>;
 }
 
 export default FormList;
