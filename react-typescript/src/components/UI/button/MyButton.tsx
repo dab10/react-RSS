@@ -1,23 +1,19 @@
 import React from 'react';
-import './MyButton.module.css';
+import './MyButton.css';
 
 export interface ButtonProps
   extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
     React.AriaAttributes {}
 
-class MyButton extends React.Component<ButtonProps> {
-  constructor(props: ButtonProps) {
-    super(props);
-  }
+type Ref = HTMLButtonElement;
 
-  render() {
-    const { children, ...props } = this.props;
-    return (
-      <button {...props} className="myBtn">
-        {children}
-      </button>
-    );
-  }
-}
+const MyButton = React.forwardRef<Ref, ButtonProps>((props, ref) => {
+  const { children, ...otherProps } = props;
+  return (
+    <button ref={ref} {...otherProps} className="myBtn">
+      {children}
+    </button>
+  );
+});
 
 export default MyButton;
