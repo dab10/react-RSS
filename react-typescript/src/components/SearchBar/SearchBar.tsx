@@ -7,27 +7,21 @@ type SearchProps = {
   handleChangeForm: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-class SearchBar extends React.Component<SearchProps> {
-  constructor(props: SearchProps) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="searching">
-        <form onSubmit={(event) => this.props.handleSubmit(event)}>
-          <input
-            type="text"
-            value={this.props.searching === null ? '' : this.props.searching}
-            name="searching"
-            placeholder="Search"
-            onChange={this.props.handleChangeForm}
-          />
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    );
-  }
+function SearchBar(props: SearchProps) {
+  return (
+    <div className="searching">
+      <form onSubmit={(event) => props.handleSubmit(event)}>
+        <input
+          type="text"
+          value={props.searching === null ? '' : props.searching}
+          name="searching"
+          placeholder="Search"
+          onChange={props.handleChangeForm}
+        />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  );
 }
 
 export default SearchBar;
