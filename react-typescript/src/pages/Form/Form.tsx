@@ -17,6 +17,7 @@ type FormItemState = {
 type FormErrors = {
   name: string;
   surname: string;
+  image: string;
   [x: string]: string;
 };
 
@@ -25,6 +26,7 @@ type FormState = {
   formErrors: FormErrors;
   nameValid: boolean;
   surnameValid: boolean;
+  imageValid: boolean;
   formValid: boolean;
   firstTypingAfterInit: boolean;
 };
@@ -46,9 +48,11 @@ class Form extends React.Component<FormProps, FormState> {
       formErrors: {
         name: '',
         surname: '',
+        image: '',
       },
       nameValid: false,
       surnameValid: false,
+      imageValid: false,
       formValid: false,
       firstTypingAfterInit: true,
     };
@@ -60,26 +64,31 @@ class Form extends React.Component<FormProps, FormState> {
     const surname = this.inputSurname.current;
     const button = this.submitButton.current;
     const image = this.inputImage.current;
-    console.log(URL.createObjectURL(image.files[0]));
-    if (name && surname && button) {
+
+    if (name && surname && button && image) {
       console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
 
       const fieldValidationErrors = this.state.formErrors;
-      let nameValid = this.state.nameValid;
-      let surnameValid = this.state.surnameValid;
-      nameValid = name.value.length >= 2;
+      const nameValid = this.state.nameValid;
+      const surnameValid = this.state.surnameValid;
+      const imageValid = this.state.imageValid;
+      // nameValid = name.value.length >= 2;
       fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
-      surnameValid = surname.value.length >= 2;
+      // surnameValid = surname.value.length >= 2;
       fieldValidationErrors.surname = surnameValid
         ? ''
         : 'Surname must contain at least 2 character';
+      fieldValidationErrors.image = imageValid ? '' : 'Field must contain image file';
       let formValid = this.state.formValid;
-      formValid = nameValid && surnameValid;
+      formValid = nameValid && surnameValid && imageValid;
       if (formValid) {
+        const files = image.files;
+        const url: File = (files as FileList)[0];
         const newItem = {
           id: newId(),
           name: name.value,
           surname: surname.value,
+          image: URL.createObjectURL(url),
         };
 
         this.setState((prevState) => {
@@ -87,20 +96,23 @@ class Form extends React.Component<FormProps, FormState> {
           return {
             ...prevState,
             formErrors: fieldValidationErrors,
-            nameValid: nameValid,
-            surnameValid: surnameValid,
-            formValid: formValid,
+            nameValid: !nameValid,
+            surnameValid: !surnameValid,
+            imageValid: !imageValid,
+            formValid: !formValid,
             firstTypingAfterInit: true,
           };
         });
         name.value = '';
         surname.value = '';
+        image.value = '';
         button.disabled = true;
       } else {
         this.setState({
           formErrors: fieldValidationErrors,
           nameValid: nameValid,
           surnameValid: surnameValid,
+          imageValid: imageValid,
           formValid: formValid,
           firstTypingAfterInit: false,
         });
@@ -114,6 +126,8 @@ class Form extends React.Component<FormProps, FormState> {
     const name = this.inputName.current;
     const surname = this.inputSurname.current;
     const button = this.submitButton.current;
+    const image = this.inputImage.current;
+
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
     }
@@ -121,7 +135,7 @@ class Form extends React.Component<FormProps, FormState> {
     console.log(name?.value.length);
     if (name && name.value.length >= 2 && button) {
       const nameValid = true;
-      const formValid = this.state.surnameValid && nameValid;
+      const formValid = nameValid && this.state.surnameValid && this.state.imageValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -139,7 +153,7 @@ class Form extends React.Component<FormProps, FormState> {
 
     if (surname && surname.value.length >= 2 && button) {
       const surnameValid = true;
-      const formValid = this.state.nameValid && surnameValid;
+      const formValid = this.state.nameValid && surnameValid && this.state.imageValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -151,6 +165,24 @@ class Form extends React.Component<FormProps, FormState> {
           surname: '',
         },
         surnameValid: surnameValid,
+        formValid: formValid,
+      }));
+    }
+
+    if (image && image.value.length > 0 && button) {
+      const imageValid = true;
+      const formValid = this.state.nameValid && this.state.surnameValid && imageValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          image: '',
+        },
+        imageValid: imageValid,
         formValid: formValid,
       }));
     }
@@ -199,10 +231,15 @@ class Form extends React.Component<FormProps, FormState> {
             <MyInput
               type="file"
               name="image"
+              accept="image/png, image/gif, image/jpeg"
               ref={this.inputImage}
-              // onChange={this.onImageChange}
+              // className="input-file"
+              onChange={this.handleChange}
             />
           </label>
+          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.image)}`}>
+            {this.state.formErrors.image}
+          </div>
           <MyButton
             ref={this.submitButton}
             disabled={this.state.firstTypingAfterInit || !this.state.formValid}

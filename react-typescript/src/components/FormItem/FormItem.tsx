@@ -1,4 +1,5 @@
 import React from 'react';
+import './FormItem.scss';
 
 type ItemProps = {
   id: number;
@@ -12,7 +13,7 @@ function FormItem(props: ItemProps) {
     <div className="form-item">
       <div>Name: {props.name}</div>
       <div>Surname: {props.surname}</div>
-      <img src={props.image} alt={props.image} />
+      <img className="image" src={props.image} alt={props.image} />
     </div>
   );
 }

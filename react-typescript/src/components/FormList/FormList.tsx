@@ -15,7 +15,7 @@ type ListProps = {
 function FormList(props: ListProps) {
   const formItems = props.formItems.map((item) => <FormItem key={item.id} {...item} />);
 
-  return <div>{formItems}</div>;
+  return <div className="item">{formItems}</div>;
 }
 
 export default FormList;
