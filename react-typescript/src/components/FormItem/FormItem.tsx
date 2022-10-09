@@ -8,6 +8,7 @@ type ItemProps = {
   image: string;
   date: string;
   select: string;
+  gender: string;
 };
 
 function FormItem(props: ItemProps) {
@@ -18,6 +19,7 @@ function FormItem(props: ItemProps) {
       <div>Surname: {props.surname}</div>
       <div>Date of birth: {props.date}</div>
       <div>Country: {props.select}</div>
+      <div>Gender: {props.gender}</div>
     </div>
   );
 }

@@ -8,10 +8,67 @@
   color: red;
 }
 
-.input-file {
+.input-radio {
+  display: flex;
+  gap: 10px;
   width: 100%;
   padding: 5px 15px;
   margin: 5px 0;
   border: 1px solid black;
 }
 
+.input-checkbox,
+.input-select {
+  display: block;
+  width: 100%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+// .toggle-bg{
+//   background: #222; /* Вам понадобится видеть область с тумблером, но не стесняйтесь изменить цвет */
+//   display: block; /* ...Чтобы можно было установить высоту и ширину */
+//   // float: left; /* ...Чтобы он не занимал всю ширину страницы */
+//   height: 7px; /* Если хотите, можно это попозже изменить */
+//   position: relative; /* Требуется, чтобы тумблер мог передвигаться */
+//   width: 26px; /* Это тоже можно позже изменить */
+//   margin-top: 10px;
+//   border-radius: 8px;
+//   background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%);
+//   box-shadow: 0 1px 0 #fff, inset 0 0 2px #d7dee3, inset 0 1px 0 #d7dee3, inset 0 1px 5px #d7dee3;
+// }
+
+// .toggle-bg input{
+//   height: 28px;
+//   left: 0;
+//   margin: 0; /* Сбросьте поля и отступ */
+//   opacity: 0; /* Невидим! */
+//   padding: 0;
+//   position: absolute;
+//   top: -10px; /* Сдвиньте по вертикали */
+//   width: 36px;
+//   z-index: 2; /* Нам нужно, чтобы вход input находился сверху span.switch, которому мы назначим z-index в 1 */
+// }
+
+// .switch{
+//   background: #ccc;
+//   display: block;
+//   float: left;
+//   height: 14px;
+//   left: -1px; /* Это – начальная точка. При добавлении border radius немного виден фон, если использовать left: 0;, поэтому лучше всего применить -1px.*/
+//   position: relative;
+//   top: -4px; /* ...Чтобы отцентрировать его по вертикали */
+//   width: 14px;
+//   z-index: 1; /* Помните, он должен быть под невидимыми input-ами */
+//   border-radius: 8px;
+//   transition: left .2s ease;
+//   background: radial-gradient(ellipse at center, #ffffff 0%,#fefefe 50%,#fdfdfd 51%,#ffffff 100%);
+//   box-shadow: 0 1px 1px #65727b, 0 0 1px #b6bdc2;
+// }
+	
+// .toggle-bg input:checked~.switch{ left: -1px; } /* Исходная позиция тумблера */
+
+// .toggle-bg input~:checked~.switch{ left: 13px; } /*окончательная относительная позиция переключателя */
+
+// .toggle-bg input:checked{ z-index: 0; }

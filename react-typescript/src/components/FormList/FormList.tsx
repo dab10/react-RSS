@@ -8,6 +8,7 @@ type FormItemProps = {
   image: string;
   date: string;
   select: string;
+  gender: string;
 };
 
 type ListProps = {

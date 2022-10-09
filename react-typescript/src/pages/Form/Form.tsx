@@ -15,6 +15,7 @@ type FormItemState = {
   date: string;
   select: string;
   agree: boolean;
+  gender: string;
 };
 
 type FormErrors = {
@@ -24,6 +25,7 @@ type FormErrors = {
   date: string;
   select: string;
   agree: string;
+  gender: string;
 };
 
 type FormState = {
@@ -36,6 +38,7 @@ type FormState = {
   dateValid: boolean;
   selectValid: boolean;
   agreeValid: boolean;
+  genderValid: boolean;
   firstTypingAfterInit: boolean;
 };
 
@@ -47,6 +50,8 @@ class Form extends React.Component<FormProps, FormState> {
   inputDate: React.RefObject<HTMLInputElement>;
   selectCountry: React.RefObject<HTMLSelectElement>;
   inputAgree: React.RefObject<HTMLInputElement>;
+  inputGenderMale: React.RefObject<HTMLInputElement>;
+  inputGenderFemale: React.RefObject<HTMLInputElement>;
 
   constructor(props: FormProps) {
     super(props);
@@ -57,6 +62,8 @@ class Form extends React.Component<FormProps, FormState> {
     this.inputDate = React.createRef<HTMLInputElement>();
     this.selectCountry = React.createRef<HTMLSelectElement>();
     this.inputAgree = React.createRef<HTMLInputElement>();
+    this.inputGenderMale = React.createRef<HTMLInputElement>();
+    this.inputGenderFemale = React.createRef<HTMLInputElement>();
     this.state = {
       formItems: [],
       formErrors: {
@@ -66,6 +73,7 @@ class Form extends React.Component<FormProps, FormState> {
         date: '',
         select: '',
         agree: '',
+        gender: '',
       },
       nameValid: false,
       surnameValid: false,
@@ -73,6 +81,7 @@ class Form extends React.Component<FormProps, FormState> {
       dateValid: false,
       selectValid: false,
       agreeValid: false,
+      genderValid: false,
       formValid: false,
       firstTypingAfterInit: true,
     };
@@ -87,8 +96,20 @@ class Form extends React.Component<FormProps, FormState> {
     const date = this.inputDate.current;
     const select = this.selectCountry.current;
     const agree = this.inputAgree.current;
-    // console.log(agree.checked);
-    if (name && surname && button && image && date && select && agree) {
+    const genderMale = this.inputGenderMale.current;
+    const genderFemale = this.inputGenderFemale.current;
+    // console.log(genderMale);
+    // console.log(genderFemale);
+    if (
+      name &&
+      surname &&
+      button &&
+      image &&
+      date &&
+      select &&
+      agree &&
+      (genderMale || genderFemale)
+    ) {
       console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
 
       const fieldValidationErrors = this.state.formErrors;
@@ -98,6 +119,7 @@ class Form extends React.Component<FormProps, FormState> {
       const dateValid = this.state.dateValid;
       const selectValid = this.state.selectValid;
       const agreeValid = this.state.agreeValid;
+      const genderValid = this.state.genderValid;
       // nameValid = name.value.length >= 2;
       fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
       // surnameValid = surname.value.length >= 2;
@@ -108,8 +130,16 @@ class Form extends React.Component<FormProps, FormState> {
       fieldValidationErrors.date = dateValid ? '' : 'Field must contain date';
       fieldValidationErrors.select = selectValid ? '' : 'Country must be selected';
       fieldValidationErrors.agree = agreeValid ? '' : 'Checkbox must be checked';
+      fieldValidationErrors.gender = genderValid ? '' : 'Gender must be checked';
       let formValid = this.state.formValid;
-      formValid = nameValid && surnameValid && imageValid && dateValid && selectValid && agreeValid;
+      formValid =
+        nameValid &&
+        surnameValid &&
+        imageValid &&
+        dateValid &&
+        selectValid &&
+        agreeValid &&
+        genderValid;
       if (formValid) {
         const files = image.files;
         const url: File = (files as FileList)[0];
@@ -121,6 +151,9 @@ class Form extends React.Component<FormProps, FormState> {
           date: date.value,
           select: select.value,
           agree: agree.checked,
+          gender: (genderMale as HTMLInputElement).checked
+            ? (genderMale as HTMLInputElement).value
+            : (genderFemale as HTMLInputElement).value,
         };
 
         this.setState((prevState) => {
@@ -134,6 +167,7 @@ class Form extends React.Component<FormProps, FormState> {
             dateValid: !dateValid,
             selectValid: !selectValid,
             agreeValid: !agreeValid,
+            genderValid: !genderValid,
             formValid: !formValid,
             firstTypingAfterInit: true,
           };
@@ -144,6 +178,8 @@ class Form extends React.Component<FormProps, FormState> {
         date.value = '';
         select.value = '';
         agree.checked = false;
+        (genderMale as HTMLInputElement).checked = false;
+        (genderFemale as HTMLInputElement).checked = false;
         button.disabled = true;
       } else {
         this.setState({
@@ -154,6 +190,7 @@ class Form extends React.Component<FormProps, FormState> {
           dateValid: dateValid,
           selectValid: selectValid,
           agreeValid: agreeValid,
+          genderValid: genderValid,
           formValid: formValid,
           firstTypingAfterInit: false,
         });
@@ -171,6 +208,8 @@ class Form extends React.Component<FormProps, FormState> {
     const date = this.inputDate.current;
     const select = this.selectCountry.current;
     const agree = this.inputAgree.current;
+    const genderMale = this.inputGenderMale.current;
+    const genderFemale = this.inputGenderFemale.current;
 
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
@@ -185,7 +224,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.imageValid &&
         this.state.dateValid &&
         this.state.selectValid &&
-        this.state.agreeValid;
+        this.state.agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -214,7 +254,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.imageValid &&
         this.state.dateValid &&
         this.state.selectValid &&
-        this.state.agreeValid;
+        this.state.agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -243,7 +284,8 @@ class Form extends React.Component<FormProps, FormState> {
         imageValid &&
         this.state.dateValid &&
         this.state.selectValid &&
-        this.state.agreeValid;
+        this.state.agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -267,7 +309,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.imageValid &&
         dateValid &&
         this.state.selectValid &&
-        this.state.agreeValid;
+        this.state.agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -296,7 +339,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.imageValid &&
         this.state.dateValid &&
         selectValid &&
-        this.state.agreeValid;
+        this.state.agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -311,7 +355,7 @@ class Form extends React.Component<FormProps, FormState> {
         formValid: formValid,
       }));
     }
-    console.log(agree?.checked);
+
     if (agree && agree.checked && button) {
       const agreeValid = true;
       const formValid =
@@ -320,7 +364,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.imageValid &&
         this.state.dateValid &&
         this.state.selectValid &&
-        agreeValid;
+        agreeValid &&
+        this.state.genderValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -340,17 +385,34 @@ class Form extends React.Component<FormProps, FormState> {
         agreeValid: false,
       }));
     }
-  };
 
-  // onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.currentTarget.files && event.currentTarget.files[0]) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e: ProgressEvent<FileReader>) => {
-  //       this.setState({ image: e.current.result });
-  //     };
-  //     reader.readAsDataURL(event.currentTarget.files[0]);
-  //   }
-  // };
+    if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
+      // console.log(genderMale.checked);
+
+      const genderValid = true;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid &&
+        this.state.agreeValid &&
+        genderValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          gender: '',
+        },
+        genderValid: genderValid,
+        formValid: formValid,
+      }));
+    }
+  };
 
   toggleErrorClass(error: string) {
     return error.length === 0 ? '' : 'error';
@@ -404,7 +466,7 @@ class Form extends React.Component<FormProps, FormState> {
           <label>
             Country:
             <select
-              className="input-file"
+              className="input-select"
               ref={this.selectCountry}
               defaultValue={''}
               onChange={this.handleChange}
@@ -420,11 +482,33 @@ class Form extends React.Component<FormProps, FormState> {
           <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.select)}`}>
             {this.state.formErrors.select}
           </div>
-          <input type="radio" id="toggle-on" name="toggle" checked />
-          <label htmlFor="toggle-on">On</label>
-          <input type="radio" id="toggle-off" name="toggle" />
-          <label htmlFor="toggle-off">Off</label>
-          <label className="input-file">
+          <div>
+            <label>
+              Gender:
+              <div className="input-radio">
+                <div>male</div>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  ref={this.inputGenderMale}
+                  onChange={this.handleChange}
+                />
+                <div>female</div>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  ref={this.inputGenderFemale}
+                  onChange={this.handleChange}
+                />
+              </div>
+            </label>
+          </div>
+          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.gender)}`}>
+            {this.state.formErrors.gender}
+          </div>
+          <label className="input-checkbox">
             <input
               type="checkbox"
               name="agree"
