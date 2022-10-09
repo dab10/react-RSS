@@ -14,6 +14,7 @@ type FormItemState = {
   image: string;
   date: string;
   select: string;
+  agree: boolean;
 };
 
 type FormErrors = {
@@ -22,6 +23,7 @@ type FormErrors = {
   image: string;
   date: string;
   select: string;
+  agree: string;
 };
 
 type FormState = {
@@ -33,6 +35,7 @@ type FormState = {
   formValid: boolean;
   dateValid: boolean;
   selectValid: boolean;
+  agreeValid: boolean;
   firstTypingAfterInit: boolean;
 };
 
@@ -43,6 +46,7 @@ class Form extends React.Component<FormProps, FormState> {
   inputImage: React.RefObject<HTMLInputElement>;
   inputDate: React.RefObject<HTMLInputElement>;
   selectCountry: React.RefObject<HTMLSelectElement>;
+  inputAgree: React.RefObject<HTMLInputElement>;
 
   constructor(props: FormProps) {
     super(props);
@@ -52,6 +56,7 @@ class Form extends React.Component<FormProps, FormState> {
     this.inputImage = React.createRef<HTMLInputElement>();
     this.inputDate = React.createRef<HTMLInputElement>();
     this.selectCountry = React.createRef<HTMLSelectElement>();
+    this.inputAgree = React.createRef<HTMLInputElement>();
     this.state = {
       formItems: [],
       formErrors: {
@@ -60,12 +65,14 @@ class Form extends React.Component<FormProps, FormState> {
         image: '',
         date: '',
         select: '',
+        agree: '',
       },
       nameValid: false,
       surnameValid: false,
       imageValid: false,
       dateValid: false,
       selectValid: false,
+      agreeValid: false,
       formValid: false,
       firstTypingAfterInit: true,
     };
@@ -79,8 +86,9 @@ class Form extends React.Component<FormProps, FormState> {
     const image = this.inputImage.current;
     const date = this.inputDate.current;
     const select = this.selectCountry.current;
-    // console.log(select.value);
-    if (name && surname && button && image && date && select) {
+    const agree = this.inputAgree.current;
+    // console.log(agree.checked);
+    if (name && surname && button && image && date && select && agree) {
       console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
 
       const fieldValidationErrors = this.state.formErrors;
@@ -89,6 +97,7 @@ class Form extends React.Component<FormProps, FormState> {
       const imageValid = this.state.imageValid;
       const dateValid = this.state.dateValid;
       const selectValid = this.state.selectValid;
+      const agreeValid = this.state.agreeValid;
       // nameValid = name.value.length >= 2;
       fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
       // surnameValid = surname.value.length >= 2;
@@ -98,8 +107,9 @@ class Form extends React.Component<FormProps, FormState> {
       fieldValidationErrors.image = imageValid ? '' : 'Field must contain image file';
       fieldValidationErrors.date = dateValid ? '' : 'Field must contain date';
       fieldValidationErrors.select = selectValid ? '' : 'Country must be selected';
+      fieldValidationErrors.agree = agreeValid ? '' : 'Checkbox must be checked';
       let formValid = this.state.formValid;
-      formValid = nameValid && surnameValid && imageValid && dateValid && selectValid;
+      formValid = nameValid && surnameValid && imageValid && dateValid && selectValid && agreeValid;
       if (formValid) {
         const files = image.files;
         const url: File = (files as FileList)[0];
@@ -110,6 +120,7 @@ class Form extends React.Component<FormProps, FormState> {
           image: URL.createObjectURL(url),
           date: date.value,
           select: select.value,
+          agree: agree.checked,
         };
 
         this.setState((prevState) => {
@@ -122,6 +133,7 @@ class Form extends React.Component<FormProps, FormState> {
             imageValid: !imageValid,
             dateValid: !dateValid,
             selectValid: !selectValid,
+            agreeValid: !agreeValid,
             formValid: !formValid,
             firstTypingAfterInit: true,
           };
@@ -131,6 +143,7 @@ class Form extends React.Component<FormProps, FormState> {
         image.value = '';
         date.value = '';
         select.value = '';
+        agree.checked = false;
         button.disabled = true;
       } else {
         this.setState({
@@ -140,6 +153,7 @@ class Form extends React.Component<FormProps, FormState> {
           imageValid: imageValid,
           dateValid: dateValid,
           selectValid: selectValid,
+          agreeValid: agreeValid,
           formValid: formValid,
           firstTypingAfterInit: false,
         });
@@ -156,6 +170,7 @@ class Form extends React.Component<FormProps, FormState> {
     const image = this.inputImage.current;
     const date = this.inputDate.current;
     const select = this.selectCountry.current;
+    const agree = this.inputAgree.current;
 
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
@@ -169,7 +184,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.surnameValid &&
         this.state.imageValid &&
         this.state.dateValid &&
-        this.state.selectValid;
+        this.state.selectValid &&
+        this.state.agreeValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -183,6 +199,11 @@ class Form extends React.Component<FormProps, FormState> {
         nameValid: nameValid,
         formValid: formValid,
       }));
+    } else if (name && name.value.length < 2 && button) {
+      this.setState((prevState) => ({
+        ...prevState,
+        nameValid: false,
+      }));
     }
 
     if (surname && surname.value.length >= 2 && button) {
@@ -192,7 +213,8 @@ class Form extends React.Component<FormProps, FormState> {
         surnameValid &&
         this.state.imageValid &&
         this.state.dateValid &&
-        this.state.selectValid;
+        this.state.selectValid &&
+        this.state.agreeValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -206,6 +228,11 @@ class Form extends React.Component<FormProps, FormState> {
         surnameValid: surnameValid,
         formValid: formValid,
       }));
+    } else if (surname && surname.value.length < 2 && button) {
+      this.setState((prevState) => ({
+        ...prevState,
+        surnameValid: false,
+      }));
     }
 
     if (image && image.value.length > 0 && button) {
@@ -215,7 +242,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.surnameValid &&
         imageValid &&
         this.state.dateValid &&
-        this.state.selectValid;
+        this.state.selectValid &&
+        this.state.agreeValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -238,7 +266,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.surnameValid &&
         this.state.imageValid &&
         dateValid &&
-        this.state.selectValid;
+        this.state.selectValid &&
+        this.state.agreeValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -252,6 +281,11 @@ class Form extends React.Component<FormProps, FormState> {
         dateValid: dateValid,
         formValid: formValid,
       }));
+    } else if (date && date.value.length === 0 && button) {
+      this.setState((prevState) => ({
+        ...prevState,
+        dateValid: false,
+      }));
     }
 
     if (select && select.value.length > 0 && button) {
@@ -261,7 +295,8 @@ class Form extends React.Component<FormProps, FormState> {
         this.state.surnameValid &&
         this.state.imageValid &&
         this.state.dateValid &&
-        selectValid;
+        selectValid &&
+        this.state.agreeValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -274,6 +309,35 @@ class Form extends React.Component<FormProps, FormState> {
         },
         selectValid: selectValid,
         formValid: formValid,
+      }));
+    }
+    console.log(agree?.checked);
+    if (agree && agree.checked && button) {
+      const agreeValid = true;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid &&
+        agreeValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          agree: '',
+        },
+        agreeValid: agreeValid,
+        formValid: formValid,
+      }));
+    } else if (agree && !agree.checked && button) {
+      this.setState((prevState) => ({
+        ...prevState,
+        agreeValid: false,
       }));
     }
   };
@@ -355,6 +419,22 @@ class Form extends React.Component<FormProps, FormState> {
           </label>
           <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.select)}`}>
             {this.state.formErrors.select}
+          </div>
+          <input type="radio" id="toggle-on" name="toggle" checked />
+          <label htmlFor="toggle-on">On</label>
+          <input type="radio" id="toggle-off" name="toggle" />
+          <label htmlFor="toggle-off">Off</label>
+          <label className="input-file">
+            <input
+              type="checkbox"
+              name="agree"
+              ref={this.inputAgree}
+              onChange={this.handleChange}
+            />
+            Agree with terms
+          </label>
+          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.agree)}`}>
+            {this.state.formErrors.agree}
           </div>
           <MyButton
             ref={this.submitButton}
