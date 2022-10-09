@@ -52,6 +52,7 @@ class Form extends React.Component<FormProps, FormState> {
   inputAgree: React.RefObject<HTMLInputElement>;
   inputGenderMale: React.RefObject<HTMLInputElement>;
   inputGenderFemale: React.RefObject<HTMLInputElement>;
+  confirmationMessage: React.RefObject<HTMLDivElement>;
 
   constructor(props: FormProps) {
     super(props);
@@ -64,6 +65,7 @@ class Form extends React.Component<FormProps, FormState> {
     this.inputAgree = React.createRef<HTMLInputElement>();
     this.inputGenderMale = React.createRef<HTMLInputElement>();
     this.inputGenderFemale = React.createRef<HTMLInputElement>();
+    this.confirmationMessage = React.createRef<HTMLDivElement>();
     this.state = {
       formItems: [],
       formErrors: {
@@ -98,7 +100,7 @@ class Form extends React.Component<FormProps, FormState> {
     const agree = this.inputAgree.current;
     const genderMale = this.inputGenderMale.current;
     const genderFemale = this.inputGenderFemale.current;
-    // console.log(genderMale);
+    const confirmationMessage = this.confirmationMessage.current;
     // console.log(genderFemale);
     if (
       name &&
@@ -108,7 +110,8 @@ class Form extends React.Component<FormProps, FormState> {
       date &&
       select &&
       agree &&
-      (genderMale || genderFemale)
+      (genderMale || genderFemale) &&
+      confirmationMessage
     ) {
       console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
 
@@ -181,6 +184,8 @@ class Form extends React.Component<FormProps, FormState> {
         (genderMale as HTMLInputElement).checked = false;
         (genderFemale as HTMLInputElement).checked = false;
         button.disabled = true;
+        confirmationMessage.className = 'hidden error';
+        setInterval(() => (confirmationMessage.className = 'hidden'), 2000);
       } else {
         this.setState({
           formErrors: fieldValidationErrors,
@@ -418,6 +423,18 @@ class Form extends React.Component<FormProps, FormState> {
     return error.length === 0 ? '' : 'error';
   }
 
+  toggleHiddenClass(hidden: boolean) {
+    if (hidden) {
+      return 'error';
+    } else {
+      return '';
+    }
+  }
+
+  toggleHiddenClass1() {
+    return '';
+  }
+
   render() {
     console.log(this.state);
     return (
@@ -526,6 +543,9 @@ class Form extends React.Component<FormProps, FormState> {
           >
             Submit
           </MyButton>
+          <div ref={this.confirmationMessage} className="hidden">
+            <span>✓</span>Saved
+          </div>
         </form>
         <FormList formItems={this.state.formItems} />
       </div>
