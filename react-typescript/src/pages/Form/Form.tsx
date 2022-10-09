@@ -12,13 +12,16 @@ type FormItemState = {
   name: string;
   surname: string;
   image: string;
+  date: string;
+  select: string;
 };
 
 type FormErrors = {
   name: string;
   surname: string;
   image: string;
-  [x: string]: string;
+  date: string;
+  select: string;
 };
 
 type FormState = {
@@ -28,6 +31,8 @@ type FormState = {
   surnameValid: boolean;
   imageValid: boolean;
   formValid: boolean;
+  dateValid: boolean;
+  selectValid: boolean;
   firstTypingAfterInit: boolean;
 };
 
@@ -36,6 +41,8 @@ class Form extends React.Component<FormProps, FormState> {
   inputSurname: React.RefObject<HTMLInputElement>;
   submitButton: React.RefObject<HTMLButtonElement>;
   inputImage: React.RefObject<HTMLInputElement>;
+  inputDate: React.RefObject<HTMLInputElement>;
+  selectCountry: React.RefObject<HTMLSelectElement>;
 
   constructor(props: FormProps) {
     super(props);
@@ -43,16 +50,22 @@ class Form extends React.Component<FormProps, FormState> {
     this.inputSurname = React.createRef<HTMLInputElement>();
     this.submitButton = React.createRef<HTMLButtonElement>();
     this.inputImage = React.createRef<HTMLInputElement>();
+    this.inputDate = React.createRef<HTMLInputElement>();
+    this.selectCountry = React.createRef<HTMLSelectElement>();
     this.state = {
       formItems: [],
       formErrors: {
         name: '',
         surname: '',
         image: '',
+        date: '',
+        select: '',
       },
       nameValid: false,
       surnameValid: false,
       imageValid: false,
+      dateValid: false,
+      selectValid: false,
       formValid: false,
       firstTypingAfterInit: true,
     };
@@ -64,14 +77,18 @@ class Form extends React.Component<FormProps, FormState> {
     const surname = this.inputSurname.current;
     const button = this.submitButton.current;
     const image = this.inputImage.current;
-
-    if (name && surname && button && image) {
+    const date = this.inputDate.current;
+    const select = this.selectCountry.current;
+    // console.log(select.value);
+    if (name && surname && button && image && date && select) {
       console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
 
       const fieldValidationErrors = this.state.formErrors;
       const nameValid = this.state.nameValid;
       const surnameValid = this.state.surnameValid;
       const imageValid = this.state.imageValid;
+      const dateValid = this.state.dateValid;
+      const selectValid = this.state.selectValid;
       // nameValid = name.value.length >= 2;
       fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
       // surnameValid = surname.value.length >= 2;
@@ -79,8 +96,10 @@ class Form extends React.Component<FormProps, FormState> {
         ? ''
         : 'Surname must contain at least 2 character';
       fieldValidationErrors.image = imageValid ? '' : 'Field must contain image file';
+      fieldValidationErrors.date = dateValid ? '' : 'Field must contain date';
+      fieldValidationErrors.select = selectValid ? '' : 'Country must be selected';
       let formValid = this.state.formValid;
-      formValid = nameValid && surnameValid && imageValid;
+      formValid = nameValid && surnameValid && imageValid && dateValid && selectValid;
       if (formValid) {
         const files = image.files;
         const url: File = (files as FileList)[0];
@@ -89,6 +108,8 @@ class Form extends React.Component<FormProps, FormState> {
           name: name.value,
           surname: surname.value,
           image: URL.createObjectURL(url),
+          date: date.value,
+          select: select.value,
         };
 
         this.setState((prevState) => {
@@ -99,6 +120,8 @@ class Form extends React.Component<FormProps, FormState> {
             nameValid: !nameValid,
             surnameValid: !surnameValid,
             imageValid: !imageValid,
+            dateValid: !dateValid,
+            selectValid: !selectValid,
             formValid: !formValid,
             firstTypingAfterInit: true,
           };
@@ -106,6 +129,8 @@ class Form extends React.Component<FormProps, FormState> {
         name.value = '';
         surname.value = '';
         image.value = '';
+        date.value = '';
+        select.value = '';
         button.disabled = true;
       } else {
         this.setState({
@@ -113,6 +138,8 @@ class Form extends React.Component<FormProps, FormState> {
           nameValid: nameValid,
           surnameValid: surnameValid,
           imageValid: imageValid,
+          dateValid: dateValid,
+          selectValid: selectValid,
           formValid: formValid,
           firstTypingAfterInit: false,
         });
@@ -127,6 +154,8 @@ class Form extends React.Component<FormProps, FormState> {
     const surname = this.inputSurname.current;
     const button = this.submitButton.current;
     const image = this.inputImage.current;
+    const date = this.inputDate.current;
+    const select = this.selectCountry.current;
 
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
@@ -135,7 +164,12 @@ class Form extends React.Component<FormProps, FormState> {
     console.log(name?.value.length);
     if (name && name.value.length >= 2 && button) {
       const nameValid = true;
-      const formValid = nameValid && this.state.surnameValid && this.state.imageValid;
+      const formValid =
+        nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -153,7 +187,12 @@ class Form extends React.Component<FormProps, FormState> {
 
     if (surname && surname.value.length >= 2 && button) {
       const surnameValid = true;
-      const formValid = this.state.nameValid && surnameValid && this.state.imageValid;
+      const formValid =
+        this.state.nameValid &&
+        surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -171,7 +210,12 @@ class Form extends React.Component<FormProps, FormState> {
 
     if (image && image.value.length > 0 && button) {
       const imageValid = true;
-      const formValid = this.state.nameValid && this.state.surnameValid && imageValid;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid;
       if (formValid) {
         button.disabled = false;
       }
@@ -183,6 +227,52 @@ class Form extends React.Component<FormProps, FormState> {
           image: '',
         },
         imageValid: imageValid,
+        formValid: formValid,
+      }));
+    }
+
+    if (date && date.value.length > 0 && button) {
+      const dateValid = true;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        dateValid &&
+        this.state.selectValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          date: '',
+        },
+        dateValid: dateValid,
+        formValid: formValid,
+      }));
+    }
+
+    if (select && select.value.length > 0 && button) {
+      const selectValid = true;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        selectValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          select: '',
+        },
+        selectValid: selectValid,
         formValid: formValid,
       }));
     }
@@ -239,6 +329,32 @@ class Form extends React.Component<FormProps, FormState> {
           </label>
           <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.image)}`}>
             {this.state.formErrors.image}
+          </div>
+          <label>
+            Date of birth:
+            <MyInput type="date" name="date" ref={this.inputDate} onChange={this.handleChange} />
+          </label>
+          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.date)}`}>
+            {this.state.formErrors.date}
+          </div>
+          <label>
+            Country:
+            <select
+              className="input-file"
+              ref={this.selectCountry}
+              defaultValue={''}
+              onChange={this.handleChange}
+            >
+              <option value="" disabled>
+                Please select a country
+              </option>
+              <option value="Russia">Russia</option>
+              <option value="Belarus">Belarus</option>
+              <option value="Kazakhstan">Kazakhstan</option>
+            </select>
+          </label>
+          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.select)}`}>
+            {this.state.formErrors.select}
           </div>
           <MyButton
             ref={this.submitButton}

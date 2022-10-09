@@ -6,14 +6,18 @@ type ItemProps = {
   name: string;
   surname: string;
   image: string;
+  date: string;
+  select: string;
 };
 
 function FormItem(props: ItemProps) {
   return (
     <div className="form-item">
+      <img className="image" src={props.image} alt={props.image} />
       <div>Name: {props.name}</div>
       <div>Surname: {props.surname}</div>
-      <img className="image" src={props.image} alt={props.image} />
+      <div>Date of birth: {props.date}</div>
+      <div>Country: {props.select}</div>
     </div>
   );
 }
