@@ -1,7 +1,7 @@
 import React from 'react';
 import './MyInput.css';
 
-export interface InputProps
+interface InputProps
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     React.AriaAttributes {}
 

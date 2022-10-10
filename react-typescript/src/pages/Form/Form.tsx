@@ -2,8 +2,13 @@ import React from 'react';
 import FormList from 'components/FormList/FormList';
 import newId from 'utils/newId/newId';
 import MyButton from 'components/UI/button/MyButton';
-import MyInput from 'components/UI/input/MyInput';
 import './Form.scss';
+import InputName from 'components/FormFields/InputName/InputName';
+import InputSurname from 'components/FormFields/InputSurname/InputSurname';
+import InputImage from 'components/FormFields/InputImage/InputImage';
+import InputDate from 'components/FormFields/InputDate/InputDate';
+import InputSelect from 'components/FormFields/InputSelect/InputSelect';
+import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
 
 type FormProps = Record<string, never>;
 
@@ -299,6 +304,11 @@ class Form extends React.Component<FormProps, FormState> {
         imageValid: imageValid,
         formValid: formValid,
       }));
+    } else if (image && image.value.length === 0 && button) {
+      this.setState((prevState) => ({
+        ...prevState,
+        imageValid: false,
+      }));
     }
 
     if (date && date.value.length > 0 && button) {
@@ -420,64 +430,32 @@ class Form extends React.Component<FormProps, FormState> {
     return (
       <div>
         <form onSubmit={this.handleSubmitForm}>
-          <label>
-            Name:
-            <MyInput type="text" name="name" ref={this.inputName} onChange={this.handleChange} />
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.name)}`}>
-            {this.state.formErrors.name}
-          </div>
-          <label>
-            Surname:
-            <MyInput
-              type="text"
-              name="surname"
-              ref={this.inputSurname}
-              onChange={this.handleChange}
-            />
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.surname)}`}>
-            {this.state.formErrors.surname}
-          </div>
-          <label>
-            Image:
-            <MyInput
-              type="file"
-              name="image"
-              accept="image/png, image/gif, image/jpeg"
-              ref={this.inputImage}
-              onChange={this.handleChange}
-            />
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.image)}`}>
-            {this.state.formErrors.image}
-          </div>
-          <label>
-            Date of birth:
-            <MyInput type="date" name="date" ref={this.inputDate} onChange={this.handleChange} />
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.date)}`}>
-            {this.state.formErrors.date}
-          </div>
-          <label>
-            Country:
-            <select
-              className="input-select"
-              ref={this.selectCountry}
-              defaultValue={''}
-              onChange={this.handleChange}
-            >
-              <option value="" disabled>
-                Please select a country
-              </option>
-              <option value="Russia">Russia</option>
-              <option value="Belarus">Belarus</option>
-              <option value="Kazakhstan">Kazakhstan</option>
-            </select>
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.select)}`}>
-            {this.state.formErrors.select}
-          </div>
+          <InputName
+            ref={this.inputName}
+            handleChange={this.handleChange}
+            formErrors={this.state.formErrors}
+          />
+          <InputSurname
+            ref={this.inputSurname}
+            handleChange={this.handleChange}
+            formErrors={this.state.formErrors}
+          />
+          <InputImage
+            ref={this.inputImage}
+            handleChange={this.handleChange}
+            formErrors={this.state.formErrors}
+          />
+          <InputDate
+            ref={this.inputDate}
+            handleChange={this.handleChange}
+            formErrors={this.state.formErrors}
+          />
+          <InputSelect
+            ref={this.selectCountry}
+            handleChange={this.handleChange}
+            defaultValue={''}
+            formErrors={this.state.formErrors}
+          />
           <div>
             <label>
               Gender:
@@ -504,18 +482,11 @@ class Form extends React.Component<FormProps, FormState> {
           <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.gender)}`}>
             {this.state.formErrors.gender}
           </div>
-          <label className="input-checkbox">
-            <input
-              type="checkbox"
-              name="agree"
-              ref={this.inputAgree}
-              onChange={this.handleChange}
-            />
-            Agree with terms
-          </label>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.agree)}`}>
-            {this.state.formErrors.agree}
-          </div>
+          <InputCheckbox
+            ref={this.inputAgree}
+            handleChange={this.handleChange}
+            formErrors={this.state.formErrors}
+          />
           <MyButton
             ref={this.submitButton}
             disabled={this.state.firstTypingAfterInit || !this.state.formValid}
