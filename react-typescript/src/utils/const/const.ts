@@ -1,4 +1,4 @@
-const routes = {
+export const routes = {
   homePage: '/',
   formPage: '/form',
   aboutPage: '/about',
@@ -6,4 +6,6 @@ const routes = {
   anyPage: '*',
 };
 
-export default routes;
+export const quantityCharacters = 2;
+
+export const timeConfirmationMessage = 2000;

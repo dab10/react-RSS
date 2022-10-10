@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import routes from 'utils/const/const';
+import { routes } from 'utils/const/const';
 import './Header.scss';
 
 function Header() {

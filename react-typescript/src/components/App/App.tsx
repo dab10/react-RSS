@@ -5,8 +5,8 @@ import About from 'pages/About/About';
 import Page404 from 'pages/Page404/Page404';
 import Footer from 'components/Footer/Footer';
 import Form from 'pages/Form/Form';
-import routes from 'utils/const/const';
 import Header from 'components/Header/Header';
+import { routes } from 'utils/const/const';
 
 function App() {
   return (

@@ -9,6 +9,7 @@ import InputImage from 'components/FormFields/InputImage/InputImage';
 import InputDate from 'components/FormFields/InputDate/InputDate';
 import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
+import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
 
 type FormProps = Record<string, never>;
 
@@ -127,10 +128,12 @@ class Form extends React.Component<FormProps, FormState> {
       const agreeValid = this.state.agreeValid;
       const genderValid = this.state.genderValid;
 
-      fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
+      fieldValidationErrors.name = nameValid
+        ? ''
+        : `Name must contain at least ${quantityCharacters} character`;
       fieldValidationErrors.surname = surnameValid
         ? ''
-        : 'Surname must contain at least 2 character';
+        : `Surname must contain at least ${quantityCharacters} character`;
       fieldValidationErrors.image = imageValid ? '' : 'Field must contain image file';
       fieldValidationErrors.date = dateValid ? '' : 'Field must contain date';
       fieldValidationErrors.select = selectValid ? '' : 'Country must be selected';
@@ -187,7 +190,7 @@ class Form extends React.Component<FormProps, FormState> {
         (genderFemale as HTMLInputElement).checked = false;
         button.disabled = true;
         confirmationMessage.className = 'hidden not-hidden';
-        setInterval(() => (confirmationMessage.className = 'hidden'), 2000);
+        setInterval(() => (confirmationMessage.className = 'hidden'), timeConfirmationMessage);
       } else {
         this.setState({
           formErrors: fieldValidationErrors,
@@ -221,7 +224,7 @@ class Form extends React.Component<FormProps, FormState> {
       button.disabled = false;
     }
 
-    if (name && name.value.length >= 2 && button) {
+    if (name && name.value.length >= quantityCharacters && button) {
       const nameValid = true;
       const formValid =
         nameValid &&
@@ -244,14 +247,14 @@ class Form extends React.Component<FormProps, FormState> {
         nameValid: nameValid,
         formValid: formValid,
       }));
-    } else if (name && name.value.length < 2 && button) {
+    } else if (name && name.value.length < quantityCharacters) {
       this.setState((prevState) => ({
         ...prevState,
         nameValid: false,
       }));
     }
 
-    if (surname && surname.value.length >= 2 && button) {
+    if (surname && surname.value.length >= quantityCharacters && button) {
       const surnameValid = true;
       const formValid =
         this.state.nameValid &&
@@ -274,7 +277,7 @@ class Form extends React.Component<FormProps, FormState> {
         surnameValid: surnameValid,
         formValid: formValid,
       }));
-    } else if (surname && surname.value.length < 2 && button) {
+    } else if (surname && surname.value.length < quantityCharacters) {
       this.setState((prevState) => ({
         ...prevState,
         surnameValid: false,
@@ -304,7 +307,7 @@ class Form extends React.Component<FormProps, FormState> {
         imageValid: imageValid,
         formValid: formValid,
       }));
-    } else if (image && image.value.length === 0 && button) {
+    } else if (image && image.value.length === 0) {
       this.setState((prevState) => ({
         ...prevState,
         imageValid: false,
@@ -334,7 +337,7 @@ class Form extends React.Component<FormProps, FormState> {
         dateValid: dateValid,
         formValid: formValid,
       }));
-    } else if (date && date.value.length === 0 && button) {
+    } else if (date && date.value.length === 0) {
       this.setState((prevState) => ({
         ...prevState,
         dateValid: false,
@@ -389,7 +392,7 @@ class Form extends React.Component<FormProps, FormState> {
         agreeValid: agreeValid,
         formValid: formValid,
       }));
-    } else if (agree && !agree.checked && button) {
+    } else if (agree && !agree.checked) {
       this.setState((prevState) => ({
         ...prevState,
         agreeValid: false,
