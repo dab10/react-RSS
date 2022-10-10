@@ -432,75 +432,79 @@ class Form extends React.Component<FormProps, FormState> {
   render() {
     return (
       <div>
-        <form onSubmit={this.handleSubmitForm}>
-          <InputName
-            ref={this.inputName}
-            handleChange={this.handleChange}
-            formErrors={this.state.formErrors}
-          />
-          <InputSurname
-            ref={this.inputSurname}
-            handleChange={this.handleChange}
-            formErrors={this.state.formErrors}
-          />
-          <InputImage
-            ref={this.inputImage}
-            handleChange={this.handleChange}
-            formErrors={this.state.formErrors}
-          />
-          <InputDate
-            ref={this.inputDate}
-            handleChange={this.handleChange}
-            formErrors={this.state.formErrors}
-          />
-          <InputSelect
-            ref={this.selectCountry}
-            handleChange={this.handleChange}
-            defaultValue={''}
-            formErrors={this.state.formErrors}
-          />
-          <div>
-            <label>
-              Gender:
-              <div className="input-radio">
-                <div>male</div>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="male"
-                  ref={this.inputGenderMale}
-                  onChange={this.handleChange}
-                />
-                <div>female</div>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="female"
-                  ref={this.inputGenderFemale}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </label>
-          </div>
-          <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.gender)}`}>
-            {this.state.formErrors.gender}
-          </div>
-          <InputCheckbox
-            ref={this.inputAgree}
-            handleChange={this.handleChange}
-            formErrors={this.state.formErrors}
-          />
-          <MyButton
-            ref={this.submitButton}
-            disabled={this.state.firstTypingAfterInit || !this.state.formValid}
-          >
-            Submit
-          </MyButton>
-          <div ref={this.confirmationMessage} className="hidden">
-            <span>✓</span>Saved
-          </div>
-        </form>
-        <FormList formItems={this.state.formItems} />
+        <div className="form-container">
+          <form onSubmit={this.handleSubmitForm} className="form">
+            <InputName
+              ref={this.inputName}
+              handleChange={this.handleChange}
+              formErrors={this.state.formErrors}
+            />
+            <InputSurname
+              ref={this.inputSurname}
+              handleChange={this.handleChange}
+              formErrors={this.state.formErrors}
+            />
+            <InputImage
+              ref={this.inputImage}
+              handleChange={this.handleChange}
+              formErrors={this.state.formErrors}
+            />
+            <InputDate
+              ref={this.inputDate}
+              handleChange={this.handleChange}
+              formErrors={this.state.formErrors}
+            />
+            <InputSelect
+              ref={this.selectCountry}
+              handleChange={this.handleChange}
+              defaultValue={''}
+              formErrors={this.state.formErrors}
+            />
+            <div>
+              <label>
+                Gender:
+                <div className="input-radio">
+                  <div>male</div>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    ref={this.inputGenderMale}
+                    onChange={this.handleChange}
+                  />
+                  <div>female</div>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    ref={this.inputGenderFemale}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </label>
+            </div>
+            <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.gender)}`}>
+              {this.state.formErrors.gender}
+            </div>
+            <InputCheckbox
+              ref={this.inputAgree}
+              handleChange={this.handleChange}
+              formErrors={this.state.formErrors}
+            />
+            <MyButton
+              ref={this.submitButton}
+              disabled={this.state.firstTypingAfterInit || !this.state.formValid}
+            >
+              Submit
+            </MyButton>
+            <div ref={this.confirmationMessage} className="hidden">
+              <span>✓</span>Saved
+            </div>
+          </form>
+        </div>
+        <div>
+          <FormList formItems={this.state.formItems} />
+        </div>
       </div>
     );
   }

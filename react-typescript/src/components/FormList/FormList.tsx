@@ -1,5 +1,6 @@
 import FormItem from 'components/FormItem/FormItem';
 import React from 'react';
+import './FormList.scss';
 
 type FormItemProps = {
   id: number;
@@ -18,7 +19,7 @@ type ListProps = {
 function FormList(props: ListProps) {
   const formItems = props.formItems.map((item) => <FormItem key={item.id} {...item} />);
 
-  return <div className="item">{formItems}</div>;
+  return <div className="items">{formItems}</div>;
 }
 
 export default FormList;
