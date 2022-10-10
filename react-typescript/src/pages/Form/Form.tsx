@@ -101,7 +101,7 @@ class Form extends React.Component<FormProps, FormState> {
     const genderMale = this.inputGenderMale.current;
     const genderFemale = this.inputGenderFemale.current;
     const confirmationMessage = this.confirmationMessage.current;
-    // console.log(genderFemale);
+
     if (
       name &&
       surname &&
@@ -113,8 +113,6 @@ class Form extends React.Component<FormProps, FormState> {
       (genderMale || genderFemale) &&
       confirmationMessage
     ) {
-      console.log('Отправленное имя: ' + name.value + ' ' + surname.value);
-
       const fieldValidationErrors = this.state.formErrors;
       const nameValid = this.state.nameValid;
       const surnameValid = this.state.surnameValid;
@@ -123,9 +121,8 @@ class Form extends React.Component<FormProps, FormState> {
       const selectValid = this.state.selectValid;
       const agreeValid = this.state.agreeValid;
       const genderValid = this.state.genderValid;
-      // nameValid = name.value.length >= 2;
+
       fieldValidationErrors.name = nameValid ? '' : 'Name must contain at least 2 character';
-      // surnameValid = surname.value.length >= 2;
       fieldValidationErrors.surname = surnameValid
         ? ''
         : 'Surname must contain at least 2 character';
@@ -184,7 +181,7 @@ class Form extends React.Component<FormProps, FormState> {
         (genderMale as HTMLInputElement).checked = false;
         (genderFemale as HTMLInputElement).checked = false;
         button.disabled = true;
-        confirmationMessage.className = 'hidden error';
+        confirmationMessage.className = 'hidden not-hidden';
         setInterval(() => (confirmationMessage.className = 'hidden'), 2000);
       } else {
         this.setState({
@@ -201,7 +198,6 @@ class Form extends React.Component<FormProps, FormState> {
         });
         button.disabled = true;
       }
-      console.log(this.state);
     }
   };
 
@@ -220,7 +216,6 @@ class Form extends React.Component<FormProps, FormState> {
       button.disabled = false;
     }
 
-    console.log(name?.value.length);
     if (name && name.value.length >= 2 && button) {
       const nameValid = true;
       const formValid =
@@ -392,8 +387,6 @@ class Form extends React.Component<FormProps, FormState> {
     }
 
     if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
-      // console.log(genderMale.checked);
-
       const genderValid = true;
       const formValid =
         this.state.nameValid &&
@@ -423,20 +416,7 @@ class Form extends React.Component<FormProps, FormState> {
     return error.length === 0 ? '' : 'error';
   }
 
-  toggleHiddenClass(hidden: boolean) {
-    if (hidden) {
-      return 'error';
-    } else {
-      return '';
-    }
-  }
-
-  toggleHiddenClass1() {
-    return '';
-  }
-
   render() {
-    console.log(this.state);
     return (
       <div>
         <form onSubmit={this.handleSubmitForm}>
@@ -466,7 +446,6 @@ class Form extends React.Component<FormProps, FormState> {
               name="image"
               accept="image/png, image/gif, image/jpeg"
               ref={this.inputImage}
-              // className="input-file"
               onChange={this.handleChange}
             />
           </label>
@@ -554,46 +533,3 @@ class Form extends React.Component<FormProps, FormState> {
 }
 
 export default Form;
-
-// validateField = (item: FormItemState) => {
-//   this.setState(
-//     { formErrors: fieldValidationErrors, nameValid: nameValid, surnameValid: surnameValid },
-//     this.validateForm(item)
-//   );
-// };
-// validateForm = (item: FormItemState) => {
-//   this.setState(
-//     { formValid: this.state.nameValid && this.state.surnameValid },
-//     () => () => this.renderForm(item)
-//   );
-// };
-// renderForm(newItem: FormItemState) {
-//   if (this.state.formValid) {
-//     this.setState(
-//       (prevState) => {
-//         prevState.formItems.push(newItem);
-//         return prevState;
-//       },
-//       () => {
-//         this.validateField(newItem);
-//       }
-//     );
-//     // name.value = '';
-//     // surname.value = '';
-//     console.log(this.state);
-//   }
-// }
-
-// if (!name || !surname) {
-//   this.setState({
-//     formErrors: {
-//       name: (name as HTMLInputElement).value ? '' : 'Name must contain at least 1 character',
-//       surname: (surname as HTMLInputElement).value
-//         ? ''
-//         : 'Surname must contain at least 1 character',
-//     },
-//     nameValid: false,
-//     surnameValid: false,
-//     formValid: false,
-//   });
-// }
