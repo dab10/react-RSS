@@ -10,6 +10,7 @@ import InputDate from 'components/FormFields/InputDate/InputDate';
 import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
 import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
+import MessageError from 'components/FormFields/MessageError/MessageError';
 
 type FormProps = Record<string, never>;
 
@@ -483,9 +484,7 @@ class Form extends React.Component<FormProps, FormState> {
                 </div>
               </label>
             </div>
-            <div className={`hidden ${this.toggleErrorClass(this.state.formErrors.gender)}`}>
-              {this.state.formErrors.gender}
-            </div>
+            <MessageError messageError={this.state.formErrors.gender} />
             <InputCheckbox
               ref={this.inputAgree}
               handleChange={this.handleChange}

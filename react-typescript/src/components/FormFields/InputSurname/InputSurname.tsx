@@ -1,4 +1,5 @@
 import React from 'react';
+import MessageError from '../MessageError/MessageError';
 import './InputSurname.scss';
 
 interface InputProps
@@ -29,9 +30,7 @@ const InputSurname = React.forwardRef<Ref, InputSurnameProps>(
             {...props}
           />
         </label>
-        <div className={`hidden ${formErrors.surname ? 'error' : ''}`} {...props}>
-          {formErrors.surname}
-        </div>
+        <MessageError messageError={formErrors.surname} />
       </div>
     );
   }

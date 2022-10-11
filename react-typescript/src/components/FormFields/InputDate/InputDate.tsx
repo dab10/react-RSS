@@ -1,4 +1,5 @@
 import React from 'react';
+import MessageError from '../MessageError/MessageError';
 import './InputDate.scss';
 
 interface InputProps
@@ -20,11 +21,16 @@ const InputDate = React.forwardRef<Ref, InputDateProps>(
       <div>
         <label>
           Date:
-          <input className="input-date" type="date" name="date" ref={ref} onChange={handleChange} />
+          <input
+            className="input-date"
+            type="date"
+            name="date"
+            ref={ref}
+            onChange={handleChange}
+            {...props}
+          />
         </label>
-        <div className={`hidden ${formErrors.date ? 'error' : ''}`} {...props}>
-          {formErrors.date}
-        </div>
+        <MessageError messageError={formErrors.date} />
       </div>
     );
   }

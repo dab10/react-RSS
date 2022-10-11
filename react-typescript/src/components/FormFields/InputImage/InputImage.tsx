@@ -1,4 +1,5 @@
 import React from 'react';
+import MessageError from '../MessageError/MessageError';
 import './InputImage.scss';
 
 interface InputProps
@@ -27,11 +28,10 @@ const InputImage = React.forwardRef<Ref, InputImageProps>(
             accept="image/png, image/gif, image/jpeg"
             ref={ref}
             onChange={handleChange}
+            {...props}
           />
         </label>
-        <div className={`hidden ${formErrors.image ? 'error' : ''}`} {...props}>
-          {formErrors.image}
-        </div>
+        <MessageError messageError={formErrors.image} />
       </div>
     );
   }

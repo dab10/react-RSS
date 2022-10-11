@@ -1,4 +1,5 @@
 import React from 'react';
+import MessageError from '../MessageError/MessageError';
 import './InputCheckbox.scss';
 
 interface InputProps
@@ -19,12 +20,10 @@ const InputCheckbox = React.forwardRef<Ref, InputCheckboxProps>(
     return (
       <div>
         <label className="input-checkbox">
-          <input type="checkbox" name="agree" ref={ref} onChange={handleChange} />
+          <input type="checkbox" name="agree" ref={ref} onChange={handleChange} {...props} />
           Agree with terms
         </label>
-        <div className={`hidden ${formErrors.agree ? 'error' : ''}`} {...props}>
-          {formErrors.agree}
-        </div>
+        <MessageError messageError={formErrors.agree} />
       </div>
     );
   }

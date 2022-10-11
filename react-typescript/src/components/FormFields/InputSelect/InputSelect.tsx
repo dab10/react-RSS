@@ -1,4 +1,5 @@
 import React from 'react';
+import MessageError from '../MessageError/MessageError';
 import './InputSelect.scss';
 
 interface InputProps
@@ -35,7 +36,7 @@ const InputSelect = React.forwardRef<Ref, InputSelectProps>(
             <option value="Kazakhstan">Kazakhstan</option>
           </select>
         </label>
-        <div className={`hidden ${formErrors.select ? 'error' : ''}`}>{formErrors.select}</div>
+        <MessageError messageError={formErrors.select} />
       </div>
     );
   }
