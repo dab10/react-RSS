@@ -210,16 +210,9 @@ class Form extends React.Component<FormProps, FormState> {
     }
   };
 
-  handleChange = () => {
+  handleChangeInputName = () => {
     const name = this.inputName.current;
-    const surname = this.inputSurname.current;
     const button = this.submitButton.current;
-    const image = this.inputImage.current;
-    const date = this.inputDate.current;
-    const select = this.selectCountry.current;
-    const agree = this.inputAgree.current;
-    const genderMale = this.inputGenderMale.current;
-    const genderFemale = this.inputGenderFemale.current;
 
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
@@ -254,6 +247,15 @@ class Form extends React.Component<FormProps, FormState> {
         nameValid: false,
       }));
     }
+  };
+
+  handleChangeInputSurname = () => {
+    const surname = this.inputSurname.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
+    }
 
     if (surname && surname.value.length >= quantityCharacters && button) {
       const surnameValid = true;
@@ -283,6 +285,15 @@ class Form extends React.Component<FormProps, FormState> {
         ...prevState,
         surnameValid: false,
       }));
+    }
+  };
+
+  handleChangeInputImage = () => {
+    const image = this.inputImage.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
     }
 
     if (image && image.value.length > 0 && button) {
@@ -314,6 +325,15 @@ class Form extends React.Component<FormProps, FormState> {
         imageValid: false,
       }));
     }
+  };
+
+  handleChangeInputDate = () => {
+    const date = this.inputDate.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
+    }
 
     if (date && date.value.length > 0 && button) {
       const dateValid = true;
@@ -344,6 +364,15 @@ class Form extends React.Component<FormProps, FormState> {
         dateValid: false,
       }));
     }
+  };
+
+  handleChangeInputSelect = () => {
+    const select = this.selectCountry.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
+    }
 
     if (select && select.value.length > 0 && button) {
       const selectValid = true;
@@ -368,6 +397,50 @@ class Form extends React.Component<FormProps, FormState> {
         selectValid: selectValid,
         formValid: formValid,
       }));
+    }
+  };
+
+  handleChangeInputRadio = () => {
+    const genderMale = this.inputGenderMale.current;
+    const genderFemale = this.inputGenderFemale.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
+    }
+
+    if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
+      const genderValid = true;
+      const formValid =
+        this.state.nameValid &&
+        this.state.surnameValid &&
+        this.state.imageValid &&
+        this.state.dateValid &&
+        this.state.selectValid &&
+        this.state.agreeValid &&
+        genderValid;
+      if (formValid) {
+        button.disabled = false;
+      }
+
+      this.setState((prevState) => ({
+        ...prevState,
+        formErrors: {
+          ...prevState.formErrors,
+          gender: '',
+        },
+        genderValid: genderValid,
+        formValid: formValid,
+      }));
+    }
+  };
+
+  handleChangeInputCheckbox = () => {
+    const agree = this.inputAgree.current;
+    const button = this.submitButton.current;
+
+    if (button && this.state.firstTypingAfterInit) {
+      button.disabled = false;
     }
 
     if (agree && agree.checked && button) {
@@ -399,31 +472,6 @@ class Form extends React.Component<FormProps, FormState> {
         agreeValid: false,
       }));
     }
-
-    if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
-      const genderValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          gender: '',
-        },
-        genderValid: genderValid,
-        formValid: formValid,
-      }));
-    }
   };
 
   toggleErrorClass(error: string) {
@@ -437,27 +485,27 @@ class Form extends React.Component<FormProps, FormState> {
           <form onSubmit={this.handleSubmitForm} className="form">
             <InputName
               ref={this.inputName}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputName}
               formErrors={this.state.formErrors}
             />
             <InputSurname
               ref={this.inputSurname}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputSurname}
               formErrors={this.state.formErrors}
             />
             <InputImage
               ref={this.inputImage}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputImage}
               formErrors={this.state.formErrors}
             />
             <InputDate
               ref={this.inputDate}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputDate}
               formErrors={this.state.formErrors}
             />
             <InputSelect
               ref={this.selectCountry}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputSelect}
               defaultValue={''}
               formErrors={this.state.formErrors}
             />
@@ -471,7 +519,7 @@ class Form extends React.Component<FormProps, FormState> {
                     name="gender"
                     value="male"
                     ref={this.inputGenderMale}
-                    onChange={this.handleChange}
+                    onChange={this.handleChangeInputRadio}
                   />
                   <div>female</div>
                   <input
@@ -479,7 +527,7 @@ class Form extends React.Component<FormProps, FormState> {
                     name="gender"
                     value="female"
                     ref={this.inputGenderFemale}
-                    onChange={this.handleChange}
+                    onChange={this.handleChangeInputRadio}
                   />
                 </div>
               </label>
@@ -487,7 +535,7 @@ class Form extends React.Component<FormProps, FormState> {
             <MessageError messageError={this.state.formErrors.gender} />
             <InputCheckbox
               ref={this.inputAgree}
-              handleChange={this.handleChange}
+              handleChange={this.handleChangeInputCheckbox}
               formErrors={this.state.formErrors}
             />
             <MyButton
