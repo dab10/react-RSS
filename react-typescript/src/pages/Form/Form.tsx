@@ -11,6 +11,7 @@ import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
 import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
 import MessageError from 'components/FormFields/MessageError/MessageError';
+import InputRadio from 'components/FormFields/InputRadio/InputRadio';
 
 type FormProps = Record<string, never>;
 
@@ -513,21 +514,15 @@ class Form extends React.Component<FormProps, FormState> {
               <label>
                 Gender:
                 <div className="input-radio">
-                  <div>male</div>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="male"
+                  <InputRadio
+                    gender="male"
                     ref={this.inputGenderMale}
-                    onChange={this.handleChangeInputRadio}
+                    handleChange={this.handleChangeInputRadio}
                   />
-                  <div>female</div>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="female"
+                  <InputRadio
+                    gender="female"
                     ref={this.inputGenderFemale}
-                    onChange={this.handleChangeInputRadio}
+                    handleChange={this.handleChangeInputRadio}
                   />
                 </div>
               </label>

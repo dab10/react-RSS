@@ -14,7 +14,7 @@ describe('form tests', () => {
     const dateInput = screen.getByLabelText(/date:/i);
     const imageInput = screen.getByLabelText(/image:/i);
     const countrySelect = screen.getByLabelText(/country:/i);
-    const genderRadio = screen.getByLabelText(/male/i);
+    const genderRadio = screen.getAllByLabelText(/male/i)[0];
     const agreeCheckbox = screen.getByRole('checkbox');
     const button = screen.getByRole('button');
 
