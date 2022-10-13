@@ -211,13 +211,19 @@ class Form extends React.Component<FormProps, FormState> {
     }
   };
 
-  handleChangeInputName = () => {
-    const name = this.inputName.current;
+  enableButtonAfterFirstType = () => {
     const button = this.submitButton.current;
 
     if (button && this.state.firstTypingAfterInit) {
       button.disabled = false;
     }
+  };
+
+  handleChangeInputName = () => {
+    const name = this.inputName.current;
+    const button = this.submitButton.current;
+
+    this.enableButtonAfterFirstType();
 
     if (name && name.value.length >= quantityCharacters && button) {
       const nameValid = true;
@@ -254,9 +260,7 @@ class Form extends React.Component<FormProps, FormState> {
     const surname = this.inputSurname.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (surname && surname.value.length >= quantityCharacters && button) {
       const surnameValid = true;
@@ -293,9 +297,7 @@ class Form extends React.Component<FormProps, FormState> {
     const image = this.inputImage.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (image && image.value.length > 0 && button) {
       const imageValid = true;
@@ -332,9 +334,7 @@ class Form extends React.Component<FormProps, FormState> {
     const date = this.inputDate.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (date && date.value.length > 0 && button) {
       const dateValid = true;
@@ -371,9 +371,7 @@ class Form extends React.Component<FormProps, FormState> {
     const select = this.selectCountry.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (select && select.value.length > 0 && button) {
       const selectValid = true;
@@ -406,9 +404,7 @@ class Form extends React.Component<FormProps, FormState> {
     const genderFemale = this.inputGenderFemale.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
       const genderValid = true;
@@ -440,9 +436,7 @@ class Form extends React.Component<FormProps, FormState> {
     const agree = this.inputAgree.current;
     const button = this.submitButton.current;
 
-    if (button && this.state.firstTypingAfterInit) {
-      button.disabled = false;
-    }
+    this.enableButtonAfterFirstType();
 
     if (agree && agree.checked && button) {
       const agreeValid = true;
