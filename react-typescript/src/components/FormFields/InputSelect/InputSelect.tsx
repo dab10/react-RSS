@@ -23,6 +23,7 @@ const InputSelect = React.forwardRef<Ref, InputSelectProps>(
           Country:
           <select
             className="input-select"
+            name="select"
             ref={ref}
             defaultValue={defaultValue}
             onChange={handleChange}

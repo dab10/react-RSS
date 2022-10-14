@@ -9,46 +9,17 @@ import InputImage from 'components/FormFields/InputImage/InputImage';
 import InputDate from 'components/FormFields/InputDate/InputDate';
 import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
-import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
+import { quantityCharacters, stateInit, timeConfirmationMessage } from 'utils/const/const';
 import MessageError from 'components/FormFields/MessageError/MessageError';
 import InputRadio from 'components/FormFields/InputRadio/InputRadio';
-
-type FormProps = Record<string, never>;
-
-type FormItemState = {
-  id: number;
-  name: string;
-  surname: string;
-  image: string;
-  date: string;
-  select: string;
-  agree: boolean;
-  gender: string;
-};
-
-type FormErrors = {
-  name: string;
-  surname: string;
-  image: string;
-  date: string;
-  select: string;
-  agree: string;
-  gender: string;
-};
-
-type FormState = {
-  formItems: FormItemState[];
-  formErrors: FormErrors;
-  nameValid: boolean;
-  surnameValid: boolean;
-  imageValid: boolean;
-  formValid: boolean;
-  dateValid: boolean;
-  selectValid: boolean;
-  agreeValid: boolean;
-  genderValid: boolean;
-  firstTypingAfterInit: boolean;
-};
+import {
+  FieldName,
+  FieldNumber,
+  FieldNumberStrings,
+  FormProps,
+  FormState,
+  isCheckTypeOfChecked,
+} from './FormTypes';
 
 class Form extends React.Component<FormProps, FormState> {
   inputName: React.RefObject<HTMLInputElement>;
@@ -74,27 +45,7 @@ class Form extends React.Component<FormProps, FormState> {
     this.inputGenderMale = React.createRef<HTMLInputElement>();
     this.inputGenderFemale = React.createRef<HTMLInputElement>();
     this.confirmationMessage = React.createRef<HTMLDivElement>();
-    this.state = {
-      formItems: [],
-      formErrors: {
-        name: '',
-        surname: '',
-        image: '',
-        date: '',
-        select: '',
-        agree: '',
-        gender: '',
-      },
-      nameValid: false,
-      surnameValid: false,
-      imageValid: false,
-      dateValid: false,
-      selectValid: false,
-      agreeValid: false,
-      genderValid: false,
-      formValid: false,
-      firstTypingAfterInit: true,
-    };
+    this.state = stateInit;
   }
 
   handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
@@ -219,254 +170,125 @@ class Form extends React.Component<FormProps, FormState> {
     }
   };
 
+  changeState = (
+    formItemName: HTMLInputElement | HTMLSelectElement | null,
+    fieldName: FieldNumberStrings,
+    isCheckTypeOfChecked: boolean,
+    quantityCharacters = 1
+  ) => {
+    const formSubmitButton = this.submitButton.current;
+
+    if (isCheckTypeOfChecked) {
+      if (formItemName && (formItemName as HTMLInputElement).checked && formSubmitButton) {
+        this.changeStateValidForm(formItemName, fieldName, formSubmitButton);
+      } else if (formItemName && !(formItemName as HTMLInputElement).checked) {
+        this.changeStateInvalidForm(formItemName);
+      }
+    } else {
+      if (formItemName && formItemName.value.length >= quantityCharacters && formSubmitButton) {
+        this.changeStateValidForm(formItemName, fieldName, formSubmitButton);
+      } else if (formItemName && formItemName.value.length < quantityCharacters) {
+        this.changeStateInvalidForm(formItemName);
+      }
+    }
+  };
+
+  changeStateValidForm = (
+    formItemName: HTMLInputElement | HTMLSelectElement,
+    fieldName: FieldNumberStrings,
+    formSubmitButton: HTMLButtonElement
+  ) => {
+    const formValidArr = [
+      this.state.nameValid,
+      this.state.surnameValid,
+      this.state.imageValid,
+      this.state.dateValid,
+      this.state.selectValid,
+      this.state.agreeValid,
+      this.state.genderValid,
+    ];
+    const fieldNumberChange = FieldNumber[fieldName];
+    formValidArr.splice(fieldNumberChange, 1, true);
+    const formValid = formValidArr.every(Boolean);
+    if (formValid) {
+      formSubmitButton.disabled = false;
+    }
+
+    this.setState((prevState) => ({
+      ...prevState,
+      formErrors: {
+        ...prevState.formErrors,
+        [formItemName.name]: '',
+      },
+      [`${formItemName.name}Valid`]: true,
+      formValid: formValid,
+    }));
+  };
+
+  changeStateInvalidForm = (formItemName: HTMLInputElement | HTMLSelectElement) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      [`${formItemName.name}Valid`]: false,
+    }));
+  };
+
   handleChangeInputName = () => {
     const name = this.inputName.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (name && name.value.length >= quantityCharacters && button) {
-      const nameValid = true;
-      const formValid =
-        nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          name: '',
-        },
-        nameValid: nameValid,
-        formValid: formValid,
-      }));
-    } else if (name && name.value.length < quantityCharacters) {
-      this.setState((prevState) => ({
-        ...prevState,
-        nameValid: false,
-      }));
-    }
+    this.changeState(name, FieldName.name, Boolean(isCheckTypeOfChecked.no), quantityCharacters);
   };
 
   handleChangeInputSurname = () => {
     const surname = this.inputSurname.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (surname && surname.value.length >= quantityCharacters && button) {
-      const surnameValid = true;
-      const formValid =
-        this.state.nameValid &&
-        surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          surname: '',
-        },
-        surnameValid: surnameValid,
-        formValid: formValid,
-      }));
-    } else if (surname && surname.value.length < quantityCharacters) {
-      this.setState((prevState) => ({
-        ...prevState,
-        surnameValid: false,
-      }));
-    }
+    this.changeState(
+      surname,
+      FieldName.surname,
+      Boolean(isCheckTypeOfChecked.no),
+      quantityCharacters
+    );
   };
 
   handleChangeInputImage = () => {
     const image = this.inputImage.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (image && image.value.length > 0 && button) {
-      const imageValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          image: '',
-        },
-        imageValid: imageValid,
-        formValid: formValid,
-      }));
-    } else if (image && image.value.length === 0) {
-      this.setState((prevState) => ({
-        ...prevState,
-        imageValid: false,
-      }));
-    }
+    this.changeState(image, FieldName.image, Boolean(isCheckTypeOfChecked.no));
   };
 
   handleChangeInputDate = () => {
     const date = this.inputDate.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (date && date.value.length > 0 && button) {
-      const dateValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          date: '',
-        },
-        dateValid: dateValid,
-        formValid: formValid,
-      }));
-    } else if (date && date.value.length === 0) {
-      this.setState((prevState) => ({
-        ...prevState,
-        dateValid: false,
-      }));
-    }
+    this.changeState(date, FieldName.date, Boolean(isCheckTypeOfChecked.no));
   };
 
   handleChangeInputSelect = () => {
     const select = this.selectCountry.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (select && select.value.length > 0 && button) {
-      const selectValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        selectValid &&
-        this.state.agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          select: '',
-        },
-        selectValid: selectValid,
-        formValid: formValid,
-      }));
-    }
+    this.changeState(select, FieldName.select, Boolean(isCheckTypeOfChecked.no));
   };
 
   handleChangeInputRadio = () => {
     const genderMale = this.inputGenderMale.current;
     const genderFemale = this.inputGenderFemale.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (((genderMale && genderMale.checked) || (genderFemale && genderFemale.checked)) && button) {
-      const genderValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        this.state.agreeValid &&
-        genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          gender: '',
-        },
-        genderValid: genderValid,
-        formValid: formValid,
-      }));
-    }
+    this.changeState(
+      (genderMale as HTMLInputElement).checked ? genderMale : genderFemale,
+      FieldName.gender,
+      Boolean(isCheckTypeOfChecked.yes)
+    );
   };
 
   handleChangeInputCheckbox = () => {
     const agree = this.inputAgree.current;
-    const button = this.submitButton.current;
 
     this.enableButtonAfterFirstType();
-
-    if (agree && agree.checked && button) {
-      const agreeValid = true;
-      const formValid =
-        this.state.nameValid &&
-        this.state.surnameValid &&
-        this.state.imageValid &&
-        this.state.dateValid &&
-        this.state.selectValid &&
-        agreeValid &&
-        this.state.genderValid;
-      if (formValid) {
-        button.disabled = false;
-      }
-
-      this.setState((prevState) => ({
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors,
-          agree: '',
-        },
-        agreeValid: agreeValid,
-        formValid: formValid,
-      }));
-    } else if (agree && !agree.checked) {
-      this.setState((prevState) => ({
-        ...prevState,
-        agreeValid: false,
-      }));
-    }
+    this.changeState(agree, FieldName.agree, Boolean(isCheckTypeOfChecked.yes));
   };
 
   toggleErrorClass(error: string) {
