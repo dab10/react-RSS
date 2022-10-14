@@ -291,10 +291,6 @@ class Form extends React.Component<FormProps, FormState> {
     this.changeState(agree, FieldName.agree, Boolean(isCheckTypeOfChecked.yes));
   };
 
-  toggleErrorClass(error: string) {
-    return error.length === 0 ? '' : 'error';
-  }
-
   render() {
     return (
       <div>
