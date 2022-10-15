@@ -9,10 +9,8 @@ body {
 
 #root {
   max-width: 1440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 59px 1fr 59px;
+  grid-template-columns: 1fr;
   height: 100vh;
 }
