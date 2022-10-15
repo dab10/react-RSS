@@ -1,8 +1,7 @@
 import React from 'react';
-import cardData from 'components/cardData/cardData';
-import CardItem from 'components/CardItem/CardItem';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
+import CardList from 'components/CardList/CardList';
 
 type Card = {
   id: number;
@@ -14,35 +13,81 @@ type Card = {
   isFavorite: boolean;
 };
 
+type Cards = {
+  results: Card[];
+};
+
 type HomeState = {
-  cards: Card[];
+  cards: Cards;
   searching: string;
+  isLoading: boolean;
+  errMessage: string;
 };
 
 type HomeProps = { [x: string]: string };
 
 class Home extends React.Component<HomeProps, HomeState> {
+  base: string;
+  characterByName: string;
+
   constructor(props: HomeProps) {
     super(props);
+    this.base = 'https://rickandmortyapi.com/api';
+    this.characterByName = `${this.base}/character/?name=`;
     this.state = {
-      cards: cardData,
+      cards: {
+        results: [],
+      },
       searching: '',
+      isLoading: false,
+      errMessage: '',
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let saveSearching = '';
     if (localStorage.getItem('savedStateSearching') !== undefined) {
-      const saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
-      this.setState({ searching: saveSearching });
+      saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
     }
+    await this.setState({
+      searching: saveSearching,
+    });
+    this.fetchData(`${this.characterByName}${this.state.searching}`);
   }
 
   componentWillUnmount() {
     localStorage.setItem('savedStateSearching', JSON.stringify(this.state.searching));
   }
 
+  fetchData(url: string) {
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) {
+          throw Error('Could not fetch the data');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({
+          cards: {
+            results: data.results,
+          },
+          isLoading: false,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          errMessage: err,
+        });
+      });
+  }
+
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    this.setState({
+      isLoading: true,
+    });
+    this.fetchData(`${this.characterByName}${this.state.searching}`);
   };
 
   handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,22 +99,21 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   handleChange = (id: number) => {
     this.setState((prevState) => {
-      const updatedCards = prevState.cards.map((todo) => {
+      const updatedCards = prevState.cards.results.map((todo) => {
         if (todo.id === id) {
           todo.isFavorite = !todo.isFavorite;
         }
         return todo;
       });
       return {
-        cards: updatedCards,
+        cards: {
+          results: updatedCards,
+        },
       };
     });
   };
 
   render() {
-    const cardItems = this.state.cards.map((item) => (
-      <CardItem key={item.id} handleChange={this.handleChange} {...item} />
-    ));
     return (
       <div>
         <SearchBar
@@ -77,7 +121,7 @@ class Home extends React.Component<HomeProps, HomeState> {
           handleSubmit={this.handleSubmit}
           searching={this.state.searching}
         />
-        <div className="list">{cardItems}</div>
+        <CardList cards={this.state.cards} handleChange={this.handleChange} />
       </div>
     );
   }

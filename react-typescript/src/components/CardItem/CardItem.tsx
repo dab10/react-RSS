@@ -15,11 +15,7 @@ type CardProps = {
 function CardItem(props: CardProps) {
   return (
     <div className="card-item">
-      <img
-        src={process.env.PUBLIC_URL + props.image}
-        alt={props.name}
-        className="card-item__image"
-      />
+      <img src={props.image} alt={props.name} className="card-item__image" />
       <div className="about-container">
         <div className="about-container__text">
           <div>Name: {props.name}</div>
