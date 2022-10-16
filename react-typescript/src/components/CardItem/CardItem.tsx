@@ -10,11 +10,13 @@ type CardProps = {
   gender: string;
   isFavorite: boolean;
   handleChange: (id: number) => void;
+  handleClickToggle: (id: number) => void;
 };
 
 function CardItem(props: CardProps) {
+  console.log(props.id);
   return (
-    <div className="card-item">
+    <div className="card-item" onClick={() => props.handleClickToggle(props.id)}>
       <img src={props.image} alt={props.name} className="card-item__image" />
       <div className="about-container">
         <div className="about-container__text">

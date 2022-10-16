@@ -2,6 +2,7 @@ import React from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
+import Popup from 'components/Popup/Popup';
 
 type Card = {
   id: number;
@@ -9,7 +10,11 @@ type Card = {
   name: string;
   status: string;
   species: string;
+  type: string;
   gender: string;
+  location: {
+    name: string;
+  };
   isFavorite: boolean;
 };
 
@@ -19,9 +24,11 @@ type Cards = {
 
 type HomeState = {
   cards: Cards;
+  cardModal: Card;
   searching: string;
   isLoading: boolean;
   isFirstCall: boolean;
+  isPopup: boolean;
   errMessage: string | null;
 };
 
@@ -30,33 +37,42 @@ type HomeProps = { [x: string]: string };
 class Home extends React.Component<HomeProps, HomeState> {
   base: string;
   characterByName: string;
-  saveSearchingInit: string;
 
   constructor(props: HomeProps) {
     super(props);
     this.base = 'https://rickandmortyapi.com/api';
     this.characterByName = `${this.base}/character/?name=`;
-    this.saveSearchingInit = 'Rick Sanchez';
     this.state = {
       cards: {
         results: [],
       },
+      cardModal: {
+        id: 0,
+        image: '',
+        name: '',
+        status: '',
+        species: '',
+        type: '',
+        gender: '',
+        location: {
+          name: '',
+        },
+        isFavorite: false,
+      },
       searching: '',
       isLoading: false,
       isFirstCall: true,
+      isPopup: false,
       errMessage: '',
     };
   }
 
   async componentDidMount() {
     let saveSearching = '';
-    console.log(saveSearching);
-    console.log(typeof localStorage.getItem('savedStateSearching'));
-    console.log(Boolean(localStorage.getItem('savedStateSearching')));
+
     if (localStorage.getItem('savedStateSearching') !== undefined) {
       saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
     }
-    console.log(saveSearching);
     await this.setState({
       searching: saveSearching,
     });
@@ -129,9 +145,26 @@ class Home extends React.Component<HomeProps, HomeState> {
     });
   };
 
+  handleClickToggle = (id = 0) => {
+    const cardId = this.state.cards.results.findIndex((item) => item.id === id);
+    console.log(id);
+    if (this.state.isPopup && id) {
+      document.body.classList.remove('stop-scrolling');
+      this.setState({
+        cardModal: this.state.cards.results[cardId],
+        isPopup: false,
+      });
+    } else {
+      document.body.classList.add('stop-scrolling');
+      this.setState({
+        cardModal: this.state.cards.results[cardId],
+        isPopup: true,
+      });
+    }
+  };
+
   render() {
     console.log(this.state);
-    console.log(this.state.errMessage);
     return (
       <div className="container">
         <SearchBar
@@ -150,7 +183,18 @@ class Home extends React.Component<HomeProps, HomeState> {
                   </div>
                 )
               : this.state.cards && (
-                  <CardList cards={this.state.cards} handleChange={this.handleChange} />
+                  <>
+                    <CardList
+                      cards={this.state.cards}
+                      handleChange={this.handleChange}
+                      handleClickToggle={this.handleClickToggle}
+                    />
+                    <Popup
+                      card={this.state.cardModal}
+                      active={this.state.isPopup}
+                      handleClickToggle={this.handleClickToggle}
+                    />
+                  </>
                 )}
           </>
         )}

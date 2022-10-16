@@ -19,11 +19,18 @@ type Cards = {
 type ListProps = {
   cards: Cards;
   handleChange: (id: number) => void;
+  handleClickToggle: (id: number) => void;
 };
 
 function CardList(props: ListProps) {
+  console.log(props.handleClickToggle);
   const cardItems = props.cards.results.map((item) => (
-    <CardItem key={item.id} handleChange={() => props.handleChange} {...item} />
+    <CardItem
+      key={item.id}
+      handleChange={() => props.handleChange}
+      handleClickToggle={() => props.handleClickToggle(item.id)}
+      {...item}
+    />
   ));
 
   return <div className="list">{cardItems}</div>;
