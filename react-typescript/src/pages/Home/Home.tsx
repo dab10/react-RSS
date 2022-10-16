@@ -147,7 +147,6 @@ class Home extends React.Component<HomeProps, HomeState> {
 
   handleClickToggle = (id = 0) => {
     const cardId = this.state.cards.results.findIndex((item) => item.id === id);
-    console.log(id);
     if (this.state.isPopup && id) {
       document.body.classList.remove('stop-scrolling');
       this.setState({
@@ -164,7 +163,6 @@ class Home extends React.Component<HomeProps, HomeState> {
   };
 
   render() {
-    console.log(this.state);
     return (
       <div className="container">
         <SearchBar

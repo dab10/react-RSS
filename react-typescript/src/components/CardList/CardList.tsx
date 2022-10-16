@@ -23,7 +23,6 @@ type ListProps = {
 };
 
 function CardList(props: ListProps) {
-  console.log(props.handleClickToggle);
   const cardItems = props.cards.results.map((item) => (
     <CardItem
       key={item.id}

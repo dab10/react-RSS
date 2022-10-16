@@ -19,7 +19,6 @@ type PopupProps = {
 };
 
 const Popup = (props: PopupProps) => {
-  console.log(props.card);
   return (
     <div
       className={props.active ? 'modal active' : 'modal'}

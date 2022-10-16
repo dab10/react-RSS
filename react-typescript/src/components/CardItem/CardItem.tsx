@@ -14,7 +14,6 @@ type CardProps = {
 };
 
 function CardItem(props: CardProps) {
-  console.log(props.id);
   return (
     <div className="card-item" onClick={() => props.handleClickToggle(props.id)}>
       <img src={props.image} alt={props.name} className="card-item__image" />
