@@ -15,7 +15,7 @@ function SearchBar(props: SearchProps) {
           type="text"
           value={props.searching === null ? '' : props.searching}
           name="searching"
-          placeholder="Search"
+          placeholder="Example: Rick Sanchez"
           onChange={props.handleChangeForm}
         />
         <button type="submit">Search</button>
