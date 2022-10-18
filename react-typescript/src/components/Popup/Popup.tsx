@@ -1,5 +1,6 @@
 import React from 'react';
 import './Popup.scss';
+import classNames from 'classnames';
 
 type PopupProps = {
   card: {
@@ -19,15 +20,19 @@ type PopupProps = {
 };
 
 const Popup = (props: PopupProps) => {
+  const modalClass = classNames({
+    modal: true,
+    active: props.active,
+  });
+
+  const modalContentClass = classNames({
+    modal__content: true,
+    active: props.active,
+  });
+
   return (
-    <div
-      className={props.active ? 'modal active' : 'modal'}
-      onClick={() => props.handleClickToggle(props.card.id)}
-    >
-      <div
-        className={props.active ? 'modal__content active' : 'modal__content'}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className={modalClass} onClick={() => props.handleClickToggle(props.card.id)}>
+      <div className={modalContentClass} onClick={(e) => e.stopPropagation()}>
         <div className="modal__close" onClick={() => props.handleClickToggle(props.card.id)}>
           X
         </div>
