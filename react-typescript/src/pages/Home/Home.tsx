@@ -86,9 +86,9 @@ class Home extends React.Component<HomeProps, HomeState> {
   }
 
   async fetchData(url: string) {
-    const res = await fetch(url);
-    const data = await res.json();
     try {
+      const res = await fetch(url);
+      const data = await res.json();
       if (!res.ok) {
         throw Error();
       }
