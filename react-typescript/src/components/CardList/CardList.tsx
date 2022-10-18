@@ -26,7 +26,7 @@ function CardList(props: ListProps) {
   const cardItems = props.cards.results.map((item) => (
     <CardItem
       key={item.id}
-      handleChange={() => props.handleChange}
+      handleChange={props.handleChange}
       handleClickToggle={() => props.handleClickToggle(item.id)}
       {...item}
     />
