@@ -73,7 +73,9 @@ class Home extends React.Component<HomeProps, HomeState> {
     if (localStorage.getItem('savedStateSearching') !== undefined) {
       saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
     }
+
     await this.setState({
+      isFirstCall: saveSearching === null ? true : false,
       searching: saveSearching,
     });
     this.fetchData(`${this.characterByName}${this.state.searching}`);
