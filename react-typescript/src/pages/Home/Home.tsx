@@ -83,35 +83,32 @@ class Home extends React.Component<HomeProps, HomeState> {
     localStorage.setItem('savedStateSearching', JSON.stringify(this.state.searching));
   }
 
-  fetchData(url: string) {
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw Error();
-        }
-        return res.json();
-      })
-      .then((data) => {
-        this.setState({
-          cards: {
-            results: data.results,
-          },
-          isLoading: false,
-          errMessage: '',
-        });
-      })
-      .catch(() => {
-        this.state.isFirstCall
-          ? this.setState({
-              isLoading: false,
-              isFirstCall: false,
-              errMessage: '',
-            })
-          : this.setState({
-              isLoading: false,
-              errMessage: 'Could not fetch the data',
-            });
+  async fetchData(url: string) {
+    const res = await fetch(url);
+    const data = await res.json();
+    try {
+      if (!res.ok) {
+        throw Error();
+      }
+      this.setState({
+        cards: {
+          results: data.results,
+        },
+        isLoading: false,
+        errMessage: '',
       });
+    } catch {
+      this.state.isFirstCall
+        ? this.setState({
+            isLoading: false,
+            isFirstCall: false,
+            errMessage: '',
+          })
+        : this.setState({
+            isLoading: false,
+            errMessage: 'Could not fetch the data',
+          });
+    }
   }
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
