@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, { useEffect, useState } from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
@@ -34,15 +34,13 @@ type HomeState = {
 
 type HomeProps = { [x: string]: string };
 
-class Home extends React.Component<HomeProps, HomeState> {
-  base: string;
-  characterByName: string;
+function Home() {
+  // base: string;
+  // characterByName: string;
 
-  constructor(props: HomeProps) {
-    super(props);
-    this.base = 'https://rickandmortyapi.com/api';
-    this.characterByName = `${this.base}/character/?name=`;
-    this.state = {
+    const base = 'https://rickandmortyapi.com/api';
+    const characterByName = `${base}/character/?name=`;
+    const stateInit = {
       cards: {
         results: [],
       },
@@ -65,25 +63,36 @@ class Home extends React.Component<HomeProps, HomeState> {
       isPopup: false,
       errMessage: '',
     };
+    const [data, setData] = useState(stateInit);
+
+ useEffect(() => {
+  const saveSearching = localStorage.getItem('savedStateSearching');
+  if (saveSearching) {
+    setData((prevData) => {
+      return {
+        ...prevData,
+        isFirstCall: JSON.parse(saveSearching) === null ? true : false,
+        searching: JSON.parse(saveSearching),
+      }
+    })
   }
+ }, []);
 
-  async componentDidMount() {
-    let saveSearching = '';
+  // async componentDidMount() {
+  //   let saveSearching = '';
 
-    if (localStorage.getItem('savedStateSearching') !== undefined) {
-      saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
-    }
+  //   if (localStorage.getItem('savedStateSearching') !== undefined) {
+  //     saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
+  //   }
 
-    await this.setState({
-      isFirstCall: saveSearching === null ? true : false,
-      searching: saveSearching,
-    });
-    this.fetchData(`${this.characterByName}${this.state.searching}`);
-  }
+  //   await this.setState({
+  //     isFirstCall: saveSearching === null ? true : false,
+  //     searching: saveSearching,
+  //   });
+  //   this.fetchData(`${this.characterByName}${this.state.searching}`);
+  // }
 
-  componentWillUnmount() {
-    localStorage.setItem('savedStateSearching', JSON.stringify(this.state.searching));
-  }
+  useEffect(() => { localStorage.setItem('savedStateSearching', JSON.stringify(data.searching)); } );
 
   async fetchData(url: string) {
     try {
