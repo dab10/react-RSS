@@ -64,6 +64,7 @@ function Home() {
       errMessage: '',
     };
     const [data, setData] = useState(stateInit);
+    const [url, setUrl] = useState('');
 
  useEffect(() => {
   const saveSearching = localStorage.getItem('savedStateSearching');
@@ -94,33 +95,82 @@ function Home() {
 
   useEffect(() => { localStorage.setItem('savedStateSearching', JSON.stringify(data.searching)); } );
 
-  async fetchData(url: string) {
+ useEffect(() => {
+  const fetchData = async () => {
+    setData((prevData) => {
+      return {
+        ...prevData,
+        isLoading: true,
+        errMessage: '',
+      }
+    })
+
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
         throw Error();
       }
-      this.setState({
-        cards: {
-          results: data.results,
-        },
-        isLoading: false,
-        errMessage: '',
-      });
+      setData((prevData) => {
+        return {
+          ...prevData,
+          cards: {
+            results: data.results,
+          }
+        }
+      })
     } catch {
-      this.state.isFirstCall
-        ? this.setState({
-            isLoading: false,
-            isFirstCall: false,
-            errMessage: '',
-          })
-        : this.setState({
-            isLoading: false,
-            errMessage: 'Could not fetch the data',
-          });
+      data.isFirstCall ? setData((prevData) => {
+        return {
+          ...prevData,
+          isFirstCall: false,
+          errMessage: '',
+        }
+      }) : setData((prevData) => {
+        return {
+          ...prevData,
+          errMessage: 'Could not fetch the data',
+        }
+      })
     }
+    setData((prevData) => {
+      return {
+        ...prevData,
+        isLoading: false,
+      }
+    })
   }
+
+  fetchData();
+ }, [url])
+
+  // async fetchData(url: string) {
+  //   try {
+  //     const res = await fetch(url);
+  //     const data = await res.json();
+  //     if (!res.ok) {
+  //       throw Error();
+  //     }
+  //     this.setState({
+  //       cards: {
+  //         results: data.results,
+  //       },
+  //       isLoading: false,
+  //       errMessage: '',
+  //     });
+  //   } catch {
+  //     this.state.isFirstCall
+  //       ? this.setState({
+  //           isLoading: false,
+  //           isFirstCall: false,
+  //           errMessage: '',
+  //         })
+  //       : this.setState({
+  //           isLoading: false,
+  //           errMessage: 'Could not fetch the data',
+  //         });
+  //   }
+  // }
 
   handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
