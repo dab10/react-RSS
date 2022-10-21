@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
