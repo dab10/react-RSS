@@ -4,20 +4,6 @@ import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 
-type Card = {
-  id: number;
-  image: string;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-  location: {
-    name: string;
-  };
-  isFavorite: boolean;
-};
-
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
