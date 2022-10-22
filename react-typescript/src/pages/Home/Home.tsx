@@ -71,6 +71,12 @@ function Home() {
   const [data, setData] = useState(stateInit);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isFirstCall, setIsFirstCall] = useState(() => {
+    const savedItem = localStorage.getItem('savedStateSearching') as string;
+    const parsedItem = JSON.parse(savedItem);
+    console.log(parsedItem);
+    return parsedItem ? false : true;
+  });
   const [query, setQuery] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
@@ -103,6 +109,7 @@ function Home() {
       // });
       setQuery(`${JSON.parse(saveSearching)}`);
       setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
+      setIsFirstCall(false);
     }
   }, [characterByName]);
 
@@ -147,6 +154,14 @@ function Home() {
           };
         });
       } catch {
+        // console.log(isFirstCall);
+        // setIsFirstCall((prevState) => {
+        //   if (prevState) {
+        //     prevState = !prevState;
+        //   }
+        //   return prevState;
+        // });
+        // console.log(isFirstCall);
         setIsError(true);
         setData((prevData) => {
           return {
@@ -206,6 +221,7 @@ function Home() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUrl(`${characterByName}${query}`);
+    setIsFirstCall(false);
   };
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -314,7 +330,7 @@ function Home() {
         handleSubmit={handleSubmit}
         searching={query}
       />
-      {isError && <div className="error-fetch">Could not fetch the data</div>}
+      {isError && !isFirstCall && <div className="error-fetch">Could not fetch the data</div>}
       {
         <>
           {isLoading ? (
