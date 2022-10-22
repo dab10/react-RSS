@@ -12,18 +12,14 @@ type Card = {
   isFavorite: boolean;
 };
 
-type Cards = {
-  results: Card[];
-};
-
 type ListProps = {
-  cards: Cards;
+  cards: Card[];
   handleChange: (id: number) => void;
   handleClickToggle: (id: number) => void;
 };
 
 function CardList(props: ListProps) {
-  const cardItems = props.cards.results.map((item) => (
+  const cardItems = props.cards.map((item) => (
     <CardItem
       key={item.id}
       handleChange={props.handleChange}

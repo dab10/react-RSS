@@ -18,39 +18,11 @@ type Card = {
   isFavorite: boolean;
 };
 
-type Cards = {
-  results: Card[];
-};
-
-type HomeState = {
-  cards: Cards;
-  cardModal: Card;
-  searching: string;
-  isPopup: boolean;
-};
-
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
-  const stateInit = {
-    cards: {
-      results: [
-        {
-          id: 0,
-          image: '',
-          name: '',
-          status: '',
-          species: '',
-          type: '',
-          gender: '',
-          location: {
-            name: '',
-          },
-          isFavorite: false,
-        },
-      ],
-    },
-    cardModal: {
+  const stateInit = [
+    {
       id: 0,
       image: '',
       name: '',
@@ -63,12 +35,26 @@ function Home() {
       },
       isFavorite: false,
     },
-    isPopup: false,
+  ];
+  const stateInitPopup = {
+    id: 0,
+    image: '',
+    name: '',
+    status: '',
+    species: '',
+    type: '',
+    gender: '',
+    location: {
+      name: '',
+    },
+    isFavorite: false,
   };
 
   const [data, setData] = useState(stateInit);
+  const [dataPopup, setDataPopup] = useState(stateInitPopup);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isPopup, setIsPopup] = useState(false);
   const [isFirstCall, setIsFirstCall] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
@@ -109,24 +95,10 @@ function Home() {
         if (!res.ok) {
           throw Error();
         }
-        setData((prevData) => {
-          return {
-            ...prevData,
-            cards: {
-              results: data.results,
-            },
-          };
-        });
+        setData(data.results);
       } catch {
         setIsError(true);
-        setData((prevData) => {
-          return {
-            ...prevData,
-            cards: {
-              results: [],
-            },
-          };
-        });
+        setData([]);
       }
       setIsLoading(false);
     };
@@ -147,41 +119,26 @@ function Home() {
 
   const handleChange = (id: number) => {
     setData((prevData) => {
-      const updatedCards = prevData.cards.results.map((todo) => {
+      const updatedCards = prevData.map((todo) => {
         if (todo.id === id) {
           todo.isFavorite = !todo.isFavorite;
         }
         return todo;
       });
-      return {
-        ...prevData,
-        cards: {
-          results: updatedCards,
-        },
-      };
+      return updatedCards;
     });
   };
 
   const handleClickToggle = (id = 0) => {
-    const cardId = data.cards.results.findIndex((item) => item.id === id);
-    if (data.isPopup && id) {
+    const cardId = data.findIndex((item) => item.id === id);
+    if (isPopup && id) {
       document.body.classList.remove('stop-scrolling');
-      setData((prevData) => {
-        return {
-          ...prevData,
-          cardModal: data.cards.results[cardId],
-          isPopup: false,
-        };
-      });
+      setDataPopup(data[cardId]);
+      setIsPopup(false);
     } else {
       document.body.classList.add('stop-scrolling');
-      setData((prevData) => {
-        return {
-          ...prevData,
-          cardModal: data.cards.results[cardId],
-          isPopup: true,
-        };
-      });
+      setDataPopup(data[cardId]);
+      setIsPopup(true);
     }
   };
 
@@ -202,15 +159,11 @@ function Home() {
           ) : (
             <>
               <CardList
-                cards={data.cards}
+                cards={data}
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />
-              <Popup
-                card={data.cardModal}
-                active={data.isPopup}
-                handleClickToggle={handleClickToggle}
-              />
+              <Popup card={dataPopup} active={isPopup} handleClickToggle={handleClickToggle} />
             </>
           )}
         </>
