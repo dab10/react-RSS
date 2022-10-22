@@ -2,7 +2,7 @@ import React from 'react';
 import './SearchBar.scss';
 
 type SearchProps = {
-  searching: string;
+  searching: string | null;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   handleChangeForm: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

@@ -16,6 +16,7 @@ type Card = {
     name: string;
   };
   isFavorite: boolean;
+  isInit?: boolean;
 };
 
 type Cards = {
@@ -26,18 +27,10 @@ type HomeState = {
   cards: Cards;
   cardModal: Card;
   searching: string;
-  isLoading: boolean;
-  isFirstCall: boolean;
   isPopup: boolean;
-  errMessage: string | null;
 };
 
-// type HomeProps = { [x: string]: string };
-
 function Home() {
-  // base: string;
-  // characterByName: string;
-
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const stateInit = {
@@ -55,6 +48,7 @@ function Home() {
             name: '',
           },
           isFavorite: false,
+          isInit: true,
         },
       ],
     },
@@ -71,28 +65,51 @@ function Home() {
       },
       isFavorite: false,
     },
-    searching: '',
-    isLoading: false,
-    isFirstCall: true,
     isPopup: false,
-    errMessage: '',
   };
 
   const [data, setData] = useState(stateInit);
-  const [url, setUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [query, setQuery] = useState(() => {
+    const savedItem = localStorage.getItem('savedStateSearching') as string;
+    const parsedItem = JSON.parse(savedItem);
+    console.log(parsedItem);
+    return parsedItem ? `${parsedItem}` : null;
+  });
+  const [url, setUrl] = useState(() => {
+    const savedItem = localStorage.getItem('savedStateSearching') as string;
+    const parsedItem = JSON.parse(savedItem);
+    console.log(parsedItem);
+    return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
+  });
+  // const [url, setUrl] = useState(`${characterByName}`);
+  // const [search, setSearch] = useState(() => {
+  //   const savedItem = localStorage.getItem('savedStateSearching') as string;
+  //   const parsedItem = JSON.parse(savedItem);
+  //   return parsedItem || '';
+  // });
 
   useEffect(() => {
+    console.log('1');
     const saveSearching = localStorage.getItem('savedStateSearching');
-    if (saveSearching) {
-      setData((prevData) => {
-        return {
-          ...prevData,
-          isFirstCall: JSON.parse(saveSearching) === null ? true : false,
-          searching: JSON.parse(saveSearching),
-        };
-      });
+    console.log(saveSearching);
+    if (saveSearching && JSON.parse(saveSearching)) {
+      // setData((prevData) => {
+      //   return {
+      //     ...prevData,
+      //     searching: JSON.parse(saveSearching),
+      //   };
+      // });
+      setQuery(`${JSON.parse(saveSearching)}`);
+      setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
     }
-  }, []);
+  }, [characterByName]);
+
+  useEffect(() => {
+    console.log('2');
+    localStorage.setItem('savedStateSearching', JSON.stringify(query));
+  }, [query]);
 
   // async componentDidMount() {
   //   let saveSearching = '';
@@ -109,20 +126,13 @@ function Home() {
   // }
 
   useEffect(() => {
-    localStorage.setItem('savedStateSearching', JSON.stringify(data.searching));
-  });
-
-  useEffect(() => {
+    console.log('3');
     const fetchData = async () => {
-      setData((prevData) => {
-        return {
-          ...prevData,
-          isLoading: true,
-          errMessage: '',
-        };
-      });
+      setErrorMessage(false);
+      setIsLoading(true);
 
       try {
+        console.log(url);
         const res = await fetch(url);
         const data = await res.json();
         if (!res.ok) {
@@ -137,38 +147,33 @@ function Home() {
           };
         });
       } catch {
-        data.isFirstCall
-          ? setData((prevData) => {
-              return {
-                ...prevData,
-                isFirstCall: false,
-                errMessage: '',
-              };
-            })
-          : setData((prevData) => {
-              return {
-                ...prevData,
-                errMessage: 'Could not fetch the data',
-              };
-            });
+        setErrorMessage(true);
+        setData((prevData) => {
+          return {
+            ...prevData,
+            cards: {
+              results: [],
+            },
+          };
+        });
+        // console.log('4');
+        // console.log(isFirstCall);
+        // if (isFirstCall) {
+        //   setIsFirstCall(false);
+        //   setErrorMessage('');
+        //   console.log(isFirstCall);
+        // } else {
+        //   setErrorMessage('Could not fetch the data');
+        //   console.log(errorMessage);
+        // }
+        // console.log(isFirstCall);
+        // console.log(errorMessage);
       }
-      setData((prevData) => {
-        return {
-          ...prevData,
-          isLoading: false,
-        };
-      });
+      setIsLoading(false);
     };
 
-    setData((prevData) => {
-      return {
-        ...prevData,
-        isLoading: false,
-      };
-    });
-
     fetchData();
-  }, [data.isFirstCall, url]);
+  }, [characterByName, url]);
 
   // async fetchData(url: string) {
   //   try {
@@ -200,7 +205,7 @@ function Home() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setUrl(`${characterByName}${data.searching}`);
+    setUrl(`${characterByName}${query}`);
   };
 
   // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -213,12 +218,13 @@ function Home() {
 
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setData((prevData) => {
-      return {
-        ...prevData,
-        searching: value,
-      };
-    });
+    setQuery(value);
+    // setData((prevData) => {
+    //   return {
+    //     ...prevData,
+    //     searching: value,
+    //   };
+    // });
   };
 
   // handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -306,34 +312,31 @@ function Home() {
       <SearchBar
         handleChangeForm={handleChangeForm}
         handleSubmit={handleSubmit}
-        searching={data.searching}
+        searching={query}
       />
-      {data.errMessage ? (
-        <div className="error-fetch">{data.errMessage}</div>
-      ) : (
+      {errorMessage && <div className="error-fetch">Could not fetch the data</div>}
+      {
         <>
-          {data.isLoading
-            ? data.isLoading && (
-                <div className="loader">
-                  <div></div>
-                </div>
-              )
-            : data.cards && (
-                <>
-                  <CardList
-                    cards={data.cards}
-                    handleChange={handleChange}
-                    handleClickToggle={handleClickToggle}
-                  />
-                  <Popup
-                    card={data.cardModal}
-                    active={data.isPopup}
-                    handleClickToggle={handleClickToggle}
-                  />
-                </>
-              )}
+          {isLoading ? (
+            <div className="loader">
+              <div></div>
+            </div>
+          ) : (
+            <>
+              <CardList
+                cards={data.cards}
+                handleChange={handleChange}
+                handleClickToggle={handleClickToggle}
+              />
+              <Popup
+                card={data.cardModal}
+                active={data.isPopup}
+                handleClickToggle={handleClickToggle}
+              />
+            </>
+          )}
         </>
-      )}
+      }
     </div>
   );
 }
