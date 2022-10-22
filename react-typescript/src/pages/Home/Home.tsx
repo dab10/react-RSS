@@ -74,39 +74,22 @@ function Home() {
   const [isFirstCall, setIsFirstCall] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
-    console.log(parsedItem);
     return parsedItem ? false : true;
   });
   const [query, setQuery] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
-    console.log(parsedItem);
     return parsedItem ? `${parsedItem}` : null;
   });
   const [url, setUrl] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
-    console.log(parsedItem);
     return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
   });
-  // const [url, setUrl] = useState(`${characterByName}`);
-  // const [search, setSearch] = useState(() => {
-  //   const savedItem = localStorage.getItem('savedStateSearching') as string;
-  //   const parsedItem = JSON.parse(savedItem);
-  //   return parsedItem || '';
-  // });
 
   useEffect(() => {
-    console.log('1');
     const saveSearching = localStorage.getItem('savedStateSearching');
-    console.log(saveSearching);
     if (saveSearching && JSON.parse(saveSearching)) {
-      // setData((prevData) => {
-      //   return {
-      //     ...prevData,
-      //     searching: JSON.parse(saveSearching),
-      //   };
-      // });
       setQuery(`${JSON.parse(saveSearching)}`);
       setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
       setIsFirstCall(false);
@@ -114,32 +97,15 @@ function Home() {
   }, [characterByName]);
 
   useEffect(() => {
-    console.log('2');
     localStorage.setItem('savedStateSearching', JSON.stringify(query));
   }, [query]);
 
-  // async componentDidMount() {
-  //   let saveSearching = '';
-
-  //   if (localStorage.getItem('savedStateSearching') !== undefined) {
-  //     saveSearching = JSON.parse(localStorage.getItem('savedStateSearching') as string);
-  //   }
-
-  //   await this.setState({
-  //     isFirstCall: saveSearching === null ? true : false,
-  //     searching: saveSearching,
-  //   });
-  //   this.fetchData(`${this.characterByName}${this.state.searching}`);
-  // }
-
   useEffect(() => {
-    console.log('3');
     const fetchData = async () => {
       setIsError(false);
       setIsLoading(true);
 
       try {
-        console.log(url);
         const res = await fetch(url);
         const data = await res.json();
         if (!res.ok) {
@@ -154,14 +120,6 @@ function Home() {
           };
         });
       } catch {
-        // console.log(isFirstCall);
-        // setIsFirstCall((prevState) => {
-        //   if (prevState) {
-        //     prevState = !prevState;
-        //   }
-        //   return prevState;
-        // });
-        // console.log(isFirstCall);
         setIsError(true);
         setData((prevData) => {
           return {
@@ -171,18 +129,6 @@ function Home() {
             },
           };
         });
-        // console.log('4');
-        // console.log(isFirstCall);
-        // if (isFirstCall) {
-        //   setIsFirstCall(false);
-        //   setErrorMessage('');
-        //   console.log(isFirstCall);
-        // } else {
-        //   setErrorMessage('Could not fetch the data');
-        //   console.log(errorMessage);
-        // }
-        // console.log(isFirstCall);
-        // console.log(errorMessage);
       }
       setIsLoading(false);
     };
@@ -190,65 +136,16 @@ function Home() {
     fetchData();
   }, [characterByName, url]);
 
-  // async fetchData(url: string) {
-  //   try {
-  //     const res = await fetch(url);
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       throw Error();
-  //     }
-  //     this.setState({
-  //       cards: {
-  //         results: data.results,
-  //       },
-  //       isLoading: false,
-  //       errMessage: '',
-  //     });
-  //   } catch {
-  //     this.state.isFirstCall
-  //       ? this.setState({
-  //           isLoading: false,
-  //           isFirstCall: false,
-  //           errMessage: '',
-  //         })
-  //       : this.setState({
-  //           isLoading: false,
-  //           errMessage: 'Could not fetch the data',
-  //         });
-  //   }
-  // }
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUrl(`${characterByName}${query}`);
     setIsFirstCall(false);
   };
 
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   this.setState({
-  //     isLoading: true,
-  //   });
-  //   this.fetchData(`${this.characterByName}${this.state.searching}`);
-  // };
-
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setQuery(value);
-    // setData((prevData) => {
-    //   return {
-    //     ...prevData,
-    //     searching: value,
-    //   };
-    // });
   };
-
-  // handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value } = event.target;
-  //   this.setState({
-  //     searching: value,
-  //   });
-  // };
 
   const handleChange = (id: number) => {
     setData((prevData) => {
@@ -266,22 +163,6 @@ function Home() {
       };
     });
   };
-
-  // handleChange = (id: number) => {
-  //   this.setState((prevState) => {
-  //     const updatedCards = prevState.cards.results.map((todo) => {
-  //       if (todo.id === id) {
-  //         todo.isFavorite = !todo.isFavorite;
-  //       }
-  //       return todo;
-  //     });
-  //     return {
-  //       cards: {
-  //         results: updatedCards,
-  //       },
-  //     };
-  //   });
-  // };
 
   const handleClickToggle = (id = 0) => {
     const cardId = data.cards.results.findIndex((item) => item.id === id);
@@ -305,23 +186,6 @@ function Home() {
       });
     }
   };
-
-  // handleClickToggle = (id = 0) => {
-  //   const cardId = this.state.cards.results.findIndex((item) => item.id === id);
-  //   if (this.state.isPopup && id) {
-  //     document.body.classList.remove('stop-scrolling');
-  //     this.setState({
-  //       cardModal: this.state.cards.results[cardId],
-  //       isPopup: false,
-  //     });
-  //   } else {
-  //     document.body.classList.add('stop-scrolling');
-  //     this.setState({
-  //       cardModal: this.state.cards.results[cardId],
-  //       isPopup: true,
-  //     });
-  //   }
-  // };
 
   return (
     <div className="container">
