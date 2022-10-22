@@ -16,7 +16,6 @@ type Card = {
     name: string;
   };
   isFavorite: boolean;
-  isInit?: boolean;
 };
 
 type Cards = {
@@ -48,7 +47,6 @@ function Home() {
             name: '',
           },
           isFavorite: false,
-          isInit: true,
         },
       ],
     },
