@@ -70,7 +70,7 @@ function Home() {
 
   const [data, setData] = useState(stateInit);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [query, setQuery] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
     const parsedItem = JSON.parse(savedItem);
@@ -128,7 +128,7 @@ function Home() {
   useEffect(() => {
     console.log('3');
     const fetchData = async () => {
-      setErrorMessage(false);
+      setIsError(false);
       setIsLoading(true);
 
       try {
@@ -147,7 +147,7 @@ function Home() {
           };
         });
       } catch {
-        setErrorMessage(true);
+        setIsError(true);
         setData((prevData) => {
           return {
             ...prevData,
@@ -314,7 +314,7 @@ function Home() {
         handleSubmit={handleSubmit}
         searching={query}
       />
-      {errorMessage && <div className="error-fetch">Could not fetch the data</div>}
+      {isError && <div className="error-fetch">Could not fetch the data</div>}
       {
         <>
           {isLoading ? (
