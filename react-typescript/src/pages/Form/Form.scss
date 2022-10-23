@@ -12,6 +12,7 @@
 }
 
 .hidden {
+  height: 30px;
   opacity: 0;
   height: 30px;
 }
@@ -23,6 +24,7 @@
 
 .error {
   opacity: 1;
+  height: 30px;
   color: red;
 }
 

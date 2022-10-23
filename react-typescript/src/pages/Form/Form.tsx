@@ -5,6 +5,7 @@ import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
 import newId from 'utils/newId/newId';
 import './Form.scss';
 import classNames from 'classnames';
+import MyButton from 'components/UI/button/MyButton';
 
 interface IFormInputs {
   id: number;
@@ -73,6 +74,7 @@ const Form = () => {
                 {...register('name', { required: true, minLength: quantityCharacters })}
               />
             </label>
+            {!errors.name && <div className="hidden"></div>}
             {errors.name && (
               <div className="error">{`Name must contain at least ${quantityCharacters} character`}</div>
             )}
@@ -85,6 +87,7 @@ const Form = () => {
                 {...register('surname', { required: true, minLength: quantityCharacters })}
               />
             </label>
+            {!errors.surname && <div className="hidden"></div>}
             {errors.surname && (
               <div className="error">{`Surname must contain at least ${quantityCharacters} character`}</div>
             )}
@@ -99,6 +102,7 @@ const Form = () => {
                 {...register('image', { required: true })}
               />
             </label>
+            {!errors.image && <div className="hidden"></div>}
             {errors.image && <div className="error">Field must contain image file</div>}
           </div>
           <div>
@@ -106,6 +110,7 @@ const Form = () => {
               Date:
               <input className="input-date" type="date" {...register('date', { required: true })} />
             </label>
+            {!errors.date && <div className="hidden"></div>}
             {errors.date && <div className="error">Field must contain date</div>}
           </div>
           <div>
@@ -124,6 +129,7 @@ const Form = () => {
                 <option value="Kazakhstan">Kazakhstan</option>
               </select>
             </label>
+            {!errors.select && <div className="hidden"></div>}
             {errors.select && <div className="error">Country must be selected</div>}
           </div>
           <div>
@@ -136,6 +142,7 @@ const Form = () => {
                 <input type="radio" value="female" {...register('gender', { required: true })} />
               </div>
             </label>
+            {!errors.gender && <div className="hidden"></div>}
             {errors.gender && <div className="error">Gender must be checked</div>}
           </div>
           <div>
@@ -143,9 +150,10 @@ const Form = () => {
               Agree with terms
               <input type="checkbox" {...register('agree', { required: true })} />
             </label>
+            {!errors.agree && <div className="hidden"></div>}
             {errors.agree && <div className="error">Checkbox must be checked</div>}
           </div>
-          <button
+          <MyButton
             className="myBtn"
             type="submit"
             disabled={
@@ -155,7 +163,7 @@ const Form = () => {
             }
           >
             Submit
-          </button>
+          </MyButton>
           <div className={isSuccessClass}>
             <span>✓</span>Saved
           </div>
