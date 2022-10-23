@@ -1,46 +1,40 @@
 import React from 'react';
-import MessageError from '../MessageError/MessageError';
+import { UseFormRegister, FormState } from 'react-hook-form';
 import './InputSelect.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>,
-    React.AriaAttributes {}
-
-interface InputSelectProps extends InputProps {
-  formErrors: {
-    select: string;
-  };
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLSelectElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputSelect = React.forwardRef<Ref, InputSelectProps>(
-  ({ handleChange, defaultValue, formErrors, ...props }, ref) => {
-    return (
-      <div>
-        <label>
-          Country:
-          <select
-            className="input-select"
-            name="select"
-            ref={ref}
-            defaultValue={defaultValue}
-            onChange={handleChange}
-            {...props}
-          >
-            <option value="" disabled>
-              Please select a country
-            </option>
-            <option value="Russia">Russia</option>
-            <option value="Belarus">Belarus</option>
-            <option value="Kazakhstan">Kazakhstan</option>
-          </select>
-        </label>
-        <MessageError messageError={formErrors.select} />
-      </div>
-    );
-  }
+const InputSelect = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label htmlFor="select">
+      Country:
+      <select className="input-select" defaultValue="" {...register('select', { required: true })}>
+        <option value="" disabled>
+          Please select a country
+        </option>
+        <option value="Russia">Russia</option>
+        <option value="Belarus">Belarus</option>
+        <option value="Kazakhstan">Kazakhstan</option>
+      </select>
+    </label>
+    {!errors.select && <div className="hidden"></div>}
+    {errors.select && <div className="error">Country must be selected</div>}
+  </div>
 );
 
 export default InputSelect;

@@ -1,39 +1,39 @@
 import React from 'react';
-import MessageError from '../MessageError/MessageError';
+import { FormState, UseFormRegister } from 'react-hook-form';
+import { quantityCharacters } from 'utils/const/const';
 import './InputSurname.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    React.AriaAttributes {}
-
-interface InputSurnameProps extends InputProps {
-  formErrors: {
-    surname: string;
-  };
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLInputElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputSurname = React.forwardRef<Ref, InputSurnameProps>(
-  ({ handleChange, formErrors, ...props }, ref) => {
-    return (
-      <div>
-        <label>
-          Surname:
-          <input
-            className="input-surname"
-            type="text"
-            name="surname"
-            ref={ref}
-            onChange={handleChange}
-            {...props}
-          />
-        </label>
-        <MessageError messageError={formErrors.surname} />
-      </div>
-    );
-  }
+const InputSurname = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label htmlFor="surname">
+      Surname:
+      <input
+        className="input-surname"
+        {...register('surname', { required: true, minLength: quantityCharacters })}
+      />
+    </label>
+    {!errors.surname && <div className="hidden"></div>}
+    {errors.surname && (
+      <div className="error">{`Surname must contain at least ${quantityCharacters} character`}</div>
+    )}
+  </div>
 );
 
 export default InputSurname;

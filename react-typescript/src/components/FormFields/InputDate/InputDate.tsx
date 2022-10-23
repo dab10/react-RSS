@@ -1,39 +1,33 @@
 import React from 'react';
-import MessageError from '../MessageError/MessageError';
+import { UseFormRegister, FormState } from 'react-hook-form';
 import './InputDate.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    React.AriaAttributes {}
-
-interface InputDateProps extends InputProps {
-  formErrors: {
-    date: string;
-  };
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLInputElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputDate = React.forwardRef<Ref, InputDateProps>(
-  ({ handleChange, formErrors, ...props }, ref) => {
-    return (
-      <div>
-        <label>
-          Date:
-          <input
-            className="input-date"
-            type="date"
-            name="date"
-            ref={ref}
-            onChange={handleChange}
-            {...props}
-          />
-        </label>
-        <MessageError messageError={formErrors.date} />
-      </div>
-    );
-  }
+const InputDate = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label>
+      Date:
+      <input className="input-date" type="date" {...register('date', { required: true })} />
+    </label>
+    {!errors.date && <div className="hidden"></div>}
+    {errors.date && <div className="error">Field must contain date</div>}
+  </div>
 );
 
 export default InputDate;

@@ -1,40 +1,38 @@
 import React from 'react';
-import MessageError from '../MessageError/MessageError';
+import { UseFormRegister, FormState } from 'react-hook-form';
 import './InputImage.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    React.AriaAttributes {}
-
-interface InputImageProps extends InputProps {
-  formErrors: {
-    image: string;
-  };
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLInputElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputImage = React.forwardRef<Ref, InputImageProps>(
-  ({ handleChange, formErrors, ...props }, ref) => {
-    return (
-      <div>
-        <label>
-          Image:
-          <input
-            className="input-image"
-            type="file"
-            name="image"
-            accept="image/png, image/gif, image/jpeg"
-            ref={ref}
-            onChange={handleChange}
-            {...props}
-          />
-        </label>
-        <MessageError messageError={formErrors.image} />
-      </div>
-    );
-  }
+const InputImage = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label htmlFor="image">
+      Image:
+      <input
+        className="input-image"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        {...register('image', { required: true })}
+      />
+    </label>
+    {!errors.image && <div className="hidden"></div>}
+    {errors.image && <div className="error">Field must contain image file</div>}
+  </div>
 );
 
 export default InputImage;

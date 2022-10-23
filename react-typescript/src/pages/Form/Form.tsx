@@ -1,11 +1,18 @@
 import FormList from 'components/FormList/FormList';
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { quantityCharacters, timeConfirmationMessage } from 'utils/const/const';
+import { timeConfirmationMessage } from 'utils/const/const';
 import newId from 'utils/newId/newId';
 import './Form.scss';
 import classNames from 'classnames';
 import MyButton from 'components/UI/button/MyButton';
+import InputName from 'components/FormFields/InputName/InputName';
+import InputSurname from 'components/FormFields/InputSurname/InputSurname';
+import InputImage from 'components/FormFields/InputImage/InputImage';
+import InputSelect from 'components/FormFields/InputSelect/InputSelect';
+import InputDate from 'components/FormFields/InputDate/InputDate';
+import InputRadio from 'components/FormFields/InputRadio/InputRadio';
+import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
 
 interface IFormInputs {
   id: number;
@@ -24,7 +31,7 @@ const Form = () => {
 
   const {
     register,
-    formState: { errors, isDirty, isValid, isSubmitted, submitCount },
+    formState: { isDirty, isValid, isSubmitted, submitCount },
     handleSubmit,
     reset,
     formState,
@@ -66,93 +73,13 @@ const Form = () => {
     <div>
       <div className="form-container">
         <form onSubmit={handleSubmit(onSubmit)} className="form">
-          <div>
-            <label htmlFor="name">
-              Name:
-              <input
-                className="input-name"
-                {...register('name', { required: true, minLength: quantityCharacters })}
-              />
-            </label>
-            {!errors.name && <div className="hidden"></div>}
-            {errors.name && (
-              <div className="error">{`Name must contain at least ${quantityCharacters} character`}</div>
-            )}
-          </div>
-          <div>
-            <label htmlFor="surname">
-              Surname:
-              <input
-                className="input-surname"
-                {...register('surname', { required: true, minLength: quantityCharacters })}
-              />
-            </label>
-            {!errors.surname && <div className="hidden"></div>}
-            {errors.surname && (
-              <div className="error">{`Surname must contain at least ${quantityCharacters} character`}</div>
-            )}
-          </div>
-          <div>
-            <label htmlFor="image">
-              Image:
-              <input
-                className="input-image"
-                type="file"
-                accept="image/png, image/gif, image/jpeg"
-                {...register('image', { required: true })}
-              />
-            </label>
-            {!errors.image && <div className="hidden"></div>}
-            {errors.image && <div className="error">Field must contain image file</div>}
-          </div>
-          <div>
-            <label>
-              Date:
-              <input className="input-date" type="date" {...register('date', { required: true })} />
-            </label>
-            {!errors.date && <div className="hidden"></div>}
-            {errors.date && <div className="error">Field must contain date</div>}
-          </div>
-          <div>
-            <label htmlFor="select">
-              Country:
-              <select
-                className="input-select"
-                defaultValue=""
-                {...register('select', { required: true })}
-              >
-                <option value="" disabled>
-                  Please select a country
-                </option>
-                <option value="Russia">Russia</option>
-                <option value="Belarus">Belarus</option>
-                <option value="Kazakhstan">Kazakhstan</option>
-              </select>
-            </label>
-            {!errors.select && <div className="hidden"></div>}
-            {errors.select && <div className="error">Country must be selected</div>}
-          </div>
-          <div>
-            <label>
-              Gender:
-              <div className="input-radio">
-                <label htmlFor="male">male</label>
-                <input type="radio" value="male" {...register('gender', { required: true })} />
-                <label htmlFor="female">female</label>
-                <input type="radio" value="female" {...register('gender', { required: true })} />
-              </div>
-            </label>
-            {!errors.gender && <div className="hidden"></div>}
-            {errors.gender && <div className="error">Gender must be checked</div>}
-          </div>
-          <div>
-            <label htmlFor="agree" className="input-checkbox">
-              Agree with terms
-              <input type="checkbox" {...register('agree', { required: true })} />
-            </label>
-            {!errors.agree && <div className="hidden"></div>}
-            {errors.agree && <div className="error">Checkbox must be checked</div>}
-          </div>
+          <InputName register={register} required formState={formState}></InputName>
+          <InputSurname register={register} required formState={formState}></InputSurname>
+          <InputImage register={register} required formState={formState}></InputImage>
+          <InputDate register={register} required formState={formState}></InputDate>
+          <InputSelect register={register} required formState={formState}></InputSelect>
+          <InputRadio register={register} required formState={formState}></InputRadio>
+          <InputCheckbox register={register} required formState={formState}></InputCheckbox>
           <MyButton
             className="myBtn"
             type="submit"

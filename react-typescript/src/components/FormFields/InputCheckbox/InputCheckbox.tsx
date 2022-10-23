@@ -1,32 +1,33 @@
 import React from 'react';
-import MessageError from '../MessageError/MessageError';
+import { UseFormRegister, FormState } from 'react-hook-form';
 import './InputCheckbox.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    React.AriaAttributes {}
-
-interface InputCheckboxProps extends InputProps {
-  formErrors: {
-    agree: string;
-  };
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLInputElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputCheckbox = React.forwardRef<Ref, InputCheckboxProps>(
-  ({ handleChange, formErrors, ...props }, ref) => {
-    return (
-      <div>
-        <label className="input-checkbox">
-          <input type="checkbox" name="agree" ref={ref} onChange={handleChange} {...props} />
-          Agree with terms
-        </label>
-        <MessageError messageError={formErrors.agree} />
-      </div>
-    );
-  }
+const InputCheckbox = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label htmlFor="agree" className="input-checkbox">
+      Agree with terms
+      <input type="checkbox" {...register('agree', { required: true })} />
+    </label>
+    {!errors.agree && <div className="hidden"></div>}
+    {errors.agree && <div className="error">Checkbox must be checked</div>}
+  </div>
 );
 
 export default InputCheckbox;

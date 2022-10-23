@@ -1,34 +1,37 @@
 import React from 'react';
+import { UseFormRegister, FormState } from 'react-hook-form';
 import './InputRadio.scss';
 
-interface InputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
-    React.AriaAttributes {}
-
-interface InputRadioProps extends InputProps {
-  gender: 'male' | 'female';
-  handleChange: () => void;
+interface IFormValues {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
 }
 
-type Ref = HTMLInputElement;
+type InputProps = {
+  register: UseFormRegister<IFormValues>;
+  required: boolean;
+  formState: FormState<IFormValues>;
+};
 
-const InputRadio = React.forwardRef<Ref, InputRadioProps>(
-  ({ gender, handleChange, ...props }, ref) => {
-    return (
-      <>
-        <label htmlFor={gender}>{gender}</label>
-        <input
-          type="radio"
-          name="gender"
-          value={gender}
-          id={gender}
-          ref={ref}
-          onChange={handleChange}
-          {...props}
-        />
-      </>
-    );
-  }
+const InputRadio = ({ register, formState: { errors } }: InputProps) => (
+  <div>
+    <label>
+      Gender:
+      <div className="input-radio">
+        <label htmlFor="male">male</label>
+        <input type="radio" value="male" {...register('gender', { required: true })} />
+        <label htmlFor="female">female</label>
+        <input type="radio" value="female" {...register('gender', { required: true })} />
+      </div>
+    </label>
+    {!errors.gender && <div className="hidden"></div>}
+    {errors.gender && <div className="error">Gender must be checked</div>}
+  </div>
 );
-
 export default InputRadio;
