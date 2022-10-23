@@ -6,7 +6,7 @@ import InputName from './InputName';
 test('type', () => {
   render(
     <InputName
-      handleChange={() => {}}
+      // handleChange={() => {}}
       formErrors={{
         name: '',
       }}

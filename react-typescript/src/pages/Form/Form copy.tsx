@@ -298,7 +298,7 @@ class Form extends React.Component<FormProps, FormState> {
           <form onSubmit={this.handleSubmitForm} className="form">
             <InputName
               ref={this.inputName}
-              handleChange={this.handleChangeInputName}
+              // handleChange={this.handleChangeInputName}
               formErrors={this.state.formErrors}
             />
             <InputSurname
