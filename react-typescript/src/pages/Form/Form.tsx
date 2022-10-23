@@ -63,57 +63,104 @@ const Form = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="name">Name:</label>
-        <input {...register('name', { required: true, minLength: quantityCharacters })} />
-        {errors.name && <div>{`Name must contain at least ${quantityCharacters} character`}</div>}
-        <label htmlFor="surname">Surname:</label>
-        <input {...register('surname', { required: true, minLength: quantityCharacters })} />
-        {errors.surname && (
-          <div>{`Surname must contain at least ${quantityCharacters} character`}</div>
-        )}
-        <label htmlFor="image">Image:</label>
-        <input
-          type="file"
-          accept="image/png, image/gif, image/jpeg"
-          {...register('image', { required: true })}
-        />
-        {errors.image && <div>Field must contain image file</div>}
-        <input type="date" {...register('date', { required: true })} />
-        {errors.date && <div>Field must contain date</div>}
-        <label htmlFor="select">Country:</label>
-        <select defaultValue="" {...register('select', { required: true })}>
-          <option value="" disabled>
-            Please select a country
-          </option>
-          <option value="Russia">Russia</option>
-          <option value="Belarus">Belarus</option>
-          <option value="Kazakhstan">Kazakhstan</option>
-        </select>
-        {errors.select && <div>Country must be selected</div>}
-        <label>Gender:</label>
-        <label htmlFor="male">male</label>
-        <input type="radio" value="male" {...register('gender', { required: true })} />
-        <label htmlFor="female">female</label>
-        <input type="radio" value="female" {...register('gender', { required: true })} />
-        {errors.gender && <div>Gender must be checked</div>}
-        <label htmlFor="agree">Agree with terms</label>
-        <input type="checkbox" {...register('agree', { required: true })} />
-        {errors.agree && <div>Checkbox must be checked</div>}
-        <button
-          type="submit"
-          disabled={
-            (!isDirty && !isSubmitted) ||
-            (isDirty && !isValid && isSubmitted) ||
-            (!!submitCount && !isValid)
-          }
-        >
-          Submit
-        </button>
-        <div className={isSuccessClass}>
-          <span>✓</span>Saved
-        </div>
-      </form>
+      <div className="form-container">
+        <form onSubmit={handleSubmit(onSubmit)} className="form">
+          <div>
+            <label htmlFor="name">
+              Name:
+              <input
+                className="input-name"
+                {...register('name', { required: true, minLength: quantityCharacters })}
+              />
+            </label>
+            {errors.name && (
+              <div className="error">{`Name must contain at least ${quantityCharacters} character`}</div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="surname">
+              Surname:
+              <input
+                className="input-surname"
+                {...register('surname', { required: true, minLength: quantityCharacters })}
+              />
+            </label>
+            {errors.surname && (
+              <div className="error">{`Surname must contain at least ${quantityCharacters} character`}</div>
+            )}
+          </div>
+          <div>
+            <label htmlFor="image">
+              Image:
+              <input
+                className="input-image"
+                type="file"
+                accept="image/png, image/gif, image/jpeg"
+                {...register('image', { required: true })}
+              />
+            </label>
+            {errors.image && <div className="error">Field must contain image file</div>}
+          </div>
+          <div>
+            <label>
+              Date:
+              <input className="input-date" type="date" {...register('date', { required: true })} />
+            </label>
+            {errors.date && <div className="error">Field must contain date</div>}
+          </div>
+          <div>
+            <label htmlFor="select">
+              Country:
+              <select
+                className="input-select"
+                defaultValue=""
+                {...register('select', { required: true })}
+              >
+                <option value="" disabled>
+                  Please select a country
+                </option>
+                <option value="Russia">Russia</option>
+                <option value="Belarus">Belarus</option>
+                <option value="Kazakhstan">Kazakhstan</option>
+              </select>
+            </label>
+            {errors.select && <div className="error">Country must be selected</div>}
+          </div>
+          <div>
+            <label>
+              Gender:
+              <div className="input-radio">
+                <label htmlFor="male">male</label>
+                <input type="radio" value="male" {...register('gender', { required: true })} />
+                <label htmlFor="female">female</label>
+                <input type="radio" value="female" {...register('gender', { required: true })} />
+              </div>
+            </label>
+            {errors.gender && <div className="error">Gender must be checked</div>}
+          </div>
+          <div>
+            <label htmlFor="agree" className="input-checkbox">
+              Agree with terms
+              <input type="checkbox" {...register('agree', { required: true })} />
+            </label>
+            {errors.agree && <div className="error">Checkbox must be checked</div>}
+          </div>
+          <button
+            className="myBtn"
+            type="submit"
+            disabled={
+              (!isDirty && !isSubmitted) ||
+              (isDirty && !isValid && isSubmitted) ||
+              (!!submitCount && !isValid)
+            }
+          >
+            Submit
+          </button>
+          <div className={isSuccessClass}>
+            <span>✓</span>Saved
+          </div>
+        </form>
+      </div>
       <div>
         <FormList formItems={formItems} />
       </div>

@@ -33,3 +33,74 @@
   margin: 5px 0;
   border: 1px solid black;
 }
+
+.input-name {
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-surname {
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-image {
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-date {
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-select {
+  width: 100%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-radio {
+  display: flex;
+  gap: 10px;
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.input-checkbox {
+  width: 89%;
+  padding: 5px 15px;
+  margin: 5px 0;
+  border: 1px solid black;
+}
+
+.myBtn {
+  display: block;
+  padding: 5px 15px;
+  color: black;
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid black;
+  cursor: pointer;
+
+  &:active {
+    background: gray;
+  }
+  &:disabled,
+  &[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+}
