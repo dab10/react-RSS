@@ -91,7 +91,7 @@ const Form = () => {
           >
             Submit
           </MyButton>
-          <div className={isSuccessClass}>
+          <div className={isSuccessClass} data-testid="submit-message">
             <span>✓</span>Saved
           </div>
         </form>

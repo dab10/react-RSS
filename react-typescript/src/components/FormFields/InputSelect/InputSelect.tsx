@@ -23,7 +23,12 @@ const InputSelect = ({ register, formState: { errors } }: InputProps) => (
   <div>
     <label htmlFor="select">
       Country:
-      <select className="input-select" defaultValue="" {...register('select', { required: true })}>
+      <select
+        id="select"
+        className="input-select"
+        defaultValue=""
+        {...register('select', { required: true })}
+      >
         <option value="" disabled>
           Please select a country
         </option>

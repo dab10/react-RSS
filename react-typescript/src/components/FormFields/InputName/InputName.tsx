@@ -22,9 +22,10 @@ type InputProps = {
 
 const InputName = ({ register, formState: { errors } }: InputProps) => (
   <div>
-    <label htmlFor="name">
+    <label htmlFor="input-name">
       Name:
       <input
+        id="input-name"
         className="input-name"
         {...register('name', { required: true, minLength: quantityCharacters })}
       />

@@ -25,6 +25,7 @@ const InputSurname = ({ register, formState: { errors } }: InputProps) => (
     <label htmlFor="surname">
       Surname:
       <input
+        id="surname"
         className="input-surname"
         {...register('surname', { required: true, minLength: quantityCharacters })}
       />

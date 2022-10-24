@@ -43,17 +43,17 @@ function Home() {
   const [isPopup, setIsPopup] = useState(false);
   const [isFirstCall, setIsFirstCall] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
-    const parsedItem = JSON.parse(savedItem);
+    const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
     return parsedItem ? false : true;
   });
   const [query, setQuery] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
-    const parsedItem = JSON.parse(savedItem);
+    const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
     return parsedItem ? `${parsedItem}` : null;
   });
   const [url, setUrl] = useState(() => {
     const savedItem = localStorage.getItem('savedStateSearching') as string;
-    const parsedItem = JSON.parse(savedItem);
+    const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
     return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
   });
 
@@ -82,6 +82,13 @@ function Home() {
           throw Error();
         }
         setData(data.results);
+        setData((prevData) => {
+          const updatedCards = prevData.map((item) => {
+            item.isFavorite = false;
+            return item;
+          });
+          return updatedCards;
+        });
       } catch {
         setIsError(true);
         setData([]);

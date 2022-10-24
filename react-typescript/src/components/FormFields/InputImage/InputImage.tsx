@@ -24,6 +24,7 @@ const InputImage = ({ register, formState: { errors } }: InputProps) => (
     <label htmlFor="image">
       Image:
       <input
+        id="image"
         className="input-image"
         type="file"
         accept="image/png, image/gif, image/jpeg"

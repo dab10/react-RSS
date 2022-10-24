@@ -31,7 +31,11 @@ const Popup = (props: PopupProps) => {
   });
 
   return (
-    <div className={modalClass} onClick={() => props.handleClickToggle(props.card.id)}>
+    <div
+      className={modalClass}
+      onClick={() => props.handleClickToggle(props.card.id)}
+      data-testid="popup"
+    >
       <div className={modalContentClass} onClick={(e) => e.stopPropagation()}>
         <div className="modal__close" onClick={() => props.handleClickToggle(props.card.id)}>
           X
