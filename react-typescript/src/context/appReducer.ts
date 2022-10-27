@@ -11,11 +11,12 @@ type Card = {
   };
   isFavorite: boolean;
 };
-type Cards = {
-  results: Card[];
-};
+// type Cards = {
+//   results: Card[];
+// };
 type HomeState = {
-  data: Cards;
+  id: number;
+  data: Card[];
   dataPopup: Card;
   query: string | null;
   url: string;
@@ -30,20 +31,102 @@ export type StateType = {
   formPage?: string;
 };
 
-const appReducer = (state: StateType, action: { type: string; payload: StateType }) => {
+type ActionDataFromLocalStorage = {
+  type: 'DATA_FROM_LOCAL_STORAGE';
+  payload: {
+    homePage: {
+      query: string | null;
+      url: string;
+    };
+  };
+};
+
+type ActionFetchSuccess = {
+  type: 'FETCH_SUCCESS';
+  payload: {
+    homePage: {
+      data: Card[];
+    };
+  };
+};
+
+type ActionFetchError = {
+  type: 'FETCH_ERROR';
+};
+
+type ActionHandleSubmit = {
+  type: 'HANDLE_SUBMIT';
+  payload: {
+    homePage: {
+      url: string;
+    };
+  };
+};
+
+type ActionHandleChangeForm = {
+  type: 'HANDLE_CHANGE_FORM';
+  payload: {
+    homePage: {
+      query: string | null;
+    };
+  };
+};
+
+type ActionHandleChangeLikes = {
+  type: 'HANDLE_CHANGE_LIKES';
+  payload: {
+    homePage: {
+      data: Card[];
+    };
+  };
+};
+
+type ActionClosePopup = {
+  type: 'CLOSE_POPUP';
+  payload: {
+    homePage: {
+      dataPopup: Card;
+    };
+  };
+};
+
+type ActionOpenPopup = {
+  type: 'OPEN_POPUP';
+  payload: {
+    homePage: {
+      dataPopup: Card;
+    };
+  };
+};
+
+type Actions =
+  | ActionDataFromLocalStorage
+  | ActionFetchSuccess
+  | ActionFetchError
+  | ActionHandleSubmit
+  | ActionHandleChangeForm
+  | ActionHandleChangeLikes
+  | ActionClosePopup
+  | ActionOpenPopup;
+
+// type Action = {
+//   homePage: {
+//     id: number;
+//     data: Card[];
+//     dataPopup: Card;
+//     query: string | null;
+//     url: string;
+//   };
+// };
+
+const appReducer = (state: StateType, action: Actions) => {
   switch (action.type) {
     case 'FETCH_SUCCESS':
-      const updatedCards = action.payload.homePage.data.results.map((item) => {
-        item.isFavorite = false;
-        return item;
-      });
       return {
         ...state,
         homePage: {
           ...state.homePage,
-          data: {
-            results: updatedCards,
-          },
+          data: action.payload.homePage.data,
           isLoading: false,
           isError: false,
         },
@@ -53,18 +136,70 @@ const appReducer = (state: StateType, action: { type: string; payload: StateType
         ...state,
         homePage: {
           ...state.homePage,
-          data: {
-            results: [],
-          },
+          data: [],
           isLoading: false,
           isError: true,
         },
       };
-    // case COUNT_ZERO:
-    //   return {
-    //     count: 0,
-    //     id: Date.now().toString(),
-    //   };
+    case 'DATA_FROM_LOCAL_STORAGE':
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          query: action.payload.homePage.query,
+          url: action.payload.homePage.url,
+          isFirstCall: false,
+        },
+      };
+    case 'HANDLE_SUBMIT':
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          url: action.payload.homePage.url,
+          isFirstCall: false,
+        },
+      };
+    case 'HANDLE_CHANGE_FORM':
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          query: action.payload.homePage.query,
+        },
+      };
+    case 'HANDLE_CHANGE_LIKES':
+      // const updatedCardsLike = state.homePage.data.map((todo) => {
+      //   if (todo.id === action.payload.homePage.id) {
+      //     todo.isFavorite = !todo.isFavorite;
+      //   }
+      //   return todo;
+      // });
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          data: action.payload.homePage.data,
+        },
+      };
+    case 'CLOSE_POPUP':
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          dataPopup: action.payload.homePage.dataPopup,
+          isPopup: false,
+        },
+      };
+    case 'OPEN_POPUP':
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          dataPopup: action.payload.homePage.dataPopup,
+          isPopup: true,
+        },
+      };
     default:
       return state;
   }

@@ -1,5 +1,5 @@
 import React, { createContext, Dispatch, useReducer } from 'react';
-import appReducer, { StateType } from './appReducer';
+import appReducer from './appReducer';
 
 type Card = {
   id: number;
@@ -15,12 +15,13 @@ type Card = {
   isFavorite: boolean;
 };
 
-type Cards = {
-  results: Card[];
-};
+// type Cards = {
+//   results: Card[];
+// };
 
 type HomeState = {
-  data: Cards;
+  id: number;
+  data: Card[];
   dataPopup: Card;
   query: string | null;
   url: string;
@@ -30,12 +31,89 @@ type HomeState = {
   isError: boolean;
 };
 
+type ActionDataFromLocalStorage = {
+  type: 'DATA_FROM_LOCAL_STORAGE';
+  payload: {
+    homePage: {
+      query: string | null;
+      url: string;
+    };
+  };
+};
+type ActionFetchSuccess = {
+  type: 'FETCH_SUCCESS';
+  payload: {
+    homePage: {
+      data: Card[];
+    };
+  };
+};
+
+type ActionFetchError = {
+  type: 'FETCH_ERROR';
+};
+
+type ActionHandleSubmit = {
+  type: 'HANDLE_SUBMIT';
+  payload: {
+    homePage: {
+      url: string;
+    };
+  };
+};
+
+type ActionHandleChangeForm = {
+  type: 'HANDLE_CHANGE_FORM';
+  payload: {
+    homePage: {
+      query: string | null;
+    };
+  };
+};
+
+type ActionHandleChangeLikes = {
+  type: 'HANDLE_CHANGE_LIKES';
+  payload: {
+    homePage: {
+      data: Card[];
+    };
+  };
+};
+
+type ActionClosePopup = {
+  type: 'CLOSE_POPUP';
+  payload: {
+    homePage: {
+      dataPopup: Card;
+    };
+  };
+};
+
+type ActionOpenPopup = {
+  type: 'OPEN_POPUP';
+  payload: {
+    homePage: {
+      dataPopup: Card;
+    };
+  };
+};
+
+type Actions =
+  | ActionDataFromLocalStorage
+  | ActionFetchSuccess
+  | ActionFetchError
+  | ActionHandleSubmit
+  | ActionHandleChangeForm
+  | ActionHandleChangeLikes
+  | ActionClosePopup
+  | ActionOpenPopup;
+
 type AppContextType = {
   state: {
     homePage: HomeState;
     formPage?: string;
   };
-  dispatch: Dispatch<{ type: string; payload: StateType }>;
+  dispatch: Dispatch<Actions>;
 };
 
 export const AppContext = createContext({} as AppContextType);
@@ -48,23 +126,22 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
 
   const initialState = {
     homePage: {
-      data: {
-        results: [
-          {
-            id: 0,
-            image: '',
+      id: 0,
+      data: [
+        {
+          id: 0,
+          image: '',
+          name: '',
+          status: '',
+          species: '',
+          type: '',
+          gender: '',
+          location: {
             name: '',
-            status: '',
-            species: '',
-            type: '',
-            gender: '',
-            location: {
-              name: '',
-            },
-            isFavorite: false,
           },
-        ],
-      },
+          isFavorite: false,
+        },
+      ] as Array<Card>,
       dataPopup: {
         id: 0,
         image: '',
@@ -77,7 +154,7 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
           name: '',
         },
         isFavorite: false,
-      },
+      } as Card,
       isLoading: true,
       isPopup: false,
       isError: false,

@@ -7,10 +7,11 @@ import Footer from 'components/Footer/Footer';
 import Form from 'pages/Form/Form';
 import Header from 'components/Header/Header';
 import { routes } from 'utils/const/const';
+import { AppState } from 'context/AppState';
 
 function App() {
   return (
-    <>
+    <AppState>
       <Header />
       <Routes>
         <Route path={routes.homePage} element={<Home />} />
@@ -20,7 +21,7 @@ function App() {
         <Route path={routes.anyPage} element={<Navigate to={routes.notFoundPage} replace />} />
       </Routes>
       <Footer />
-    </>
+    </AppState>
   );
 }
 
