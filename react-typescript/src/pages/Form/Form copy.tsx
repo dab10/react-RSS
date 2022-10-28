@@ -1,5 +1,5 @@
 import FormList from 'components/FormList/FormList';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { timeConfirmationMessage } from 'utils/const/const';
 import newId from 'utils/newId/newId';
@@ -13,7 +13,6 @@ import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputDate from 'components/FormFields/InputDate/InputDate';
 import InputRadio from 'components/FormFields/InputRadio/InputRadio';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
-import { AppContext } from 'context/AppState';
 
 interface IFormInputs {
   id: number;
@@ -27,9 +26,8 @@ interface IFormInputs {
 }
 
 const Form = () => {
-  // const [formItems, setFormItems] = useState([] as Array<IFormInputs>);
-  // const [isSuccess, setIsSuccess] = useState(false);
-  const { state, dispatch } = useContext(AppContext);
+  const [formItems, setFormItems] = useState([] as Array<IFormInputs>);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const {
     register,
@@ -41,7 +39,7 @@ const Form = () => {
 
   const isSuccessClass = classNames({
     hidden: true,
-    'not-hidden': state.formPage.isSuccess,
+    'not-hidden': isSuccess,
   });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
@@ -56,21 +54,12 @@ const Form = () => {
       agree: data.agree,
       gender: data.gender,
     };
-    // setFormItems([...formItems, newItem]);
+    setFormItems([...formItems, newItem]);
 
-    // setIsSuccess(true);
-
-    dispatch({
-      type: 'ADD_NEW_FORM',
-      payload: {
-        formPage: {
-          formItems: newItem,
-        },
-      },
-    });
+    setIsSuccess(true);
 
     setTimeout(() => {
-      dispatch({ type: 'SET_MESSAGE_FALSE' });
+      setIsSuccess(false);
     }, timeConfirmationMessage);
   };
 
@@ -108,7 +97,7 @@ const Form = () => {
         </form>
       </div>
       <div>
-        <FormList formItems={state.formPage.formItems} />
+        <FormList formItems={formItems} />
       </div>
     </div>
   );

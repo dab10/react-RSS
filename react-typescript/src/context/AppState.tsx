@@ -31,6 +31,22 @@ type HomeState = {
   isError: boolean;
 };
 
+type FormState = {
+  formItems: FormInputs[];
+  isSuccess: boolean;
+};
+
+type FormInputs = {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
+};
+
 type ActionDataFromLocalStorage = {
   type: 'DATA_FROM_LOCAL_STORAGE';
   payload: {
@@ -98,6 +114,19 @@ type ActionOpenPopup = {
   };
 };
 
+type ActionAddNewForm = {
+  type: 'ADD_NEW_FORM';
+  payload: {
+    formPage: {
+      formItems: FormInputs;
+    };
+  };
+};
+
+type ActionSetMessageFalse = {
+  type: 'SET_MESSAGE_FALSE';
+};
+
 type Actions =
   | ActionDataFromLocalStorage
   | ActionFetchSuccess
@@ -106,12 +135,14 @@ type Actions =
   | ActionHandleChangeForm
   | ActionHandleChangeLikes
   | ActionClosePopup
-  | ActionOpenPopup;
+  | ActionOpenPopup
+  | ActionAddNewForm
+  | ActionSetMessageFalse;
 
 type AppContextType = {
   state: {
     homePage: HomeState;
-    formPage?: string;
+    formPage: FormState;
   };
   dispatch: Dispatch<Actions>;
 };
@@ -161,6 +192,10 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
       query: parsedItem ? `${parsedItem}` : null,
       url: parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`,
       isFirstCall: parsedItem ? false : true,
+    },
+    formPage: {
+      formItems: [] as FormInputs[],
+      isSuccess: false,
     },
   };
   const [state, dispatch] = useReducer(appReducer, initialState);

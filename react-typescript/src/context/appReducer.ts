@@ -26,9 +26,25 @@ type HomeState = {
   isError: boolean;
 };
 
+type FormState = {
+  formItems: FormInputs[];
+  isSuccess: boolean;
+};
+
+type FormInputs = {
+  id: number;
+  name: string;
+  surname: string;
+  image: string;
+  date: string;
+  select: string;
+  gender: string;
+  agree: boolean;
+};
+
 export type StateType = {
   homePage: HomeState;
-  formPage?: string;
+  formPage: FormState;
 };
 
 type ActionDataFromLocalStorage = {
@@ -99,6 +115,19 @@ type ActionOpenPopup = {
   };
 };
 
+type ActionAddNewForm = {
+  type: 'ADD_NEW_FORM';
+  payload: {
+    formPage: {
+      formItems: FormInputs;
+    };
+  };
+};
+
+type ActionSetMessageFalse = {
+  type: 'SET_MESSAGE_FALSE';
+};
+
 type Actions =
   | ActionDataFromLocalStorage
   | ActionFetchSuccess
@@ -107,7 +136,9 @@ type Actions =
   | ActionHandleChangeForm
   | ActionHandleChangeLikes
   | ActionClosePopup
-  | ActionOpenPopup;
+  | ActionOpenPopup
+  | ActionAddNewForm
+  | ActionSetMessageFalse;
 
 // type Action = {
 //   homePage: {
@@ -198,6 +229,22 @@ const appReducer = (state: StateType, action: Actions) => {
           ...state.homePage,
           dataPopup: action.payload.homePage.dataPopup,
           isPopup: true,
+        },
+      };
+    case 'ADD_NEW_FORM':
+      return {
+        ...state,
+        formPage: {
+          formItems: [...state.formPage.formItems, action.payload.formPage.formItems],
+          isSuccess: true,
+        },
+      };
+    case 'SET_MESSAGE_FALSE':
+      return {
+        ...state,
+        formPage: {
+          ...state.formPage,
+          isSuccess: false,
         },
       };
     default:

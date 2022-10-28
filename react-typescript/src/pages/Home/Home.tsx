@@ -73,35 +73,35 @@ function Home() {
   //   return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
   // });
 
-  useEffect(() => {
-    const saveSearching = localStorage.getItem('savedStateSearching');
-    if (saveSearching && JSON.parse(saveSearching)) {
-      // setQuery(`${JSON.parse(saveSearching)}`);
-      // setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
-      // setIsFirstCall(false);
-      dispatch({
-        type: 'DATA_FROM_LOCAL_STORAGE',
-        payload: {
-          homePage: {
-            query: `${JSON.parse(saveSearching)}`,
-            url: `${characterByName}${JSON.parse(saveSearching)}`,
-          },
-        },
-      });
-    }
-  }, [characterByName, dispatch]);
+  // useEffect(() => {
+  //   const saveSearching = localStorage.getItem('savedStateSearching');
+  //   if (saveSearching && JSON.parse(saveSearching)) {
+  //     // setQuery(`${JSON.parse(saveSearching)}`);
+  //     // setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
+  //     // setIsFirstCall(false);
+  //     dispatch({
+  //       type: 'DATA_FROM_LOCAL_STORAGE',
+  //       payload: {
+  //         homePage: {
+  //           query: `${JSON.parse(saveSearching)}`,
+  //           url: `${characterByName}${JSON.parse(saveSearching)}`,
+  //         },
+  //       },
+  //     });
+  //   }
+  // }, [characterByName, dispatch]);
 
-  useEffect(() => {
-    localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
-  }, [state.homePage.query]);
+  // useEffect(() => {
+  //   localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
+  // });
 
   useEffect(() => {
     const fetchData = async () => {
       // setIsError(false);
       // setIsLoading(true);
-      console.log(state.homePage.query);
+      // console.log(state.homePage.query);
       try {
-        const res = await fetch(`${characterByName}${state.homePage.query}`);
+        const res = await fetch(state.homePage.url);
         const data = await res.json();
         if (!res.ok) {
           throw Error();
@@ -135,7 +135,7 @@ function Home() {
     };
 
     fetchData();
-  }, [characterByName, dispatch, state.homePage.query]);
+  }, [characterByName, dispatch, state.homePage.url]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -147,6 +147,7 @@ function Home() {
         },
       },
     });
+    localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
     // setUrl(`${characterByName}${query}`);
     // setIsFirstCall(false);
   };
@@ -221,6 +222,7 @@ function Home() {
 
   return (
     <div className="container">
+      {console.log(state.homePage)}
       <SearchBar
         handleChangeForm={handleChangeForm}
         handleSubmit={handleSubmit}
