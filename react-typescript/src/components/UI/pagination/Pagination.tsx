@@ -11,9 +11,9 @@ type PropsPagination = {
 
 const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => {
   const pagesArray = getPagesArray(totalPages);
-  console.log(totalPages);
   let sliceLeft;
   let sliceRight;
+
   if (pagesArray.length > 5) {
     if (page === 1) {
       sliceLeft = page;
