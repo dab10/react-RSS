@@ -1,0 +1,15 @@
+.page-wrapper {
+  margin-top: 20px;
+  display: flex;
+}
+
+.page {
+  padding: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.page-current {
+  border: 2px solid gold;
+  font-weight: bold;
+}

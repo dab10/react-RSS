@@ -18,6 +18,9 @@ export type HomeState = {
   id: number;
   data: Card[];
   dataPopup: Card;
+  totalPages: number;
+  limit: number;
+  page: number;
   query: string | null;
   url: string;
   isLoading: boolean;
@@ -62,6 +65,7 @@ type ActionFetchSuccess = {
   payload: {
     homePage: {
       data: Card[];
+      totalPages: number;
     };
   };
 };
@@ -128,6 +132,15 @@ type ActionSetMessageFalse = {
   type: TypeDispatch.SET_MESSAGE_FALSE;
 };
 
+type ActionSetPage = {
+  type: TypeDispatch.HANDLE_SET_PAGE;
+  payload: {
+    homePage: {
+      page: number;
+    };
+  };
+};
+
 export type Actions =
   | ActionDataFromLocalStorage
   | ActionFetchSuccess
@@ -138,4 +151,5 @@ export type Actions =
   | ActionClosePopup
   | ActionOpenPopup
   | ActionAddNewForm
-  | ActionSetMessageFalse;
+  | ActionSetMessageFalse
+  | ActionSetPage;

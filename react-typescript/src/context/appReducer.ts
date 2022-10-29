@@ -1,3 +1,4 @@
+import { TypeDispatch } from 'utils/const/const';
 import { Actions, StateType } from './context.types';
 
 const appReducer = (state: StateType, action: Actions) => {
@@ -8,6 +9,7 @@ const appReducer = (state: StateType, action: Actions) => {
         homePage: {
           ...state.homePage,
           data: action.payload.homePage.data,
+          totalPages: action.payload.homePage.totalPages,
           isLoading: false,
           isError: false,
         },
@@ -90,6 +92,15 @@ const appReducer = (state: StateType, action: Actions) => {
         formPage: {
           ...state.formPage,
           isSuccess: false,
+        },
+      };
+    case TypeDispatch.HANDLE_SET_PAGE:
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          page: action.payload.homePage.page,
+          isLoading: true,
         },
       };
     default:

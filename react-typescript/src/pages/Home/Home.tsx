@@ -5,6 +5,8 @@ import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
 import { TypeDispatch } from 'utils/const/const';
+import { getPageCount } from 'utils/pagination/getPageCount';
+import Pagination from 'components/UI/pagination/Pagination';
 
 function Home() {
   type Card = {
@@ -41,6 +43,7 @@ function Home() {
         payload: {
           homePage: {
             data: updatedCards,
+            totalPages: getPageCount(data.info.count, state.homePage.limit),
           },
         },
       });
@@ -117,6 +120,18 @@ function Home() {
     }
   };
 
+  const handleChangePage = async (pageNumber: number) => {
+    dispatch({
+      type: TypeDispatch.HANDLE_SET_PAGE,
+      payload: {
+        homePage: {
+          page: pageNumber,
+        },
+      },
+    });
+    await fetchData(`${characterByName}${state.homePage.query}&page=${pageNumber}`);
+  };
+
   return (
     <div className="container">
       <SearchBar
@@ -144,6 +159,11 @@ function Home() {
                 card={state.homePage.dataPopup}
                 active={state.homePage.isPopup}
                 handleClickToggle={handleClickToggle}
+              />
+              <Pagination
+                totalPages={state.homePage.totalPages}
+                page={state.homePage.page}
+                handleChangePage={handleChangePage}
               />
             </>
           )}
