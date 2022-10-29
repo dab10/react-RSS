@@ -20,6 +20,7 @@ const appReducer = (state: StateType, action: Actions) => {
         homePage: {
           ...state.homePage,
           data: [],
+          totalPages: 0,
           isLoading: false,
           isError: true,
         },

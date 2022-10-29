@@ -11,7 +11,7 @@ type PropsPagination = {
 
 const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => {
   const pagesArray = getPagesArray(totalPages);
-  console.log(pagesArray.length);
+  console.log(totalPages);
   let sliceLeft;
   let sliceRight;
   if (pagesArray.length > 5) {
@@ -89,15 +89,16 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
         </span>
       ))}
       <span className={isDisableRightDots}>...</span>
-      {pagesArray.slice(-1).map((pageNumber) => (
-        <span
-          onClick={() => handleChangePage(pageNumber)}
-          className={page === pageNumber ? 'page page-current' : 'page'}
-          key={pageNumber}
-        >
-          {pageNumber}
-        </span>
-      ))}
+      {pagesArray.length !== 1 &&
+        pagesArray.slice(-1).map((pageNumber) => (
+          <span
+            onClick={() => handleChangePage(pageNumber)}
+            className={page === pageNumber ? 'page page-current' : 'page'}
+            key={pageNumber}
+          >
+            {pageNumber}
+          </span>
+        ))}
       <span
         className={isDisableRightButton}
         onClick={page < pagesArray.length ? () => handleChangePage(page + 1) : () => {}}

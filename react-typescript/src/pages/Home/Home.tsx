@@ -5,7 +5,6 @@ import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
 import { TypeDispatch } from 'utils/const/const';
-import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
 
 function Home() {
@@ -43,7 +42,7 @@ function Home() {
         payload: {
           homePage: {
             data: updatedCards,
-            totalPages: getPageCount(data.info.count, state.homePage.limit),
+            totalPages: data.info.pages,
           },
         },
       });
