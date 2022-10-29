@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
@@ -23,101 +23,14 @@ function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
-  // const stateInit = [
-  //   {
-  //     id: 0,
-  //     image: '',
-  //     name: '',
-  //     status: '',
-  //     species: '',
-  //     type: '',
-  //     gender: '',
-  //     location: {
-  //       name: '',
-  //     },
-  //     isFavorite: false,
-  //   },
-  // ];
-  // const stateInitPopup = {
-  //   id: 0,
-  //   image: '',
-  //   name: '',
-  //   status: '',
-  //   species: '',
-  //   type: '',
-  //   gender: '',
-  //   location: {
-  //     name: '',
-  //   },
-  //   isFavorite: false,
-  // };
 
-  // const [data, setData] = useState(stateInit);
-  // const [dataPopup, setDataPopup] = useState(stateInitPopup);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [isError, setIsError] = useState(false);
-  // const [isPopup, setIsPopup] = useState(false);
-  // const [isFirstCall, setIsFirstCall] = useState(() => {
-  //   const savedItem = localStorage.getItem('savedStateSearching') as string;
-  //   const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
-  //   return parsedItem ? false : true;
-  // });
-  // const [query, setQuery] = useState(() => {
-  //   const savedItem = localStorage.getItem('savedStateSearching') as string;
-  //   const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
-  //   return parsedItem ? `${parsedItem}` : null;
-  // });
-  // const [url, setUrl] = useState(() => {
-  //   const savedItem = localStorage.getItem('savedStateSearching') as string;
-  //   const parsedItem = savedItem ? JSON.parse(savedItem) : savedItem;
-  //   return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
-  // });
-
-  useEffect(() => {
-    const saveSearching = localStorage.getItem('savedStateSearching');
-    if (saveSearching && JSON.parse(saveSearching)) {
-      // setQuery(`${JSON.parse(saveSearching)}`);
-      // setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
-      // setIsFirstCall(false);
-      dispatch({
-        type: 'DATA_FROM_LOCAL_STORAGE',
-        payload: {
-          homePage: {
-            query: `${JSON.parse(saveSearching)}`,
-            url: `${characterByName}${JSON.parse(saveSearching)}`,
-          },
-        },
-      });
-    }
-  }, [characterByName, dispatch]);
-
-  // useEffect(() => {
-  //   fetchData(state.homePage.url);
-  // }, [fetchData, state.homePage.url]);
-
-  // useEffect(() => {
-  //   localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
-  // });
-
-  // useEffect(() => {
   const fetchData = async (url: string) => {
-    // setIsError(false);
-    // setIsLoading(true);
-    // console.log(state.homePage.query);
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
         throw Error();
       }
-      // setData(data.results);
-      // setData((prevData) => {
-      //   const updatedCards = prevData.map((item) => {
-      //     item.isFavorite = false;
-      //     return item;
-      //   });
-      //   return updatedCards;
-      // });
       const updatedCards = data.results.map((item: Card) => {
         item.isFavorite = false;
         return item;
@@ -131,14 +44,9 @@ function Home() {
         },
       });
     } catch {
-      // setIsError(true);
-      // setData([]);
       dispatch({ type: 'FETCH_ERROR' });
     }
-    // setIsLoading(false);
   };
-  //   fetchData();
-  // }, [characterByName, dispatch, state.homePage.url]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -150,11 +58,8 @@ function Home() {
         },
       },
     });
-    console.log(state.homePage.query, state.homePage.url);
     await fetchData(`${characterByName}${state.homePage.query}`);
     localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
-    // setUrl(`${characterByName}${query}`);
-    // setIsFirstCall(false);
   };
 
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +72,6 @@ function Home() {
         },
       },
     });
-    // setQuery(value);
   };
 
   const handleChange = (id: number) => {
@@ -185,15 +89,6 @@ function Home() {
         },
       },
     });
-    // setData((prevData) => {
-    //   const updatedCards = prevData.map((todo) => {
-    //     if (todo.id === id) {
-    //       todo.isFavorite = !todo.isFavorite;
-    //     }
-    //     return todo;
-    //   });
-    //   return updatedCards;
-    // });
   };
 
   const handleClickToggle = (id = 0) => {
@@ -208,8 +103,6 @@ function Home() {
           },
         },
       });
-      // setDataPopup(data[cardId]);
-      // setIsPopup(false);
     } else {
       document.body.classList.add('stop-scrolling');
       dispatch({
@@ -220,8 +113,6 @@ function Home() {
           },
         },
       });
-      // setDataPopup(data[cardId]);
-      // setIsPopup(true);
     }
   };
 

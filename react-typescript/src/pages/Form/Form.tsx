@@ -27,8 +27,6 @@ interface IFormInputs {
 }
 
 const Form = () => {
-  // const [formItems, setFormItems] = useState([] as Array<IFormInputs>);
-  // const [isSuccess, setIsSuccess] = useState(false);
   const { state, dispatch } = useContext(AppContext);
 
   const {
@@ -56,9 +54,6 @@ const Form = () => {
       agree: data.agree,
       gender: data.gender,
     };
-    // setFormItems([...formItems, newItem]);
-
-    // setIsSuccess(true);
 
     dispatch({
       type: 'ADD_NEW_FORM',

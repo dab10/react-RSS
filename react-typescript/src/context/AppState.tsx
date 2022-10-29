@@ -15,10 +15,6 @@ type Card = {
   isFavorite: boolean;
 };
 
-// type Cards = {
-//   results: Card[];
-// };
-
 type HomeState = {
   id: number;
   data: Card[];
@@ -158,21 +154,7 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
   const initialState = {
     homePage: {
       id: 0,
-      data: [
-        // {
-        //   id: 0,
-        //   image: '',
-        //   name: '',
-        //   status: '',
-        //   species: '',
-        //   type: '',
-        //   gender: '',
-        //   location: {
-        //     name: '',
-        //   },
-        //   isFavorite: false,
-        // },
-      ] as Array<Card>,
+      data: [] as Array<Card>,
       dataPopup: {
         id: 0,
         image: '',

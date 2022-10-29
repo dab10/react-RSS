@@ -11,9 +11,7 @@ type Card = {
   };
   isFavorite: boolean;
 };
-// type Cards = {
-//   results: Card[];
-// };
+
 type HomeState = {
   id: number;
   data: Card[];
@@ -42,7 +40,7 @@ type FormInputs = {
   agree: boolean;
 };
 
-export type StateType = {
+type StateType = {
   homePage: HomeState;
   formPage: FormState;
 };
@@ -140,16 +138,6 @@ type Actions =
   | ActionAddNewForm
   | ActionSetMessageFalse;
 
-// type Action = {
-//   homePage: {
-//     id: number;
-//     data: Card[];
-//     dataPopup: Card;
-//     query: string | null;
-//     url: string;
-//   };
-// };
-
 const appReducer = (state: StateType, action: Actions) => {
   switch (action.type) {
     case 'FETCH_SUCCESS':
@@ -201,12 +189,6 @@ const appReducer = (state: StateType, action: Actions) => {
         },
       };
     case 'HANDLE_CHANGE_LIKES':
-      // const updatedCardsLike = state.homePage.data.map((todo) => {
-      //   if (todo.id === action.payload.homePage.id) {
-      //     todo.isFavorite = !todo.isFavorite;
-      //   }
-      //   return todo;
-      // });
       return {
         ...state,
         homePage: {
