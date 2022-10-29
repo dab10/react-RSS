@@ -4,12 +4,30 @@
 }
 
 .page {
+  width: 18px;
   padding: 10px;
   border: 1px solid black;
+  text-align: center;
   cursor: pointer;
 }
 
 .page-current {
   border: 2px solid gold;
   font-weight: bold;
+}
+
+.page-disable {
+  color: grey;
+  border: 1px solid grey;
+  cursor: default;
+}
+
+.page-disable-dots {
+  border: none;
+  color: grey;
+  cursor: default;
+}
+
+.page-hidden {
+  display: none;
 }

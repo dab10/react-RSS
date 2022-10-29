@@ -40,6 +40,7 @@ const appReducer = (state: StateType, action: Actions) => {
         homePage: {
           ...state.homePage,
           url: action.payload.homePage.url,
+          page: 1,
           isLoading: true,
           isFirstCall: false,
         },
