@@ -4,6 +4,7 @@ import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
+import { TypeDispatch } from 'utils/const/const';
 
 function Home() {
   type Card = {
@@ -36,7 +37,7 @@ function Home() {
         return item;
       });
       dispatch({
-        type: 'FETCH_SUCCESS',
+        type: TypeDispatch.FETCH_SUCCESS,
         payload: {
           homePage: {
             data: updatedCards,
@@ -44,14 +45,14 @@ function Home() {
         },
       });
     } catch {
-      dispatch({ type: 'FETCH_ERROR' });
+      dispatch({ type: TypeDispatch.FETCH_ERROR });
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch({
-      type: 'HANDLE_SUBMIT',
+      type: TypeDispatch.HANDLE_SUBMIT,
       payload: {
         homePage: {
           url: `${characterByName}${state.homePage.query}`,
@@ -65,7 +66,7 @@ function Home() {
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     dispatch({
-      type: 'HANDLE_CHANGE_FORM',
+      type: TypeDispatch.HANDLE_CHANGE_FORM,
       payload: {
         homePage: {
           query: value,
@@ -82,7 +83,7 @@ function Home() {
       return todo;
     });
     dispatch({
-      type: 'HANDLE_CHANGE_LIKES',
+      type: TypeDispatch.HANDLE_CHANGE_LIKES,
       payload: {
         homePage: {
           data: updatedCards,
@@ -96,7 +97,7 @@ function Home() {
     if (state.homePage.isPopup && id) {
       document.body.classList.remove('stop-scrolling');
       dispatch({
-        type: 'CLOSE_POPUP',
+        type: TypeDispatch.CLOSE_POPUP,
         payload: {
           homePage: {
             dataPopup: state.homePage.data[cardId],
@@ -106,7 +107,7 @@ function Home() {
     } else {
       document.body.classList.add('stop-scrolling');
       dispatch({
-        type: 'OPEN_POPUP',
+        type: TypeDispatch.OPEN_POPUP,
         payload: {
           homePage: {
             dataPopup: state.homePage.data[cardId],

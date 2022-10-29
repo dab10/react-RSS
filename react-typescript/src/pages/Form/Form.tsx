@@ -1,7 +1,7 @@
 import FormList from 'components/FormList/FormList';
 import React, { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { timeConfirmationMessage } from 'utils/const/const';
+import { timeConfirmationMessage, TypeDispatch } from 'utils/const/const';
 import newId from 'utils/newId/newId';
 import './Form.scss';
 import classNames from 'classnames';
@@ -56,7 +56,7 @@ const Form = () => {
     };
 
     dispatch({
-      type: 'ADD_NEW_FORM',
+      type: TypeDispatch.ADD_NEW_FORM,
       payload: {
         formPage: {
           formItems: newItem,
@@ -65,7 +65,7 @@ const Form = () => {
     });
 
     setTimeout(() => {
-      dispatch({ type: 'SET_MESSAGE_FALSE' });
+      dispatch({ type: TypeDispatch.SET_MESSAGE_FALSE });
     }, timeConfirmationMessage);
   };
 
