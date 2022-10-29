@@ -73,71 +73,74 @@ function Home() {
   //   return parsedItem ? `${characterByName}${parsedItem}` : `${characterByName}null`;
   // });
 
+  useEffect(() => {
+    const saveSearching = localStorage.getItem('savedStateSearching');
+    if (saveSearching && JSON.parse(saveSearching)) {
+      // setQuery(`${JSON.parse(saveSearching)}`);
+      // setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
+      // setIsFirstCall(false);
+      dispatch({
+        type: 'DATA_FROM_LOCAL_STORAGE',
+        payload: {
+          homePage: {
+            query: `${JSON.parse(saveSearching)}`,
+            url: `${characterByName}${JSON.parse(saveSearching)}`,
+          },
+        },
+      });
+    }
+  }, [characterByName, dispatch]);
+
   // useEffect(() => {
-  //   const saveSearching = localStorage.getItem('savedStateSearching');
-  //   if (saveSearching && JSON.parse(saveSearching)) {
-  //     // setQuery(`${JSON.parse(saveSearching)}`);
-  //     // setUrl(`${characterByName}${JSON.parse(saveSearching)}`);
-  //     // setIsFirstCall(false);
-  //     dispatch({
-  //       type: 'DATA_FROM_LOCAL_STORAGE',
-  //       payload: {
-  //         homePage: {
-  //           query: `${JSON.parse(saveSearching)}`,
-  //           url: `${characterByName}${JSON.parse(saveSearching)}`,
-  //         },
-  //       },
-  //     });
-  //   }
-  // }, [characterByName, dispatch]);
+  //   fetchData(state.homePage.url);
+  // }, [fetchData, state.homePage.url]);
 
   // useEffect(() => {
   //   localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
   // });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // setIsError(false);
-      // setIsLoading(true);
-      // console.log(state.homePage.query);
-      try {
-        const res = await fetch(state.homePage.url);
-        const data = await res.json();
-        if (!res.ok) {
-          throw Error();
-        }
-        // setData(data.results);
-        // setData((prevData) => {
-        //   const updatedCards = prevData.map((item) => {
-        //     item.isFavorite = false;
-        //     return item;
-        //   });
-        //   return updatedCards;
-        // });
-        const updatedCards = data.results.map((item: Card) => {
-          item.isFavorite = false;
-          return item;
-        });
-        dispatch({
-          type: 'FETCH_SUCCESS',
-          payload: {
-            homePage: {
-              data: updatedCards,
-            },
-          },
-        });
-      } catch {
-        // setIsError(true);
-        // setData([]);
-        dispatch({ type: 'FETCH_ERROR' });
+  // useEffect(() => {
+  const fetchData = async (url: string) => {
+    // setIsError(false);
+    // setIsLoading(true);
+    // console.log(state.homePage.query);
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!res.ok) {
+        throw Error();
       }
-      // setIsLoading(false);
-    };
+      // setData(data.results);
+      // setData((prevData) => {
+      //   const updatedCards = prevData.map((item) => {
+      //     item.isFavorite = false;
+      //     return item;
+      //   });
+      //   return updatedCards;
+      // });
+      const updatedCards = data.results.map((item: Card) => {
+        item.isFavorite = false;
+        return item;
+      });
+      dispatch({
+        type: 'FETCH_SUCCESS',
+        payload: {
+          homePage: {
+            data: updatedCards,
+          },
+        },
+      });
+    } catch {
+      // setIsError(true);
+      // setData([]);
+      dispatch({ type: 'FETCH_ERROR' });
+    }
+    // setIsLoading(false);
+  };
+  //   fetchData();
+  // }, [characterByName, dispatch, state.homePage.url]);
 
-    fetchData();
-  }, [characterByName, dispatch, state.homePage.url]);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch({
       type: 'HANDLE_SUBMIT',
@@ -147,6 +150,8 @@ function Home() {
         },
       },
     });
+    console.log(state.homePage.query, state.homePage.url);
+    await fetchData(`${characterByName}${state.homePage.query}`);
     localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
     // setUrl(`${characterByName}${query}`);
     // setIsFirstCall(false);
@@ -222,7 +227,6 @@ function Home() {
 
   return (
     <div className="container">
-      {console.log(state.homePage)}
       <SearchBar
         handleChangeForm={handleChangeForm}
         handleSubmit={handleSubmit}

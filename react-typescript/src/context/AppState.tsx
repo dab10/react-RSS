@@ -159,19 +159,19 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
     homePage: {
       id: 0,
       data: [
-        {
-          id: 0,
-          image: '',
-          name: '',
-          status: '',
-          species: '',
-          type: '',
-          gender: '',
-          location: {
-            name: '',
-          },
-          isFavorite: false,
-        },
+        // {
+        //   id: 0,
+        //   image: '',
+        //   name: '',
+        //   status: '',
+        //   species: '',
+        //   type: '',
+        //   gender: '',
+        //   location: {
+        //     name: '',
+        //   },
+        //   isFavorite: false,
+        // },
       ] as Array<Card>,
       dataPopup: {
         id: 0,
@@ -186,7 +186,7 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
         },
         isFavorite: false,
       } as Card,
-      isLoading: true,
+      isLoading: false,
       isPopup: false,
       isError: false,
       query: parsedItem ? `${parsedItem}` : null,

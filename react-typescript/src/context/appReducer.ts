@@ -188,6 +188,7 @@ const appReducer = (state: StateType, action: Actions) => {
         homePage: {
           ...state.homePage,
           url: action.payload.homePage.url,
+          isLoading: true,
           isFirstCall: false,
         },
       };
