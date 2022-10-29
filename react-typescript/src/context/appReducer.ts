@@ -3,7 +3,7 @@ import { Actions, StateType } from './context.types';
 
 const appReducer = (state: StateType, action: Actions) => {
   switch (action.type) {
-    case 'FETCH_SUCCESS':
+    case TypeDispatch.FETCH_SUCCESS:
       return {
         ...state,
         homePage: {
@@ -14,7 +14,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isError: false,
         },
       };
-    case 'FETCH_ERROR':
+    case TypeDispatch.FETCH_ERROR:
       return {
         ...state,
         homePage: {
@@ -25,7 +25,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isError: true,
         },
       };
-    case 'DATA_FROM_LOCAL_STORAGE':
+    case TypeDispatch.DATA_FROM_LOCAL_STORAGE:
       return {
         ...state,
         homePage: {
@@ -35,7 +35,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isFirstCall: false,
         },
       };
-    case 'HANDLE_SUBMIT':
+    case TypeDispatch.HANDLE_SUBMIT:
       return {
         ...state,
         homePage: {
@@ -46,7 +46,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isFirstCall: false,
         },
       };
-    case 'HANDLE_CHANGE_FORM':
+    case TypeDispatch.HANDLE_CHANGE_FORM:
       return {
         ...state,
         homePage: {
@@ -54,7 +54,7 @@ const appReducer = (state: StateType, action: Actions) => {
           query: action.payload.homePage.query,
         },
       };
-    case 'HANDLE_CHANGE_LIKES':
+    case TypeDispatch.HANDLE_CHANGE_LIKES:
       return {
         ...state,
         homePage: {
@@ -62,7 +62,7 @@ const appReducer = (state: StateType, action: Actions) => {
           data: action.payload.homePage.data,
         },
       };
-    case 'CLOSE_POPUP':
+    case TypeDispatch.CLOSE_POPUP:
       return {
         ...state,
         homePage: {
@@ -71,7 +71,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isPopup: false,
         },
       };
-    case 'OPEN_POPUP':
+    case TypeDispatch.OPEN_POPUP:
       return {
         ...state,
         homePage: {
@@ -80,7 +80,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isPopup: true,
         },
       };
-    case 'ADD_NEW_FORM':
+    case TypeDispatch.ADD_NEW_FORM:
       return {
         ...state,
         formPage: {
@@ -88,7 +88,7 @@ const appReducer = (state: StateType, action: Actions) => {
           isSuccess: true,
         },
       };
-    case 'SET_MESSAGE_FALSE':
+    case TypeDispatch.SET_MESSAGE_FALSE:
       return {
         ...state,
         formPage: {
