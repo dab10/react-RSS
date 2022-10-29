@@ -105,6 +105,16 @@ const appReducer = (state: StateType, action: Actions) => {
           isLoading: true,
         },
       };
+    case TypeDispatch.HANDLE_CHANGE_LIMIT:
+      return {
+        ...state,
+        homePage: {
+          ...state.homePage,
+          limit: action.payload.homePage.limit,
+          isLoading: true,
+          page: 1,
+        },
+      };
     default:
       return state;
   }

@@ -5,6 +5,7 @@ import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
 import { TypeDispatch } from 'utils/const/const';
+import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
 
 function Home() {
@@ -26,14 +27,43 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
 
-  const fetchData = async (url: string) => {
+  const fetchData = async (url: string, limit = 20, pageNumber = 1) => {
+    let sliceLeft;
+    let sliceRight;
+    console.log(pageNumber, limit);
+    if (limit === 5) {
+      if (pageNumber % 4 === 1) {
+        sliceLeft = 0;
+        sliceRight = 5;
+      } else if (pageNumber % 4 === 2) {
+        sliceLeft = 5;
+        sliceRight = 10;
+      } else if (pageNumber % 4 === 3) {
+        sliceLeft = 10;
+        sliceRight = 15;
+      } else if (pageNumber % 4 === 0) {
+        sliceLeft = 15;
+        sliceRight = 20;
+      }
+    } else if (limit === 10) {
+      if (pageNumber % 2 === 1) {
+        sliceLeft = 0;
+        sliceRight = 10;
+      } else if (pageNumber % 2 === 0) {
+        sliceLeft = 10;
+        sliceRight = 20;
+      }
+    } else {
+      sliceLeft = 0;
+      sliceRight = 20;
+    }
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) {
         throw Error();
       }
-      const updatedCards = data.results.map((item: Card) => {
+      const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
         item.isFavorite = false;
         return item;
       });
@@ -42,7 +72,7 @@ function Home() {
         payload: {
           homePage: {
             data: updatedCards,
-            totalPages: data.info.pages,
+            totalPages: getPageCount(data.info.count, limit),
           },
         },
       });
@@ -61,7 +91,7 @@ function Home() {
         },
       },
     });
-    await fetchData(`${characterByName}${state.homePage.query}`);
+    await fetchData(`${characterByName}${state.homePage.query}`, state.homePage.limit);
     localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
   };
 
@@ -120,6 +150,15 @@ function Home() {
   };
 
   const handleChangePage = async (pageNumber: number) => {
+    let pageNumberLimit;
+    if (state.homePage.limit === 5) {
+      pageNumberLimit = Math.ceil(pageNumber / 4);
+    } else if (state.homePage.limit === 10) {
+      pageNumberLimit = Math.ceil(pageNumber / 2);
+    } else {
+      pageNumberLimit = pageNumber;
+    }
+
     dispatch({
       type: TypeDispatch.HANDLE_SET_PAGE,
       payload: {
@@ -128,7 +167,33 @@ function Home() {
         },
       },
     });
-    await fetchData(`${characterByName}${state.homePage.query}&page=${pageNumber}`);
+    await fetchData(
+      `${characterByName}${state.homePage.query}&page=${pageNumberLimit}`,
+      state.homePage.limit,
+      pageNumber
+    );
+  };
+
+  const handleChangeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    let pageNumberLimit;
+    if (Number(value) === 5) {
+      pageNumberLimit = Math.ceil(state.homePage.page / 4);
+    } else if (Number(value) === 10) {
+      pageNumberLimit = Math.ceil(state.homePage.page / 2);
+    } else {
+      pageNumberLimit = state.homePage.page;
+    }
+    dispatch({
+      type: TypeDispatch.HANDLE_CHANGE_LIMIT,
+      payload: {
+        homePage: {
+          limit: Number(value),
+        },
+      },
+    });
+    console.log('x', pageNumberLimit, Number(value));
+    await fetchData(`${characterByName}${state.homePage.query}&page=1`, Number(value));
   };
 
   return (
@@ -138,6 +203,16 @@ function Home() {
         handleSubmit={handleSubmit}
         searching={state.homePage.query}
       />
+      <div className="limit-wrapper">
+        <label htmlFor="select">
+          Кол-во элементов на странице:&ensp;
+          <select defaultValue={'20'} onChange={handleChangeLimit}>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+          </select>
+        </label>
+      </div>
       {state.homePage.isError && !state.homePage.isFirstCall && (
         <div className="error-fetch">Could not fetch the data</div>
       )}

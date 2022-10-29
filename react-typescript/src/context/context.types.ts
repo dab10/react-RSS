@@ -141,6 +141,15 @@ type ActionSetPage = {
   };
 };
 
+type ActionHandleChangeLimit = {
+  type: TypeDispatch.HANDLE_CHANGE_LIMIT;
+  payload: {
+    homePage: {
+      limit: number;
+    };
+  };
+};
+
 export type Actions =
   | ActionDataFromLocalStorage
   | ActionFetchSuccess
@@ -152,4 +161,5 @@ export type Actions =
   | ActionOpenPopup
   | ActionAddNewForm
   | ActionSetMessageFalse
-  | ActionSetPage;
+  | ActionSetPage
+  | ActionHandleChangeLimit;
