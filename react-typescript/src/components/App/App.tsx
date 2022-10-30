@@ -8,6 +8,7 @@ import Form from 'pages/Form/Form';
 import Header from 'components/Header/Header';
 import { routes } from 'utils/const/const';
 import { AppState } from 'context/AppState';
+import ItemIdPage from 'pages/ItemIdPage/ItemIdPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path={routes.homePage} element={<Home />} />
         <Route path={routes.formPage} element={<Form />} />
         <Route path={routes.aboutPage} element={<About />} />
+        <Route path={`${routes.homePage}:id`} element={<ItemIdPage />} />
         <Route path={routes.notFoundPage} element={<Page404 />} />
         <Route path={routes.anyPage} element={<Navigate to={routes.notFoundPage} replace />} />
       </Routes>

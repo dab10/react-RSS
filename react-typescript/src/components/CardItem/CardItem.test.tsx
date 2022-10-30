@@ -6,7 +6,7 @@ import CardItem from './CardItem';
 test('renders card', () => {
   const randomNumber = Math.floor(Math.random() * cardData.length);
   render(
-    <CardItem handleChange={() => {}} handleClickToggle={() => {}} {...cardData[randomNumber]} />
+    <CardItem handleClickToggle={() => {}} handleChange={() => {}} {...cardData[randomNumber]} />
   );
   const regexp = new RegExp(`${cardData[randomNumber].name}`, 'i');
   const name = screen.getByText(regexp);
@@ -15,7 +15,7 @@ test('renders card', () => {
 
 test('renders card', () => {
   const cardItems = cardData.map((item) => (
-    <CardItem key={item.id} handleChange={() => {}} handleClickToggle={() => {}} {...item} />
+    <CardItem handleClickToggle={() => {}} key={item.id} handleChange={() => {}} {...item} />
   ));
   render(<>{cardItems}</>);
   const quantityCards = screen.getAllByRole('checkbox').length;

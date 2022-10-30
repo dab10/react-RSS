@@ -121,8 +121,7 @@ function Home() {
 
   const handleClickToggle = (id = 0) => {
     const cardId = state.homePage.data.findIndex((item) => item.id === id);
-    if (state.homePage.isPopup && id) {
-      document.body.classList.remove('stop-scrolling');
+    if (id) {
       dispatch({
         type: TypeDispatch.CLOSE_POPUP,
         payload: {
@@ -132,7 +131,6 @@ function Home() {
         },
       });
     } else {
-      document.body.classList.add('stop-scrolling');
       dispatch({
         type: TypeDispatch.OPEN_POPUP,
         payload: {
@@ -254,11 +252,6 @@ function Home() {
               <CardList
                 cards={state.homePage.data}
                 handleChange={handleChange}
-                handleClickToggle={handleClickToggle}
-              />
-              <Popup
-                card={state.homePage.dataPopup}
-                active={state.homePage.isPopup}
                 handleClickToggle={handleClickToggle}
               />
               <Pagination

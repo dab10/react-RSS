@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { routes } from 'utils/const/const';
 import './CardItem.scss';
 
 type CardProps = {
@@ -14,8 +16,10 @@ type CardProps = {
 };
 
 function CardItem(props: CardProps) {
+  const router = useNavigate();
+  console.log(router);
   return (
-    <div className="card-item" onClick={() => props.handleClickToggle(props.id)}>
+    <div className="card-item">
       <img src={props.image} alt={props.name} className="card-item__image" />
       <div className="about-container">
         <div className="about-container__text">
@@ -36,6 +40,16 @@ function CardItem(props: CardProps) {
         </div>
       </div>
       <div>{props.isFavorite}</div>
+      <button
+        onClick={() => {
+          {
+            props ? router(`${routes.homePage}${props.id}`) : router(`${routes.homePage}`);
+          }
+          props.handleClickToggle(props.id);
+        }}
+      >
+        Open
+      </button>
     </div>
   );
 }
