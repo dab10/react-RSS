@@ -51,14 +51,12 @@ function Home() {
     try {
       const res = await fetch(url);
       const data = await res.json();
-      console.log(res.ok);
       if (!res.ok) {
         throw Error();
       }
       const updatedCardsBySort = data.results.sort((a: Card, b: Card) =>
         String(a[sort as keyof Card]).localeCompare(String(b[sort as keyof Card]))
       );
-      console.log(updatedCardsBySort);
 
       const updatedCards = updatedCardsBySort.slice(sliceLeft, sliceRight).map((item: Card) => {
         item.isFavorite = false;
@@ -74,7 +72,6 @@ function Home() {
         },
       });
     } catch {
-      console.log('111');
       dispatch({ type: TypeDispatch.FETCH_ERROR });
     }
   };
@@ -170,9 +167,6 @@ function Home() {
   const handleChangeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
-    const chunkSize = Math.ceil(maxLimitPerPage / Number(value));
-    const pageNumberLimit = Math.ceil(state.homePage.page / chunkSize);
-
     dispatch({
       type: TypeDispatch.HANDLE_CHANGE_LIMIT,
       payload: {
@@ -181,8 +175,7 @@ function Home() {
         },
       },
     });
-    console.log('x', pageNumberLimit, Number(value));
-    console.log(state.homePage.isFirstCall);
+
     if (!state.homePage.isFirstCall) {
       await fetchData(
         `${characterByName}${state.homePage.query}&page=1`,
@@ -205,7 +198,6 @@ function Home() {
         },
       },
     });
-    console.log(state.homePage.isFirstCall);
 
     if (!state.homePage.isFirstCall) {
       await fetchData(
