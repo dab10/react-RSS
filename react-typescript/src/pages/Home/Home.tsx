@@ -4,7 +4,7 @@ import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
-import { TypeDispatch } from 'utils/const/const';
+import { maxLimitPerPage, ResultsPerPage, TypeDispatch } from 'utils/const/const';
 import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
 
@@ -27,39 +27,30 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
 
-  const fetchData = async (url: string, limit = 20, pageNumber = 1) => {
+  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
+    const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
+    const chunkSize = Math.ceil(maxLimitPerPage / limit);
+    let count = 1;
     let sliceLeft;
     let sliceRight;
-    console.log(pageNumber, limit);
-    if (limit === 5) {
-      if (pageNumber % 4 === 1) {
-        sliceLeft = 0;
-        sliceRight = 5;
-      } else if (pageNumber % 4 === 2) {
-        sliceLeft = 5;
-        sliceRight = 10;
-      } else if (pageNumber % 4 === 3) {
-        sliceLeft = 10;
-        sliceRight = 15;
-      } else if (pageNumber % 4 === 0) {
-        sliceLeft = 15;
-        sliceRight = 20;
+
+    for (let i = 0; i < maxLimitPerPage; i += limit) {
+      const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
+      const sliceLeftChunk = Math.min(...chunk);
+      const sliceRightChunk = Math.max(...chunk);
+
+      if (pageNumber % chunkSize === count) {
+        sliceLeft = sliceLeftChunk;
+        sliceRight = sliceRightChunk + 1;
       }
-    } else if (limit === 10) {
-      if (pageNumber % 2 === 1) {
-        sliceLeft = 0;
-        sliceRight = 10;
-      } else if (pageNumber % 2 === 0) {
-        sliceLeft = 10;
-        sliceRight = 20;
-      }
-    } else {
-      sliceLeft = 0;
-      sliceRight = 20;
+      count++;
+      count === chunkSize ? (count = 0) : count;
     }
+
     try {
       const res = await fetch(url);
       const data = await res.json();
+      console.log(res.ok);
       if (!res.ok) {
         throw Error();
       }
@@ -77,6 +68,7 @@ function Home() {
         },
       });
     } catch {
+      console.log('111');
       dispatch({ type: TypeDispatch.FETCH_ERROR });
     }
   };
@@ -150,14 +142,8 @@ function Home() {
   };
 
   const handleChangePage = async (pageNumber: number) => {
-    let pageNumberLimit;
-    if (state.homePage.limit === 5) {
-      pageNumberLimit = Math.ceil(pageNumber / 4);
-    } else if (state.homePage.limit === 10) {
-      pageNumberLimit = Math.ceil(pageNumber / 2);
-    } else {
-      pageNumberLimit = pageNumber;
-    }
+    const chunkSize = Math.ceil(maxLimitPerPage / state.homePage.limit);
+    const pageNumberLimit = Math.ceil(pageNumber / chunkSize);
 
     dispatch({
       type: TypeDispatch.HANDLE_SET_PAGE,
@@ -176,14 +162,10 @@ function Home() {
 
   const handleChangeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
-    let pageNumberLimit;
-    if (Number(value) === 5) {
-      pageNumberLimit = Math.ceil(state.homePage.page / 4);
-    } else if (Number(value) === 10) {
-      pageNumberLimit = Math.ceil(state.homePage.page / 2);
-    } else {
-      pageNumberLimit = state.homePage.page;
-    }
+
+    const chunkSize = Math.ceil(maxLimitPerPage / Number(value));
+    const pageNumberLimit = Math.ceil(state.homePage.page / chunkSize);
+
     dispatch({
       type: TypeDispatch.HANDLE_CHANGE_LIMIT,
       payload: {
@@ -193,7 +175,11 @@ function Home() {
       },
     });
     console.log('x', pageNumberLimit, Number(value));
-    await fetchData(`${characterByName}${state.homePage.query}&page=1`, Number(value));
+    if (!state.homePage.isFirstCall) {
+      await fetchData(`${characterByName}${state.homePage.query}&page=1`, Number(value));
+    } else {
+      dispatch({ type: TypeDispatch.FETCH_ERROR });
+    }
   };
 
   return (
@@ -206,10 +192,10 @@ function Home() {
       <div className="limit-wrapper">
         <label htmlFor="select">
           Кол-во элементов на странице:&ensp;
-          <select defaultValue={'20'} onChange={handleChangeLimit}>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
+          <select defaultValue={maxLimitPerPage} onChange={handleChangeLimit}>
+            <option value={ResultsPerPage.FIVE}>{ResultsPerPage.FIVE}</option>
+            <option value={ResultsPerPage.TEN}>{ResultsPerPage.TEN}</option>
+            <option value={maxLimitPerPage}>{maxLimitPerPage}</option>
           </select>
         </label>
       </div>

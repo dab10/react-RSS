@@ -24,3 +24,10 @@ export enum TypeDispatch {
   HANDLE_SET_PAGE = 'HANDLE_SET_PAGE',
   HANDLE_CHANGE_LIMIT = 'HANDLE_CHANGE_LIMIT',
 }
+
+export const maxLimitPerPage = 20;
+
+export enum ResultsPerPage {
+  FIVE = 5,
+  TEN = 10,
+}
