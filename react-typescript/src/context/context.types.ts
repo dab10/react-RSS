@@ -21,6 +21,7 @@ export type HomeState = {
   totalPages: number;
   limit: number;
   page: number;
+  sortBy: string;
   query: string | null;
   url: string;
   isLoading: boolean;
@@ -150,6 +151,19 @@ type ActionHandleChangeLimit = {
   };
 };
 
+type ActionSortItems = {
+  type: TypeDispatch.SORT_ITEMS;
+  payload: {
+    homePage: {
+      sortBy: string;
+    };
+  };
+};
+
+type ActionLoadingFalse = {
+  type: TypeDispatch.LOADING_FALSE;
+};
+
 export type Actions =
   | ActionDataFromLocalStorage
   | ActionFetchSuccess
@@ -162,4 +176,6 @@ export type Actions =
   | ActionAddNewForm
   | ActionSetMessageFalse
   | ActionSetPage
-  | ActionHandleChangeLimit;
+  | ActionHandleChangeLimit
+  | ActionSortItems
+  | ActionLoadingFalse;

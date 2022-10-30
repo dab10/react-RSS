@@ -27,7 +27,7 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
 
-  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
+  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1, sort = 'name') => {
     const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
     const chunkSize = Math.ceil(maxLimitPerPage / limit);
     let count = 1;
@@ -54,7 +54,12 @@ function Home() {
       if (!res.ok) {
         throw Error();
       }
-      const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
+      const updatedCardsBySort = data.results.sort((a: Card, b: Card) =>
+        String(a[sort as keyof Card]).localeCompare(String(b[sort as keyof Card]))
+      );
+      console.log(updatedCardsBySort);
+
+      const updatedCards = updatedCardsBySort.slice(sliceLeft, sliceRight).map((item: Card) => {
         item.isFavorite = false;
         return item;
       });
@@ -156,7 +161,8 @@ function Home() {
     await fetchData(
       `${characterByName}${state.homePage.query}&page=${pageNumberLimit}`,
       state.homePage.limit,
-      pageNumber
+      pageNumber,
+      state.homePage.sortBy
     );
   };
 
@@ -175,10 +181,40 @@ function Home() {
       },
     });
     console.log('x', pageNumberLimit, Number(value));
+    console.log(state.homePage.isFirstCall);
     if (!state.homePage.isFirstCall) {
-      await fetchData(`${characterByName}${state.homePage.query}&page=1`, Number(value));
+      await fetchData(
+        `${characterByName}${state.homePage.query}&page=1`,
+        Number(value),
+        state.homePage.page,
+        state.homePage.sortBy
+      );
     } else {
-      dispatch({ type: TypeDispatch.FETCH_ERROR });
+      dispatch({ type: TypeDispatch.LOADING_FALSE });
+    }
+  };
+
+  const sortItems = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    dispatch({
+      type: TypeDispatch.SORT_ITEMS,
+      payload: {
+        homePage: {
+          sortBy: value,
+        },
+      },
+    });
+    console.log(state.homePage.isFirstCall);
+
+    if (!state.homePage.isFirstCall) {
+      await fetchData(
+        `${characterByName}${state.homePage.query}&page=1`,
+        state.homePage.limit,
+        state.homePage.page,
+        value
+      );
+    } else {
+      dispatch({ type: TypeDispatch.LOADING_FALSE });
     }
   };
 
@@ -191,7 +227,15 @@ function Home() {
       />
       <div className="limit-wrapper">
         <label htmlFor="select">
-          Кол-во элементов на странице:&ensp;
+          Sort by:&ensp;
+          <select defaultValue="name" onChange={sortItems}>
+            <option value="name">name</option>
+            <option value="species">species</option>
+            <option value="gender">gender</option>
+          </select>
+        </label>
+        <label htmlFor="select">
+          Number of elements per page:&ensp;
           <select defaultValue={maxLimitPerPage} onChange={handleChangeLimit}>
             <option value={ResultsPerPage.FIVE}>{ResultsPerPage.FIVE}</option>
             <option value={ResultsPerPage.TEN}>{ResultsPerPage.TEN}</option>
