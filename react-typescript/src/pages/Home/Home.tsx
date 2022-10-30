@@ -7,6 +7,7 @@ import { AppContext } from 'context/AppState';
 import { maxLimitPerPage, ResultsPerPage, TypeDispatch } from 'utils/const/const';
 import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
+import MySelect from 'components/UI/select/MySelect';
 
 function Home() {
   type Card = {
@@ -226,22 +227,26 @@ function Home() {
         searching={state.homePage.query}
       />
       <div className="limit-wrapper">
-        <label htmlFor="select">
-          Sort by:&ensp;
-          <select defaultValue="name" onChange={sortItems}>
-            <option value="name">name</option>
-            <option value="species">species</option>
-            <option value="gender">gender</option>
-          </select>
-        </label>
-        <label htmlFor="select">
-          Number of elements per page:&ensp;
-          <select defaultValue={maxLimitPerPage} onChange={handleChangeLimit}>
-            <option value={ResultsPerPage.FIVE}>{ResultsPerPage.FIVE}</option>
-            <option value={ResultsPerPage.TEN}>{ResultsPerPage.TEN}</option>
-            <option value={maxLimitPerPage}>{maxLimitPerPage}</option>
-          </select>
-        </label>
+        <MySelect
+          label="Sort by:"
+          defaultValue="name"
+          options={[
+            { name: 'name', value: 'name' },
+            { name: 'species', value: 'species' },
+            { name: 'gender', value: 'gender' },
+          ]}
+          onChange={sortItems}
+        />
+        <MySelect
+          label="Number of elements per page:"
+          defaultValue={maxLimitPerPage}
+          options={[
+            { name: ResultsPerPage.FIVE, value: ResultsPerPage.FIVE },
+            { name: ResultsPerPage.TEN, value: ResultsPerPage.TEN },
+            { name: maxLimitPerPage, value: maxLimitPerPage },
+          ]}
+          onChange={handleChangeLimit}
+        />
       </div>
       {state.homePage.isError && !state.homePage.isFirstCall && (
         <div className="error-fetch">Could not fetch the data</div>
