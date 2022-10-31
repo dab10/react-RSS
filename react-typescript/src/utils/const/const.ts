@@ -2,7 +2,7 @@ export const routes = {
   homePage: '/',
   formPage: '/form',
   aboutPage: '/about',
-  notFoundPage: '/404',
+  notFoundPage: '/notFoundPage',
   anyPage: '*',
 };
 
