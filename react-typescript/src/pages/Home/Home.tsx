@@ -33,7 +33,6 @@ function Home() {
     let count = 1;
     let sliceLeft;
     let sliceRight;
-    console.log(pageNumber);
 
     for (let i = 0; i < maxLimitPerPage; i += limit) {
       const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
@@ -194,7 +193,6 @@ function Home() {
       },
     });
 
-    console.log(state.homePage.page);
     if (!state.homePage.isFirstCall) {
       await fetchData(
         `${characterByName}${state.homePage.query}&page=1&status=${value}`,
