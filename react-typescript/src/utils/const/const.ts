@@ -33,3 +33,10 @@ export enum ResultsPerPage {
   FIVE = 5,
   TEN = 10,
 }
+
+export enum FilterByStatus {
+  ALIVE = 'alive',
+  DEAD = 'dead',
+  UNKNOWN = 'unknown',
+  ALL = 'all',
+}

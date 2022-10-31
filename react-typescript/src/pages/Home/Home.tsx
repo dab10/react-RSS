@@ -3,26 +3,13 @@ import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import { AppContext } from 'context/AppState';
-import { maxLimitPerPage, ResultsPerPage, TypeDispatch } from 'utils/const/const';
+import { maxLimitPerPage, FilterByStatus, ResultsPerPage, TypeDispatch } from 'utils/const/const';
 import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
 import MySelect from 'components/UI/select/MySelect';
+import { Card } from './Home.types';
 
 function Home() {
-  type Card = {
-    id: number;
-    image: string;
-    name: string;
-    status: string;
-    species: string;
-    type: string;
-    gender: string;
-    location: {
-      name: string;
-    };
-    isFavorite: boolean;
-  };
-
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
@@ -215,10 +202,10 @@ function Home() {
           label="Filter by status:"
           defaultValue=""
           options={[
-            { name: 'alive', value: 'alive' },
-            { name: 'dead', value: 'dead' },
-            { name: 'unknown', value: 'unknown' },
-            { name: 'all', value: '' },
+            { name: FilterByStatus.ALIVE, value: FilterByStatus.ALIVE },
+            { name: FilterByStatus.DEAD, value: FilterByStatus.DEAD },
+            { name: FilterByStatus.UNKNOWN, value: FilterByStatus.UNKNOWN },
+            { name: FilterByStatus.ALL, value: '' },
           ]}
           onChange={filterItems}
         />
