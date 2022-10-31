@@ -5,6 +5,7 @@ import { mockApi } from '../../utils/mocks/mockApi';
 import Home from './Home';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
+import { AppState } from 'context/AppState';
 
 const localStorageMock = (function () {
   let store: { [x: string]: string } = {};
@@ -36,15 +37,23 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 describe('Home page', () => {
   test('data is added into local storage', async () => {
-    render(<Home />);
+    render(
+      <AppState>
+        <Home />
+      </AppState>
+    );
     const mockId = 'savedStateSearching';
-    const mockJson = 'example';
+    const mockJson = 'morty';
     userEvent.type(screen.getByRole('textbox'), mockJson);
     window.localStorage.setItem(
       mockId,
       JSON.stringify((screen.getByRole('textbox') as HTMLInputElement).value)
     );
-    render(<Home />);
+    render(
+      <AppState>
+        <Home />
+      </AppState>
+    );
     expect(window.localStorage.getItem('savedStateSearching')).toEqual(JSON.stringify(mockJson));
   });
 
@@ -54,7 +63,11 @@ describe('Home page', () => {
         return res(ctx.status(404));
       })
     );
-    render(<Home />);
+    render(
+      <AppState>
+        <Home />
+      </AppState>
+    );
 
     await act(async () => {
       userEvent.type(screen.getByRole('textbox'), 'rrrrrr');
@@ -67,35 +80,18 @@ describe('Home page', () => {
   });
 
   test('click checkbox "like"', async () => {
-    render(<Home />);
+    render(
+      <AppState>
+        <Home />
+      </AppState>
+    );
 
+    userEvent.type(screen.getByRole('textbox'), ' morty');
     userEvent.click(screen.getByText(/Search/i));
-    await waitFor(() => expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked());
-    userEvent.click(screen.getAllByRole('checkbox')[0]);
-    expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
-  });
-
-  test('open/close popup', async () => {
-    render(<Home />);
-
-    await waitFor(async () => {
-      userEvent.click(screen.getAllByAltText(/Rick/i)[0]);
-      expect(screen.getByText('Location: Earth')).toBeInTheDocument();
-    });
-
-    await waitFor(async () => {
-      userEvent.click(screen.getByText(/x/i));
-      expect(document.body).not.toHaveClass('stop-scrolling');
-    });
-
-    await waitFor(async () => {
-      userEvent.click(screen.getAllByAltText(/Rick/i)[0]);
-      expect(screen.getByText('Location: Earth')).toBeInTheDocument();
-    });
-
-    await waitFor(async () => {
-      userEvent.click(screen.getByTestId('popup'));
-      expect(document.body).not.toHaveClass('stop-scrolling');
+    waitFor(() => {
+      expect(screen.getAllByRole('checkbox')[0]).not.toBeChecked();
+      userEvent.click(screen.getAllByRole('checkbox')[0]);
+      expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
     });
   });
 });

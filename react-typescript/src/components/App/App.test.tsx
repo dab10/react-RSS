@@ -3,9 +3,15 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, BrowserRouter } from 'react-router-dom';
 import App from './App';
 import userEvent from '@testing-library/user-event';
+import { AppState } from 'context/AppState';
 
 test('full app rendering/navigating', () => {
-  render(<App />, { wrapper: BrowserRouter });
+  render(
+    <AppState>
+      <App />
+    </AppState>,
+    { wrapper: BrowserRouter }
+  );
 
   expect(screen.getByText(/home/i)).toBeInTheDocument();
 
@@ -18,7 +24,9 @@ test('landing on a bad page', () => {
 
   render(
     <MemoryRouter initialEntries={[badRoute]}>
-      <App />
+      <AppState>
+        <App />
+      </AppState>
     </MemoryRouter>
   );
 

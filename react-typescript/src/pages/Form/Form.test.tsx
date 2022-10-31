@@ -4,10 +4,15 @@ import { act } from 'react-dom/test-utils';
 import Form from './Form';
 import userEvent from '@testing-library/user-event';
 import { quantityCharacters } from 'utils/const/const';
+import { AppState } from 'context/AppState';
 
 describe('form tests', () => {
   test('check form fields', async () => {
-    render(<Form />);
+    render(
+      <AppState>
+        <Form />
+      </AppState>
+    );
 
     const nameInput = screen.getByLabelText('Name:');
     const surnameInput = screen.getByLabelText(/surname:/i);
@@ -56,7 +61,11 @@ describe('form tests', () => {
   test('reset form after submit right form', async () => {
     window.URL.createObjectURL = jest.fn();
     act(() => {
-      render(<Form />);
+      render(
+        <AppState>
+          <Form />
+        </AppState>
+      );
     });
     const file = new File(['(⌐□_□)'], 'chucknorris.png', {
       type: 'image/png',
@@ -92,7 +101,11 @@ describe('form tests', () => {
 
   test('message after submit wrong form', async () => {
     act(() => {
-      render(<Form />);
+      render(
+        <AppState>
+          <Form />
+        </AppState>
+      );
     });
     const file = new File(['(⌐□_□)'], 'chucknorris.png', {
       type: 'image/png',
