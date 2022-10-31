@@ -115,12 +115,12 @@ const appReducer = (state: StateType, action: Actions) => {
           page: 1,
         },
       };
-    case TypeDispatch.SORT_ITEMS:
+    case TypeDispatch.FILTER_ITEMS:
       return {
         ...state,
         homePage: {
           ...state.homePage,
-          sortBy: action.payload.homePage.sortBy,
+          filterByStatus: action.payload.homePage.filterByStatus,
           isLoading: true,
           page: 1,
         },

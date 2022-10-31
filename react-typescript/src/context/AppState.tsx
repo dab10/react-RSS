@@ -38,7 +38,7 @@ export const AppState = ({ children }: { children: React.ReactNode }) => {
       totalPages: 0,
       limit: 20,
       page: 1,
-      sortBy: 'id',
+      filterByStatus: '',
       isLoading: false,
       isPopup: false,
       isError: false,

@@ -17,7 +17,7 @@ type CardProps = {
 
 function CardItem(props: CardProps) {
   const router = useNavigate();
-  console.log(router);
+
   return (
     <div className="card-item">
       <img src={props.image} alt={props.name} className="card-item__image" />

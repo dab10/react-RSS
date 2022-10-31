@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
-import Popup from 'components/Popup/Popup';
 import { AppContext } from 'context/AppState';
 import { maxLimitPerPage, ResultsPerPage, TypeDispatch } from 'utils/const/const';
 import { getPageCount } from 'utils/pagination/getPageCount';
@@ -28,12 +27,13 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
 
-  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1, sort = 'name') => {
+  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
     const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
     const chunkSize = Math.ceil(maxLimitPerPage / limit);
     let count = 1;
     let sliceLeft;
     let sliceRight;
+    console.log(pageNumber);
 
     for (let i = 0; i < maxLimitPerPage; i += limit) {
       const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
@@ -54,11 +54,8 @@ function Home() {
       if (!res.ok) {
         throw Error();
       }
-      const updatedCardsBySort = data.results.sort((a: Card, b: Card) =>
-        String(a[sort as keyof Card]).localeCompare(String(b[sort as keyof Card]))
-      );
 
-      const updatedCards = updatedCardsBySort.slice(sliceLeft, sliceRight).map((item: Card) => {
+      const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
         item.isFavorite = false;
         return item;
       });
@@ -86,7 +83,10 @@ function Home() {
         },
       },
     });
-    await fetchData(`${characterByName}${state.homePage.query}`, state.homePage.limit);
+    await fetchData(
+      `${characterByName}${state.homePage.query}&page=1&status=${state.homePage.filterByStatus}`,
+      state.homePage.limit
+    );
     localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
   };
 
@@ -155,10 +155,9 @@ function Home() {
       },
     });
     await fetchData(
-      `${characterByName}${state.homePage.query}&page=${pageNumberLimit}`,
+      `${characterByName}${state.homePage.query}&page=${pageNumberLimit}&status=${state.homePage.filterByStatus}`,
       state.homePage.limit,
-      pageNumber,
-      state.homePage.sortBy
+      pageNumber
     );
   };
 
@@ -176,33 +175,30 @@ function Home() {
 
     if (!state.homePage.isFirstCall) {
       await fetchData(
-        `${characterByName}${state.homePage.query}&page=1`,
-        Number(value),
-        state.homePage.page,
-        state.homePage.sortBy
+        `${characterByName}${state.homePage.query}&page=1&status=${state.homePage.filterByStatus}`,
+        Number(value)
       );
     } else {
       dispatch({ type: TypeDispatch.LOADING_FALSE });
     }
   };
 
-  const sortItems = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const filterItems = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
     dispatch({
-      type: TypeDispatch.SORT_ITEMS,
+      type: TypeDispatch.FILTER_ITEMS,
       payload: {
         homePage: {
-          sortBy: value,
+          filterByStatus: value,
         },
       },
     });
 
+    console.log(state.homePage.page);
     if (!state.homePage.isFirstCall) {
       await fetchData(
-        `${characterByName}${state.homePage.query}&page=1`,
-        state.homePage.limit,
-        state.homePage.page,
-        value
+        `${characterByName}${state.homePage.query}&page=1&status=${value}`,
+        state.homePage.limit
       );
     } else {
       dispatch({ type: TypeDispatch.LOADING_FALSE });
@@ -218,14 +214,15 @@ function Home() {
       />
       <div className="limit-wrapper">
         <MySelect
-          label="Sort by:"
-          defaultValue="name"
+          label="Filter by status:"
+          defaultValue=""
           options={[
-            { name: 'name', value: 'name' },
-            { name: 'species', value: 'species' },
-            { name: 'gender', value: 'gender' },
+            { name: 'alive', value: 'alive' },
+            { name: 'dead', value: 'dead' },
+            { name: 'unknown', value: 'unknown' },
+            { name: 'all', value: '' },
           ]}
-          onChange={sortItems}
+          onChange={filterItems}
         />
         <MySelect
           label="Number of elements per page:"
