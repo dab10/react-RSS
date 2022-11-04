@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import homeReducer from './reducers/HomeSlice';
+import formReducer from './reducers/FormSlice';
 
 const rootReducer = combineReducers({
   homeReducer,
+  formReducer,
 });
 
 export const setupStore = () => {

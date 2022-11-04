@@ -1,7 +1,7 @@
 import FormList from 'components/FormList/FormList';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { timeConfirmationMessage, TypeDispatch } from 'utils/const/const';
+import { timeConfirmationMessage } from 'utils/const/const';
 import newId from 'utils/newId/newId';
 import './Form.scss';
 import classNames from 'classnames';
@@ -13,7 +13,8 @@ import InputSelect from 'components/FormFields/InputSelect/InputSelect';
 import InputDate from 'components/FormFields/InputDate/InputDate';
 import InputRadio from 'components/FormFields/InputRadio/InputRadio';
 import InputCheckbox from 'components/FormFields/InputCheckbox/InputCheckbox';
-import { AppContext } from 'context/AppState';
+import { useAppDispatch, useAppSelector } from 'store/hooks/redux';
+import { addNewForm, setMessageFalse } from 'store/reducers/FormSlice';
 
 interface IFormInputs {
   id: number;
@@ -27,7 +28,8 @@ interface IFormInputs {
 }
 
 const Form = () => {
-  const { state, dispatch } = useContext(AppContext);
+  const dispatch = useAppDispatch();
+  const { formItems, isSuccess } = useAppSelector((state) => state.formReducer);
 
   const {
     register,
@@ -39,7 +41,7 @@ const Form = () => {
 
   const isSuccessClass = classNames({
     hidden: true,
-    'not-hidden': state.formPage.isSuccess,
+    'not-hidden': isSuccess,
   });
 
   const onSubmit: SubmitHandler<IFormInputs> = (data) => {
@@ -55,17 +57,10 @@ const Form = () => {
       gender: data.gender,
     };
 
-    dispatch({
-      type: TypeDispatch.ADD_NEW_FORM,
-      payload: {
-        formPage: {
-          formItems: newItem,
-        },
-      },
-    });
+    dispatch(addNewForm(newItem));
 
     setTimeout(() => {
-      dispatch({ type: TypeDispatch.SET_MESSAGE_FALSE });
+      dispatch(setMessageFalse());
     }, timeConfirmationMessage);
   };
 
@@ -103,7 +98,7 @@ const Form = () => {
         </form>
       </div>
       <div>
-        <FormList formItems={state.formPage.formItems} />
+        <FormList formItems={formItems} />
       </div>
     </div>
   );
