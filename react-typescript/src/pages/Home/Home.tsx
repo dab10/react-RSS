@@ -14,6 +14,7 @@ import {
   changeLimit,
   changePage,
   closePopup,
+  filterItems,
   handleChangeInput,
   handleChangeLikes,
   loadingFalse,
@@ -26,9 +27,18 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
   const dispatch1 = useAppDispatch();
-  const { data, url, query, filterByStatus, limit, totalPages, page, isFirstCall } = useAppSelector(
-    (state) => state.homeReducer
-  );
+  const {
+    data,
+    url,
+    query,
+    filterByStatus,
+    limit,
+    totalPages,
+    page,
+    isFirstCall,
+    isError,
+    isLoading,
+  } = useAppSelector((state) => state.homeReducer);
 
   // const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
   //   const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
@@ -164,24 +174,14 @@ function Home() {
     }
   };
 
-  const filterItems = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFilterItems = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
-    dispatch({
-      type: TypeDispatch.FILTER_ITEMS,
-      payload: {
-        homePage: {
-          filterByStatus: value,
-        },
-      },
-    });
+    dispatch1(filterItems(value));
 
-    if (!state.homePage.isFirstCall) {
-      await fetchData(
-        `${characterByName}${state.homePage.query}&page=1&status=${value}`,
-        state.homePage.limit
-      );
+    if (!isFirstCall) {
+      dispatch1(await fetchData(`${characterByName}${query}&page=1&status=${value}`, limit));
     } else {
-      dispatch({ type: TypeDispatch.LOADING_FALSE });
+      dispatch1(loadingFalse());
     }
   };
 
@@ -202,7 +202,7 @@ function Home() {
             { name: FilterByStatus.UNKNOWN, value: FilterByStatus.UNKNOWN },
             { name: FilterByStatus.ALL, value: '' },
           ]}
-          onChange={filterItems}
+          onChange={handleFilterItems}
         />
         <MySelect
           label="Number of elements per page:"
@@ -215,12 +215,10 @@ function Home() {
           onChange={handleChangeLimit}
         />
       </div>
-      {state.homePage.isError && !state.homePage.isFirstCall && (
-        <div className="error-fetch">Could not fetch the data</div>
-      )}
+      {isError && !isFirstCall && <div className="error-fetch">Could not fetch the data</div>}
       {
         <>
-          {state.homePage.isLoading ? (
+          {isLoading ? (
             <div className="loader">
               <div></div>
             </div>

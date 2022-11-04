@@ -102,6 +102,10 @@ export const homeSlice = createSlice({
     loadingFalse(state) {
       state.isLoading = false;
     },
+    filterItems(state, action: PayloadAction<string>) {
+      state.filterByStatus = action.payload;
+      state.page = 1;
+    },
   },
 });
 
@@ -115,4 +119,5 @@ export const {
   changePage,
   changeLimit,
   loadingFalse,
+  filterItems,
 } = homeSlice.actions;
