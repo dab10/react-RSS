@@ -3,13 +3,16 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, BrowserRouter } from 'react-router-dom';
 import App from './App';
 import userEvent from '@testing-library/user-event';
-import { AppState } from 'context/AppState';
+import { setupStore } from 'store/store';
+import { Provider } from 'react-redux';
 
 test('full app rendering/navigating', () => {
+  const store = setupStore();
+
   render(
-    <AppState>
+    <Provider store={store}>
       <App />
-    </AppState>,
+    </Provider>,
     { wrapper: BrowserRouter }
   );
 
@@ -21,12 +24,13 @@ test('full app rendering/navigating', () => {
 
 test('landing on a bad page', () => {
   const badRoute = '/badRoute';
+  const store = setupStore();
 
   render(
     <MemoryRouter initialEntries={[badRoute]}>
-      <AppState>
+      <Provider store={store}>
         <App />
-      </AppState>
+      </Provider>
     </MemoryRouter>
   );
 

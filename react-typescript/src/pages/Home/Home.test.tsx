@@ -5,7 +5,8 @@ import { mockApi } from '../../utils/mocks/mockApi';
 import Home from './Home';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
-import { AppState } from 'context/AppState';
+import { setupStore } from 'store/store';
+import { Provider } from 'react-redux';
 
 const localStorageMock = (function () {
   let store: { [x: string]: string } = {};
@@ -37,10 +38,11 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 describe('Home page', () => {
   test('data is added into local storage', async () => {
+    const store = setupStore();
     render(
-      <AppState>
+      <Provider store={store}>
         <Home />
-      </AppState>
+      </Provider>
     );
     const mockId = 'savedStateSearching';
     const mockJson = 'morty';
@@ -50,9 +52,9 @@ describe('Home page', () => {
       JSON.stringify((screen.getByRole('textbox') as HTMLInputElement).value)
     );
     render(
-      <AppState>
+      <Provider store={store}>
         <Home />
-      </AppState>
+      </Provider>
     );
     expect(window.localStorage.getItem('savedStateSearching')).toEqual(JSON.stringify(mockJson));
   });
@@ -63,10 +65,11 @@ describe('Home page', () => {
         return res(ctx.status(404));
       })
     );
+    const store = setupStore();
     render(
-      <AppState>
+      <Provider store={store}>
         <Home />
-      </AppState>
+      </Provider>
     );
 
     await act(async () => {
@@ -80,10 +83,11 @@ describe('Home page', () => {
   });
 
   test('click checkbox "like"', async () => {
+    const store = setupStore();
     render(
-      <AppState>
+      <Provider store={store}>
         <Home />
-      </AppState>
+      </Provider>
     );
 
     userEvent.type(screen.getByRole('textbox'), ' morty');

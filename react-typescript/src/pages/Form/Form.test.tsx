@@ -4,14 +4,16 @@ import { act } from 'react-dom/test-utils';
 import Form from './Form';
 import userEvent from '@testing-library/user-event';
 import { quantityCharacters } from 'utils/const/const';
-import { AppState } from 'context/AppState';
+import { Provider } from 'react-redux';
+import { setupStore } from 'store/store';
 
 describe('form tests', () => {
   test('check form fields', async () => {
+    const store = setupStore();
     render(
-      <AppState>
+      <Provider store={store}>
         <Form />
-      </AppState>
+      </Provider>
     );
 
     const nameInput = screen.getByLabelText('Name:');
@@ -60,11 +62,12 @@ describe('form tests', () => {
 
   test('reset form after submit right form', async () => {
     window.URL.createObjectURL = jest.fn();
+    const store = setupStore();
     act(() => {
       render(
-        <AppState>
+        <Provider store={store}>
           <Form />
-        </AppState>
+        </Provider>
       );
     });
     const file = new File(['(⌐□_□)'], 'chucknorris.png', {
@@ -100,11 +103,12 @@ describe('form tests', () => {
   });
 
   test('message after submit wrong form', async () => {
+    const store = setupStore();
     act(() => {
       render(
-        <AppState>
+        <Provider store={store}>
           <Form />
-        </AppState>
+        </Provider>
       );
     });
     const file = new File(['(⌐□_□)'], 'chucknorris.png', {
