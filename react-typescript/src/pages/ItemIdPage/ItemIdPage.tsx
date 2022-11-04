@@ -5,7 +5,6 @@ import './ItemIdPage.scss';
 
 const ItemIdPage = () => {
   const { dataPopup } = useAppSelector((state) => state.homeReducer);
-  // const { state } = useContext(AppContext);
   const router = useNavigate();
 
   return (

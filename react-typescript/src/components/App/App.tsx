@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from 'pages/Home/Home';
 import About from 'pages/About/About';
@@ -7,12 +7,10 @@ import Footer from 'components/Footer/Footer';
 import Form from 'pages/Form/Form';
 import Header from 'components/Header/Header';
 import { routes } from 'utils/const/const';
-import { AppContext } from 'context/AppState';
 import ItemIdPage from 'pages/ItemIdPage/ItemIdPage';
 import { useAppSelector } from 'store/hooks/redux';
 
 function App() {
-  // const { state } = useContext(AppContext);
   const { dataPopup } = useAppSelector((state) => state.homeReducer);
 
   return (
