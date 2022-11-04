@@ -8,85 +8,85 @@ import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from 'components/UI/pagination/Pagination';
 import MySelect from 'components/UI/select/MySelect';
 import { Card } from './Home.types';
+import { useAppDispatch, useAppSelector } from 'store/hooks/redux';
+import { fetchData } from 'store/reducers/ActionCreator';
+import { handleChangeInput, setUrlAfterSubmit } from 'store/reducers/HomeSlice';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
+  const dispatch1 = useAppDispatch();
+  const { data, url, query } = useAppSelector((state) => state.homeReducer);
 
-  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
-    const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
-    const chunkSize = Math.ceil(maxLimitPerPage / limit);
-    let count = 1;
-    let sliceLeft;
-    let sliceRight;
+  // const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
+  //   const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
+  //   const chunkSize = Math.ceil(maxLimitPerPage / limit);
+  //   let count = 1;
+  //   let sliceLeft;
+  //   let sliceRight;
 
-    for (let i = 0; i < maxLimitPerPage; i += limit) {
-      const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
-      const sliceLeftChunk = Math.min(...chunk);
-      const sliceRightChunk = Math.max(...chunk);
+  //   for (let i = 0; i < maxLimitPerPage; i += limit) {
+  //     const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
+  //     const sliceLeftChunk = Math.min(...chunk);
+  //     const sliceRightChunk = Math.max(...chunk);
 
-      if (pageNumber % chunkSize === count) {
-        sliceLeft = sliceLeftChunk;
-        sliceRight = sliceRightChunk + 1;
-      }
-      count++;
-      count === chunkSize ? (count = 0) : count;
-    }
+  //     if (pageNumber % chunkSize === count) {
+  //       sliceLeft = sliceLeftChunk;
+  //       sliceRight = sliceRightChunk + 1;
+  //     }
+  //     count++;
+  //     count === chunkSize ? (count = 0) : count;
+  //   }
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      if (!res.ok) {
-        throw Error();
-      }
+  //   try {
+  //     const res = await fetch(url);
+  //     const data = await res.json();
+  //     if (!res.ok) {
+  //       throw Error();
+  //     }
 
-      const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
-        item.isFavorite = false;
-        return item;
-      });
-      dispatch({
-        type: TypeDispatch.FETCH_SUCCESS,
-        payload: {
-          homePage: {
-            data: updatedCards,
-            totalPages: getPageCount(data.info.count, limit),
-          },
-        },
-      });
-    } catch {
-      dispatch({ type: TypeDispatch.FETCH_ERROR });
-    }
-  };
+  //     const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
+  //       item.isFavorite = false;
+  //       return item;
+  //     });
+  //     dispatch({
+  //       type: TypeDispatch.FETCH_SUCCESS,
+  //       payload: {
+  //         homePage: {
+  //           data: updatedCards,
+  //           totalPages: getPageCount(data.info.count, limit),
+  //         },
+  //       },
+  //     });
+  //   } catch {
+  //     dispatch({ type: TypeDispatch.FETCH_ERROR });
+  //   }
+  // };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch({
-      type: TypeDispatch.HANDLE_SUBMIT,
-      payload: {
-        homePage: {
-          url: `${characterByName}${state.homePage.query}`,
-        },
-      },
-    });
-    await fetchData(
-      `${characterByName}${state.homePage.query}&page=1&status=${state.homePage.filterByStatus}`,
-      state.homePage.limit
+    dispatch1(setUrlAfterSubmit({ url: `${characterByName}${state.homePage.query}` }));
+    dispatch1(
+      await fetchData(
+        `${characterByName}${query}&page=1&status=${state.homePage.filterByStatus}`,
+        state.homePage.limit
+      )
     );
-    localStorage.setItem('savedStateSearching', JSON.stringify(state.homePage.query));
+    localStorage.setItem('savedStateSearching', JSON.stringify(query));
   };
 
-  const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    dispatch({
-      type: TypeDispatch.HANDLE_CHANGE_FORM,
-      payload: {
-        homePage: {
-          query: value,
-        },
-      },
-    });
-  };
+  // const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.target;
+  //   dispatch({
+  //     type: TypeDispatch.HANDLE_CHANGE_FORM,
+  //     payload: {
+  //       homePage: {
+  //         query: value,
+  //       },
+  //     },
+  //   });
+  // };
 
   const handleChange = (id: number) => {
     const updatedCards = state.homePage.data.map((todo) => {
@@ -193,9 +193,9 @@ function Home() {
   return (
     <div className="container">
       <SearchBar
-        handleChangeForm={handleChangeForm}
+        handleChangeForm={(event) => dispatch1(handleChangeInput({ query: event.target.value }))}
         handleSubmit={handleSubmit}
-        searching={state.homePage.query}
+        searching={query}
       />
       <div className="limit-wrapper">
         <MySelect
@@ -232,7 +232,7 @@ function Home() {
           ) : (
             <>
               <CardList
-                cards={state.homePage.data}
+                cards={data}
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />

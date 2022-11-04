@@ -1,5 +1,5 @@
 import React, { createContext, Dispatch, useReducer } from 'react';
-import appReducer from './appReducer'; 
+import appReducer from './appReducer';
 import { Actions, Card, FormInputs, FormState, HomeState } from './context.types';
 
 type AppContextType = {

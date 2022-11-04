@@ -10,7 +10,7 @@ type SearchProps = {
 function SearchBar(props: SearchProps) {
   return (
     <div className="searching">
-      <form onSubmit={(event) => props.handleSubmit(event)}>
+      <form onSubmit={props.handleSubmit}>
         <input
           type="text"
           value={props.searching === null ? '' : props.searching}
