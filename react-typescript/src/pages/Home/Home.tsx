@@ -18,6 +18,7 @@ import {
   openPopup,
   setUrlAfterSubmit,
 } from 'store/reducers/HomeSlice';
+import { Card } from 'store/models/Card';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
@@ -34,7 +35,8 @@ function Home() {
   };
 
   const handleChange = (id: number) => {
-    const updatedCards = data.map((todo) => {
+    const cloneData = JSON.parse(JSON.stringify(data));
+    const updatedCards = cloneData.map((todo: Card) => {
       if (todo.id === id) {
         todo.isFavorite = !todo.isFavorite;
       }
