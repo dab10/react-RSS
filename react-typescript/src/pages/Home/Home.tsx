@@ -31,7 +31,6 @@ function Home() {
     event.preventDefault();
     dispatch(setUrlAfterSubmit(`${characterByName}${query}`));
     dispatch(
-      // await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, limit)
       await fetchData({
         url: `${characterByName}${query}&page=1&status=${filterByStatus}`,
         limit: limit,

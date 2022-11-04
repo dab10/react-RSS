@@ -59,21 +59,6 @@ export const homeSlice = createSlice({
   name: 'home',
   initialState,
   reducers: {
-    // cardsFetching(state) {
-    //   state.isLoading = true;
-    // },
-    // cardsFetchingSuccess(state, action: PayloadAction<ActionFetchSuccess>) {
-    //   state.isLoading = false;
-    //   state.isError = false;
-    //   state.data = action.payload.data;
-    //   state.totalPages = action.payload.totalPages;
-    // },
-    // cardsFetchingError(state) {
-    //   state.data = [];
-    //   state.totalPages = 0;
-    //   state.isLoading = false;
-    //   state.isError = true;
-    // },
     setUrlAfterSubmit(state, action: PayloadAction<string>) {
       state.url = action.payload;
       state.page = 1;
