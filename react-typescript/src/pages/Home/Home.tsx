@@ -30,7 +30,13 @@ function Home() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(setUrlAfterSubmit(`${characterByName}${query}`));
-    dispatch(await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, limit));
+    dispatch(
+      // await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, limit)
+      await fetchData({
+        url: `${characterByName}${query}&page=1&status=${filterByStatus}`,
+        limit: limit,
+      })
+    );
     localStorage.setItem('savedStateSearching', JSON.stringify(query));
   };
 
@@ -60,11 +66,11 @@ function Home() {
 
     dispatch(changePage(pageNumber));
     dispatch(
-      await fetchData(
-        `${characterByName}${query}&page=${pageNumberLimit}&status=${filterByStatus}`,
-        limit,
-        pageNumber
-      )
+      await fetchData({
+        url: `${characterByName}${query}&page=${pageNumberLimit}&status=${filterByStatus}`,
+        limit: limit,
+        pageNumber: pageNumber,
+      })
     );
   };
 
@@ -75,7 +81,10 @@ function Home() {
 
     if (!isFirstCall) {
       dispatch(
-        await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, Number(value))
+        await fetchData({
+          url: `${characterByName}${query}&page=1&status=${filterByStatus}`,
+          limit: Number(value),
+        })
       );
     } else {
       dispatch(loadingFalse());
@@ -87,7 +96,9 @@ function Home() {
     dispatch(filterItems(value));
 
     if (!isFirstCall) {
-      dispatch(await fetchData(`${characterByName}${query}&page=1&status=${value}`, limit));
+      dispatch(
+        await fetchData({ url: `${characterByName}${query}&page=1&status=${value}`, limit: limit })
+      );
     } else {
       dispatch(loadingFalse());
     }
