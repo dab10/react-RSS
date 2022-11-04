@@ -11,9 +11,12 @@ import { Card } from './Home.types';
 import { useAppDispatch, useAppSelector } from 'store/hooks/redux';
 import { fetchData } from 'store/reducers/ActionCreator';
 import {
+  changeLimit,
+  changePage,
   closePopup,
   handleChangeInput,
   handleChangeLikes,
+  loadingFalse,
   openPopup,
   setUrlAfterSubmit,
 } from 'store/reducers/HomeSlice';
@@ -23,7 +26,9 @@ function Home() {
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
   const dispatch1 = useAppDispatch();
-  const { data, url, query } = useAppSelector((state) => state.homeReducer);
+  const { data, url, query, filterByStatus, limit, totalPages, page, isFirstCall } = useAppSelector(
+    (state) => state.homeReducer
+  );
 
   // const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
   //   const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
@@ -72,13 +77,8 @@ function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch1(setUrlAfterSubmit(`${characterByName}${state.homePage.query}`));
-    dispatch1(
-      await fetchData(
-        `${characterByName}${query}&page=1&status=${state.homePage.filterByStatus}`,
-        state.homePage.limit
-      )
-    );
+    dispatch1(setUrlAfterSubmit(`${characterByName}${query}`));
+    dispatch1(await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, limit));
     localStorage.setItem('savedStateSearching', JSON.stringify(query));
   };
 
@@ -137,43 +137,30 @@ function Home() {
   };
 
   const handleChangePage = async (pageNumber: number) => {
-    const chunkSize = Math.ceil(maxLimitPerPage / state.homePage.limit);
+    const chunkSize = Math.ceil(maxLimitPerPage / limit);
     const pageNumberLimit = Math.ceil(pageNumber / chunkSize);
 
-    dispatch({
-      type: TypeDispatch.HANDLE_SET_PAGE,
-      payload: {
-        homePage: {
-          page: pageNumber,
-        },
-      },
-    });
-    await fetchData(
-      `${characterByName}${state.homePage.query}&page=${pageNumberLimit}&status=${state.homePage.filterByStatus}`,
-      state.homePage.limit,
-      pageNumber
+    dispatch1(changePage(pageNumber));
+    dispatch1(
+      await fetchData(
+        `${characterByName}${query}&page=${pageNumberLimit}&status=${filterByStatus}`,
+        limit,
+        pageNumber
+      )
     );
   };
 
   const handleChangeLimit = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
-    dispatch({
-      type: TypeDispatch.HANDLE_CHANGE_LIMIT,
-      payload: {
-        homePage: {
-          limit: Number(value),
-        },
-      },
-    });
+    dispatch1(changeLimit(Number(value)));
 
-    if (!state.homePage.isFirstCall) {
-      await fetchData(
-        `${characterByName}${state.homePage.query}&page=1&status=${state.homePage.filterByStatus}`,
-        Number(value)
+    if (!isFirstCall) {
+      dispatch1(
+        await fetchData(`${characterByName}${query}&page=1&status=${filterByStatus}`, Number(value))
       );
     } else {
-      dispatch({ type: TypeDispatch.LOADING_FALSE });
+      dispatch1(loadingFalse());
     }
   };
 
@@ -244,11 +231,7 @@ function Home() {
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />
-              <Pagination
-                totalPages={state.homePage.totalPages}
-                page={state.homePage.page}
-                handleChangePage={handleChangePage}
-              />
+              <Pagination totalPages={totalPages} page={page} handleChangePage={handleChangePage} />
             </>
           )}
         </>

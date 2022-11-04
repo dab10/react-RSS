@@ -92,9 +92,27 @@ export const homeSlice = createSlice({
       state.dataPopup = action.payload;
       state.isPopup = true;
     },
+    changePage(state, action: PayloadAction<number>) {
+      state.page = action.payload;
+    },
+    changeLimit(state, action: PayloadAction<number>) {
+      state.limit = action.payload;
+      state.page = 1;
+    },
+    loadingFalse(state) {
+      state.isLoading = false;
+    },
   },
 });
 
 export default homeSlice.reducer;
-export const { setUrlAfterSubmit, handleChangeInput, handleChangeLikes, closePopup, openPopup } =
-  homeSlice.actions;
+export const {
+  setUrlAfterSubmit,
+  handleChangeInput,
+  handleChangeLikes,
+  closePopup,
+  openPopup,
+  changePage,
+  changeLimit,
+  loadingFalse,
+} = homeSlice.actions;
