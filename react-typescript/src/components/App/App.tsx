@@ -9,9 +9,12 @@ import Header from 'components/Header/Header';
 import { routes } from 'utils/const/const';
 import { AppContext } from 'context/AppState';
 import ItemIdPage from 'pages/ItemIdPage/ItemIdPage';
+import { useAppSelector } from 'store/hooks/redux';
 
 function App() {
-  const { state } = useContext(AppContext);
+  // const { state } = useContext(AppContext);
+  const { dataPopup } = useAppSelector((state) => state.homeReducer);
+
   return (
     <>
       <Header />
@@ -20,7 +23,7 @@ function App() {
         <Route path={routes.formPage} element={<Form />} />
         <Route path={routes.aboutPage} element={<About />} />
         <Route
-          path={state.homePage.dataPopup.id ? `${routes.homePage}:id` : routes.homePage}
+          path={dataPopup.id ? `${routes.homePage}:id` : routes.homePage}
           element={<ItemIdPage />}
         />
         <Route path={routes.notFoundPage} element={<Page404 />} />

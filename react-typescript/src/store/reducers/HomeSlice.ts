@@ -22,14 +22,6 @@ type ActionFetchSuccess = {
   totalPages: number;
 };
 
-type ActionHandleSubmit = {
-  url: string;
-};
-
-type ActionHandleChangeForm = {
-  query: string | null;
-};
-
 const base = 'https://rickandmortyapi.com/api';
 const characterByName = `${base}/character/?name=`;
 const savedItem = localStorage.getItem('savedStateSearching');
@@ -81,16 +73,28 @@ export const homeSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
     },
-    setUrlAfterSubmit(state, action: PayloadAction<ActionHandleSubmit>) {
-      state.url = action.payload.url;
+    setUrlAfterSubmit(state, action: PayloadAction<string>) {
+      state.url = action.payload;
       state.page = 1;
       state.isFirstCall = false;
     },
-    handleChangeInput(state, action: PayloadAction<ActionHandleChangeForm>) {
-      state.query = action.payload.query;
+    handleChangeInput(state, action: PayloadAction<string | null>) {
+      state.query = action.payload;
+    },
+    handleChangeLikes(state, action: PayloadAction<Card[]>) {
+      state.data = action.payload;
+    },
+    closePopup(state, action: PayloadAction<Card>) {
+      state.dataPopup = action.payload;
+      state.isPopup = false;
+    },
+    openPopup(state, action: PayloadAction<Card>) {
+      state.dataPopup = action.payload;
+      state.isPopup = true;
     },
   },
 });
 
 export default homeSlice.reducer;
-export const { setUrlAfterSubmit, handleChangeInput } = homeSlice.actions;
+export const { setUrlAfterSubmit, handleChangeInput, handleChangeLikes, closePopup, openPopup } =
+  homeSlice.actions;

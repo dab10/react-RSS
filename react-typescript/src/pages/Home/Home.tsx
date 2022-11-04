@@ -10,7 +10,13 @@ import MySelect from 'components/UI/select/MySelect';
 import { Card } from './Home.types';
 import { useAppDispatch, useAppSelector } from 'store/hooks/redux';
 import { fetchData } from 'store/reducers/ActionCreator';
-import { handleChangeInput, setUrlAfterSubmit } from 'store/reducers/HomeSlice';
+import {
+  closePopup,
+  handleChangeInput,
+  handleChangeLikes,
+  openPopup,
+  setUrlAfterSubmit,
+} from 'store/reducers/HomeSlice';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
@@ -66,7 +72,7 @@ function Home() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch1(setUrlAfterSubmit({ url: `${characterByName}${state.homePage.query}` }));
+    dispatch1(setUrlAfterSubmit(`${characterByName}${state.homePage.query}`));
     dispatch1(
       await fetchData(
         `${characterByName}${query}&page=1&status=${state.homePage.filterByStatus}`,
@@ -89,42 +95,44 @@ function Home() {
   // };
 
   const handleChange = (id: number) => {
-    const updatedCards = state.homePage.data.map((todo) => {
+    const updatedCards = data.map((todo) => {
       if (todo.id === id) {
         todo.isFavorite = !todo.isFavorite;
       }
       return todo;
     });
-    dispatch({
-      type: TypeDispatch.HANDLE_CHANGE_LIKES,
-      payload: {
-        homePage: {
-          data: updatedCards,
-        },
-      },
-    });
+    dispatch1(handleChangeLikes(updatedCards));
   };
 
+  // const handleClickToggle = (id = 0) => {
+  //   const cardId = state.homePage.data.findIndex((item) => item.id === id);
+  //   if (id) {
+  //     dispatch({
+  //       type: TypeDispatch.CLOSE_POPUP,
+  //       payload: {
+  //         homePage: {
+  //           dataPopup: state.homePage.data[cardId],
+  //         },
+  //       },
+  //     });
+  //   } else {
+  //     dispatch({
+  //       type: TypeDispatch.OPEN_POPUP,
+  //       payload: {
+  //         homePage: {
+  //           dataPopup: state.homePage.data[cardId],
+  //         },
+  //       },
+  //     });
+  //   }
+  // };
+
   const handleClickToggle = (id = 0) => {
-    const cardId = state.homePage.data.findIndex((item) => item.id === id);
+    const cardId = data.findIndex((item) => item.id === id);
     if (id) {
-      dispatch({
-        type: TypeDispatch.CLOSE_POPUP,
-        payload: {
-          homePage: {
-            dataPopup: state.homePage.data[cardId],
-          },
-        },
-      });
+      dispatch1(closePopup(data[cardId]));
     } else {
-      dispatch({
-        type: TypeDispatch.OPEN_POPUP,
-        payload: {
-          homePage: {
-            dataPopup: state.homePage.data[cardId],
-          },
-        },
-      });
+      dispatch1(openPopup(data[cardId]));
     }
   };
 
@@ -193,7 +201,7 @@ function Home() {
   return (
     <div className="container">
       <SearchBar
-        handleChangeForm={(event) => dispatch1(handleChangeInput({ query: event.target.value }))}
+        handleChangeForm={(event) => dispatch1(handleChangeInput(event.target.value))}
         handleSubmit={handleSubmit}
         searching={query}
       />
