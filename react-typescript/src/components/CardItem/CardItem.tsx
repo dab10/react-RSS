@@ -18,6 +18,15 @@ type CardProps = {
 function CardItem(props: CardProps) {
   const router = useNavigate();
 
+  const openCard = () => {
+    if (props) {
+      router(`${routes.homePage}${props.id}`);
+    } else {
+      router(`${routes.homePage}`);
+    }
+    props.handleClickToggle(props.id);
+  };
+
   return (
     <div className="card-item">
       <img src={props.image} alt={props.name} className="card-item__image" />
@@ -40,16 +49,7 @@ function CardItem(props: CardProps) {
         </div>
       </div>
       <div>{props.isFavorite}</div>
-      <button
-        onClick={() => {
-          {
-            props ? router(`${routes.homePage}${props.id}`) : router(`${routes.homePage}`);
-          }
-          props.handleClickToggle(props.id);
-        }}
-      >
-        Open
-      </button>
+      <button onClick={openCard}>Open</button>
     </div>
   );
 }
