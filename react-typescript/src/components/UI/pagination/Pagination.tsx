@@ -36,25 +36,25 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
     sliceRight = pagesArray.length - 1;
   }
 
-  const isDisableLeftButton = classNames({
+  const leftButtonClass = classNames({
     page: true,
     'page-disable': page === 1,
     'page-hidden': pagesArray.length === 0,
   });
 
-  const isDisableRightButton = classNames({
+  const rightButtonClass = classNames({
     page: true,
     'page-disable': page === pagesArray.length,
     'page-hidden': pagesArray.length === 0,
   });
 
-  const isDisableLeftDots = classNames({
+  const leftDotsClass = classNames({
     page: true,
     'page-hidden': pagesArray.length < 6 || (page > 0 && page < 4),
     'page-disable-dots': pagesArray.length > 5 || page > 3,
   });
 
-  const isDisableRightDots = classNames({
+  const rightDotsClass = classNames({
     page: true,
     'page-hidden':
       pagesArray.length < 6 || (page > pagesArray.length - 3 && page <= pagesArray.length),
@@ -64,7 +64,7 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
   return (
     <div className="page-wrapper">
       <span
-        className={isDisableLeftButton}
+        className={leftButtonClass}
         onClick={page > 1 ? () => handleChangePage(page - 1) : () => {}}
       >
         &#60;
@@ -78,7 +78,7 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
           {pageNumber}
         </span>
       ))}
-      <span className={isDisableLeftDots}>...</span>
+      <span className={leftDotsClass}>...</span>
       {pagesArray.slice(sliceLeft, sliceRight).map((pageNumber) => (
         <span
           onClick={() => handleChangePage(pageNumber)}
@@ -88,7 +88,7 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
           {pageNumber}
         </span>
       ))}
-      <span className={isDisableRightDots}>...</span>
+      <span className={rightDotsClass}>...</span>
       {pagesArray.length !== 1 &&
         pagesArray.slice(-1).map((pageNumber) => (
           <span
@@ -100,7 +100,7 @@ const Pagination = ({ totalPages, page, handleChangePage }: PropsPagination) => 
           </span>
         ))}
       <span
-        className={isDisableRightButton}
+        className={rightButtonClass}
         onClick={page < pagesArray.length ? () => handleChangePage(page + 1) : () => {}}
       >
         &#62;
