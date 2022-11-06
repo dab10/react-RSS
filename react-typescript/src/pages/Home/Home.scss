@@ -51,3 +51,13 @@
   gap: 10px;
   margin: 10px;
 }
+
+.MuiPagination-root {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.hidden {
+  opacity: 0;
+}

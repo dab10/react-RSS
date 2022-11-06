@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import { maxLimitPerPage, FilterByStatus, ResultsPerPage } from 'utils/const/const';
-import Pagination from 'components/UI/pagination/Pagination';
+import Pagination from '@mui/material/Pagination';
 import MySelect from 'components/UI/select/MySelect';
 import { useAppDispatch, useAppSelector } from 'store/hooks/redux';
 import { fetchData } from 'store/reducers/ActionCreator';
@@ -19,6 +19,7 @@ import {
   setUrlAfterSubmit,
 } from 'store/reducers/HomeSlice';
 import { Card } from 'store/models/Card';
+import classNames from 'classnames';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
@@ -26,6 +27,10 @@ function Home() {
   const dispatch = useAppDispatch();
   const { data, query, filterByStatus, limit, totalPages, page, isFirstCall, isError, isLoading } =
     useAppSelector((state) => state.homeReducer);
+
+  const paginationClass = classNames({
+    hidden: !data.length,
+  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,7 +64,7 @@ function Home() {
     }
   };
 
-  const handleChangePage = async (pageNumber: number) => {
+  const handleChangePage = async (event: ChangeEvent<unknown>, pageNumber: number) => {
     const chunkSize = Math.ceil(maxLimitPerPage / limit);
     const pageNumberLimit = Math.ceil(pageNumber / chunkSize);
 
@@ -147,7 +152,9 @@ function Home() {
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />
-              <Pagination totalPages={totalPages} page={page} handleChangePage={handleChangePage} />
+              <div className={paginationClass}>
+                <Pagination count={totalPages} page={page} onChange={handleChangePage} />
+              </div>
             </>
           )}
         </>
