@@ -8,11 +8,15 @@ import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from '@mui/material/Pagination';
 import MySelect from 'components/UI/select/MySelect';
 import { Card } from './Home.types';
+import classNames from 'classnames';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
+  const paginationClass = classNames({
+    hidden: !state.homePage.data.length,
+  });
 
   const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
     const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
@@ -236,7 +240,7 @@ function Home() {
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />
-              <div className={state.homePage.isError || state.homePage.isFirstCall ? 'hidden' : ''}>
+              <div className={paginationClass}>
                 <Pagination
                   count={state.homePage.totalPages}
                   page={state.homePage.page}
