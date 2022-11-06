@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { ChangeEvent, useContext } from 'react';
 import './Home.scss';
 import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import { AppContext } from 'context/AppState';
 import { maxLimitPerPage, FilterByStatus, ResultsPerPage, TypeDispatch } from 'utils/const/const';
 import { getPageCount } from 'utils/pagination/getPageCount';
-import Pagination from 'components/UI/pagination/Pagination';
+import Pagination from '@mui/material/Pagination';
 import MySelect from 'components/UI/select/MySelect';
 import { Card } from './Home.types';
 
@@ -128,7 +128,7 @@ function Home() {
     }
   };
 
-  const handleChangePage = async (pageNumber: number) => {
+  const handleChangePage = async (event: ChangeEvent<unknown>, pageNumber: number) => {
     const chunkSize = Math.ceil(maxLimitPerPage / state.homePage.limit);
     const pageNumberLimit = Math.ceil(pageNumber / chunkSize);
 
@@ -236,11 +236,13 @@ function Home() {
                 handleChange={handleChange}
                 handleClickToggle={handleClickToggle}
               />
-              <Pagination
-                totalPages={state.homePage.totalPages}
-                page={state.homePage.page}
-                handleChangePage={handleChangePage}
-              />
+              <div className={state.homePage.isError || state.homePage.isFirstCall ? 'hidden' : ''}>
+                <Pagination
+                  count={state.homePage.totalPages}
+                  page={state.homePage.page}
+                  onChange={handleChangePage}
+                />
+              </div>
             </>
           )}
         </>
