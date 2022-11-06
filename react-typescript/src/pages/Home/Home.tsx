@@ -4,64 +4,17 @@ import SearchBar from 'components/SearchBar/SearchBar';
 import CardList from 'components/CardList/CardList';
 import { AppContext } from 'context/AppState';
 import { maxLimitPerPage, FilterByStatus, ResultsPerPage, TypeDispatch } from 'utils/const/const';
-import { getPageCount } from 'utils/pagination/getPageCount';
 import Pagination from '@mui/material/Pagination';
 import MySelect from 'components/UI/select/MySelect';
-import { Card } from './Home.types';
 import classNames from 'classnames';
+import { useFetchData } from 'utils/fetchData/fetchData';
 
 function Home() {
   const base = 'https://rickandmortyapi.com/api';
   const characterByName = `${base}/character/?name=`;
   const { state, dispatch } = useContext(AppContext);
-  const paginationClass = classNames({
-    hidden: !state.homePage.data.length,
-  });
-
-  const fetchData = async (url: string, limit = maxLimitPerPage, pageNumber = 1) => {
-    const arrayFromZeroToMaxLimit = [...Array(maxLimitPerPage).keys()];
-    const chunkSize = Math.ceil(maxLimitPerPage / limit);
-    let count = 1;
-    let sliceLeft;
-    let sliceRight;
-
-    for (let i = 0; i < maxLimitPerPage; i += limit) {
-      const chunk = arrayFromZeroToMaxLimit.slice(i, i + limit);
-      const sliceLeftChunk = Math.min(...chunk);
-      const sliceRightChunk = Math.max(...chunk);
-
-      if (pageNumber % chunkSize === count) {
-        sliceLeft = sliceLeftChunk;
-        sliceRight = sliceRightChunk + 1;
-      }
-      count++;
-      count === chunkSize ? (count = 0) : count;
-    }
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      if (!res.ok) {
-        throw Error();
-      }
-
-      const updatedCards = data.results.slice(sliceLeft, sliceRight).map((item: Card) => {
-        item.isFavorite = false;
-        return item;
-      });
-      dispatch({
-        type: TypeDispatch.FETCH_SUCCESS,
-        payload: {
-          homePage: {
-            data: updatedCards,
-            totalPages: getPageCount(data.info.count, limit),
-          },
-        },
-      });
-    } catch {
-      dispatch({ type: TypeDispatch.FETCH_ERROR });
-    }
-  };
+  const paginationClass = classNames({ hidden: !state.homePage.data.length });
+  const fetchData = useFetchData();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -94,17 +47,13 @@ function Home() {
 
   const handleChange = (id: number) => {
     const updatedCards = state.homePage.data.map((todo) => {
-      if (todo.id === id) {
-        todo.isFavorite = !todo.isFavorite;
-      }
+      if (todo.id === id) todo.isFavorite = !todo.isFavorite;
       return todo;
     });
     dispatch({
       type: TypeDispatch.HANDLE_CHANGE_LIKES,
       payload: {
-        homePage: {
-          data: updatedCards,
-        },
+        homePage: { data: updatedCards },
       },
     });
   };
@@ -115,18 +64,14 @@ function Home() {
       dispatch({
         type: TypeDispatch.CLOSE_POPUP,
         payload: {
-          homePage: {
-            dataPopup: state.homePage.data[cardId],
-          },
+          homePage: { dataPopup: state.homePage.data[cardId] },
         },
       });
     } else {
       dispatch({
         type: TypeDispatch.OPEN_POPUP,
         payload: {
-          homePage: {
-            dataPopup: state.homePage.data[cardId],
-          },
+          homePage: { dataPopup: state.homePage.data[cardId] },
         },
       });
     }
@@ -139,9 +84,7 @@ function Home() {
     dispatch({
       type: TypeDispatch.HANDLE_SET_PAGE,
       payload: {
-        homePage: {
-          page: pageNumber,
-        },
+        homePage: { page: pageNumber },
       },
     });
     await fetchData(
@@ -157,9 +100,7 @@ function Home() {
     dispatch({
       type: TypeDispatch.HANDLE_CHANGE_LIMIT,
       payload: {
-        homePage: {
-          limit: Number(value),
-        },
+        homePage: { limit: Number(value) },
       },
     });
 
@@ -178,9 +119,7 @@ function Home() {
     dispatch({
       type: TypeDispatch.FILTER_ITEMS,
       payload: {
-        homePage: {
-          filterByStatus: value,
-        },
+        homePage: { filterByStatus: value },
       },
     });
 
